@@ -1,0 +1,127 @@
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+import logging
+import os
+import sys
+
+# Add the project root to Python path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, BASE_DIR)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# SQLite configuration
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'sql_app.db')}"
+
+# Create engine for SQLite
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False}  # Needed for SQLite
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def init_db():
+    try:
+        # Import all models to ensure they are registered with SQLAlchemy
+        from models.models import (
+            Documents, 
+            Users, 
+            Employees, 
+            Permissions, 
+            Departments, 
+            Roles,
+            TrainingDocuments,
+            Feedback,
+            FileIndex
+        )
+        
+        # Create all tables
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables created successfully")
+        
+        # Initialize default data
+        init_default_data()
+        
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {str(e)}")
+        raise
+
+def init_default_data():
+    """Initialize default data in the database"""
+    try:
+        from models.models import Employees, Departments, Roles
+        db = SessionLocal()
+        
+        try:
+            # Create default department if it doesn't exist
+            default_dept = db.query(Departments).filter(Departments.name == "General").first()
+            if not default_dept:
+                default_dept = Departments(
+                    name="General",
+                    description="General Department"
+                )
+                db.add(default_dept)
+                db.commit()
+                db.refresh(default_dept)
+                logger.info("Created default department")
+            
+            # Create default roles if they don't exist
+            default_roles = ["admin", "manager", "user"]
+            for role_name in default_roles:
+                role = db.query(Roles).filter(Roles.name == role_name).first()
+                if not role:
+                    role = Roles(
+                        name=role_name,
+                        description=f"{role_name.capitalize()} role"
+                    )
+                    db.add(role)
+            db.commit()
+            logger.info("Created default roles")
+            
+            # Get admin role for admin user
+            admin_role = db.query(Roles).filter(Roles.name == "admin").first()
+            
+            # Check if admin user exists
+            admin = db.query(Employees).filter(Employees.email == "admin@docgen.com").first()
+            if not admin:
+                # Create admin user
+                from passlib.context import CryptContext
+                pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+                
+                admin = Employees(
+                    name="Admin",
+                    email="admin@docgen.com",
+                    password_hash=pwd_context.hash("admin123"),
+                    department_id=default_dept.id,  # Use default department
+                    role_id=admin_role.id,  # Use admin role
+                    status="active"
+                )
+                db.add(admin)
+                db.commit()
+                logger.info("Created default admin user")
+                
+        except Exception as e:
+            logger.error(f"Failed to initialize default data: {str(e)}")
+            db.rollback()
+            raise
+        finally:
+            db.close()
+            
+    except Exception as e:
+        logger.error(f"Failed to initialize default data: {str(e)}")
+        raise
+
+# Initialize database tables
+init_db()

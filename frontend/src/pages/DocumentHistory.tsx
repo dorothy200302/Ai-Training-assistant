@@ -1,0 +1,258 @@
+'use client'
+
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FileText, Download, Trash2, Search, Calendar, Grid, List, Edit, Eye } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+export default function DocumentHistory() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
+  const fetchDocuments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/documents', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch documents');
+      }
+
+      const data = await response.json();
+      setDocuments(data);
+    } catch (error) {
+      console.error('Error fetching documents:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async (documentId: number) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/documents/${documentId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch document');
+      }
+
+      const document = await response.json();
+      const content = JSON.parse(document.content);
+
+      // Create and download document
+      const element = document.createElement('a');
+      const file = new Blob([JSON.stringify(content, null, 2)], {type: 'application/json'});
+      element.href = URL.createObjectURL(file);
+      element.download = `${document.title || 'document'}.json`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    } catch (error) {
+      console.error('Error downloading document:', error);
+    }
+  };
+
+  const categories = ['全部', '培训文档', '工作报告', '会议记录', '项目方案'];
+  const documentTypes = ['全部', 'PPT', 'Word', 'PDF', 'Excel'];
+
+  const filteredDocuments = documents.filter(doc =>
+    doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedCategory === 'all' || doc.category === selectedCategory) &&
+    (selectedType === 'all' || doc.type === selectedType)
+  );
+
+  return (
+    <div className="flex min-h-screen w-screen flex-col bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300">
+      <div className="w-full p-6">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-orange-800">历史文档</h1>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="border-orange-300 text-orange-600 hover:bg-orange-100"
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            >
+              {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-orange-200">
+          <div className="p-6">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400" />
+                <Input
+                  type="text"
+                  placeholder="搜索文档..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 border-orange-200 focus:border-orange-300 focus:ring-orange-300"
+                />
+              </div>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[180px] border-orange-200">
+                  <SelectValue placeholder="文档分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="w-[180px] border-orange-200">
+                  <SelectValue placeholder="文档类型" />
+                </SelectTrigger>
+                <SelectContent>
+                  {documentTypes.map(type => (
+                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Tabs defaultValue="all" className="mb-6">
+              <TabsList className="bg-orange-100">
+                <TabsTrigger value="all" className="data-[state=active]:bg-white">全部文档</TabsTrigger>
+                <TabsTrigger value="recent" className="data-[state=active]:bg-white">最近编辑</TabsTrigger>
+                <TabsTrigger value="shared" className="data-[state=active]:bg-white">已共享</TabsTrigger>
+                <TabsTrigger value="starred" className="data-[state=active]:bg-white">已收藏</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {loading ? (
+              <div className="flex justify-center items-center h-full">
+                <p className="text-orange-600">加载中...</p>
+              </div>
+            ) : (
+              viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {filteredDocuments.map((doc) => (
+                    <motion.div
+                      key={doc.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-white border border-orange-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      <div className="aspect-video bg-orange-50 relative">
+                        <img
+                          src={doc.thumbnail}
+                          alt={doc.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-2 right-2 flex gap-1">
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-medium text-orange-800 mb-2 truncate">{doc.title}</h3>
+                        <div className="flex items-center justify-between text-sm text-orange-600">
+                          <span className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {doc.date}
+                          </span>
+                          <span className="flex items-center">
+                            <FileText className="h-4 w-4 mr-1" />
+                            {doc.type}
+                          </span>
+                        </div>
+                        <div className="mt-4 flex justify-between items-center">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            doc.status === '已完成' 
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-orange-100 text-orange-800'
+                          }`}>
+                            {doc.status}
+                          </span>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => handleDownload(doc.id)}>
+                              <Download className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-600 hover:text-red-700">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="divide-y divide-orange-200">
+                  {filteredDocuments.map((doc) => (
+                    <motion.div
+                      key={doc.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="py-4 flex items-center justify-between"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <FileText className="h-6 w-6 text-orange-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-orange-800">{doc.title}</h3>
+                          <div className="flex items-center text-sm text-orange-600">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {doc.date}
+                            <span className="mx-2">•</span>
+                            <FileText className="h-4 w-4 mr-1" />
+                            {doc.type}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700">
+                          <Eye className="h-4 w-4 mr-2" />
+                          查看
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700">
+                          <Edit className="h-4 w-4 mr-2" />
+                          编辑
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700" onClick={() => handleDownload(doc.id)}>
+                          <Download className="h-4 w-4 mr-2" />
+                          下载
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

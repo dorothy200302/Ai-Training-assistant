@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: doctr
+Version: 1.9.0
+Summary: Deploy docs from Travis to GitHub pages.
+Home-page: https://github.com/drdoctr/doctr
+Author: Aaron Meurer and Gil Forsyth
+Author-email: asmeurer@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Documentation
+Classifier: Topic :: Software Development :: Documentation
+Requires-Python: >=3.5
+Requires-Dist: pyyaml
+Requires-Dist: requests
+Requires-Dist: cryptography
+
+UNKNOWN
+
+

@@ -1,0 +1,657 @@
+2024-11-20 16:56:01,282 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 16:56:01,286 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 16:56:01,290 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 16:56:01,294 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 16:56:01,298 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 16:56:01,302 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpaljaom2l
+2024-11-20 16:56:01,308 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmpaljaom2l\364105c9-fa2b-4ad1-aa52-c7ce9c2a931d.pdf
+2024-11-20 16:56:01,312 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 16:56:01,315 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 16:56:11,254 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 16:56:11,257 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 16:56:24,359 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 16:56:24,364 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Project Development at Alibaba Group
+
+## 1. Introduction
+   1.1 Purpose of the Training
+      - To equip participants with knowledge and skills relevant to the project.
+   1.2 O...
+2024-11-20 16:56:24,369 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key 87499ca1-d396-42c4-bb58-9790f43a7142.pdf
+2024-11-20 16:56:28,018 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/87499ca1-d396-42c4-bb58-9790f43a7142.pdf
+2024-11-20 16:56:28,024 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 16:56:28,028 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=f"Database save failed: {str(e)}")
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 16:56:28,032 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmpaljaom2l\364105c9-fa2b-4ad1-aa52-c7ce9c2a931d.pdf
+2024-11-20 17:03:54,684 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 17:03:54,687 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 17:03:54,690 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 17:03:54,694 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 17:03:54,698 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 17:03:54,701 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpjzvx07zc
+2024-11-20 17:03:54,705 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmpjzvx07zc\a9eaca54-4dbf-4e7f-94d9-5d3431615531.pdf
+2024-11-20 17:03:54,708 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 17:03:54,711 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 17:04:01,898 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 17:04:01,900 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 17:04:17,202 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 17:04:17,207 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Project on Alibaba Group
+
+## 1. Introduction
+   1.1. Purpose of the Training  
+   1.2. Overview of Alibaba Group  
+   1.3. Importance of Understanding Company Background  
+   1....
+2024-11-20 17:04:17,210 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key 5f6c18fc-d363-426c-b02b-143ea553efa9.pdf
+2024-11-20 17:04:21,604 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/5f6c18fc-d363-426c-b02b-143ea553efa9.pdf
+2024-11-20 17:04:21,609 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:04:21,614 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=f"Database save failed: {str(e)}")
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:04:21,622 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmpjzvx07zc\a9eaca54-4dbf-4e7f-94d9-5d3431615531.pdf
+2024-11-20 17:07:30,758 - CloudStorage.routes - INFO - Starting document generation with template
+2024-11-20 17:07:30,763 - CloudStorage.routes - INFO - Template: new_employee_orientation
+2024-11-20 17:07:30,766 - CloudStorage.routes - INFO - Description: {"title":"新员工入职培训手册","subtitle":"欢迎加入我们的团队！","overview":"本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。","checklist":[{"id":"task1","content":"完成人事部门的入职文件"},{"id":"task2","content":"领取办公设备（电脑、门禁卡等）"},{"id":"task3","content":"设置公司邮箱和内部系统账号"},{"id":"task4","content":"熟悉部门同事和工作环境"},{"id":"task5","content":"与直属上级进行工作交接"}]}
+2024-11-20 17:07:30,771 - CloudStorage.routes - INFO - Number of files: 1
+2024-11-20 17:07:30,776 - CloudStorage.routes - INFO - Created temp directory: C:\Users\dorot\AppData\Local\Temp\tmp_sh5lcp4
+2024-11-20 17:07:30,782 - CloudStorage.routes - INFO - Processing file faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp_sh5lcp4\7df0f657-ce80-4414-802e-ce71095fb915.pdf
+2024-11-20 17:07:30,788 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 17:07:30,791 - CloudStorage.routes - INFO - Successfully parsed description JSON
+2024-11-20 17:07:30,798 - CloudStorage.routes - INFO - Initializing document generator
+2024-11-20 17:07:41,420 - CloudStorage.routes - INFO - Document generator initialized
+2024-11-20 17:07:41,423 - CloudStorage.routes - INFO - Starting full document generation
+2024-11-20 17:08:12,280 - CloudStorage.routes - INFO - Document generation completed
+2024-11-20 17:08:12,283 - CloudStorage.routes - INFO - Uploading file to S3: faqs-corporate-information - 副本.pdf -> 8b7a8ac7-b557-495c-b732-a2473d13bf50.pdf
+2024-11-20 17:08:15,720 - CloudStorage.routes - INFO - File uploaded to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/8b7a8ac7-b557-495c-b732-a2473d13bf50.pdf
+2024-11-20 17:08:15,723 - CloudStorage.routes - ERROR - Error processing file faqs-corporate-information - 副本.pdf: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:08:15,729 - CloudStorage.routes - INFO - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp_sh5lcp4\7df0f657-ce80-4414-802e-ce71095fb915.pdf
+2024-11-20 17:08:15,732 - CloudStorage.routes - INFO - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp_sh5lcp4
+2024-11-20 17:09:37,080 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 17:09:37,083 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 17:09:37,087 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 17:09:37,092 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 17:09:37,095 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 17:09:37,099 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpv6k153k9
+2024-11-20 17:09:37,103 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmpv6k153k9\38de9857-6b78-4248-896f-00c1e0468c93.pdf
+2024-11-20 17:09:37,107 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 17:09:37,110 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 17:09:45,149 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 17:09:45,153 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 17:09:57,872 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 17:09:57,876 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Alibaba Group Corporate Information and Culture
+
+## 1. Introduction
+   1.1. Purpose of the Training
+      - To provide comprehensive knowledge about Alibaba Group's corporate in...
+2024-11-20 17:09:57,881 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key 7ffe2318-b8b9-45f9-9219-a0dd53106e0c.pdf
+2024-11-20 17:10:00,954 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/7ffe2318-b8b9-45f9-9219-a0dd53106e0c.pdf
+2024-11-20 17:10:00,958 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:10:00,961 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    doc = generated_document_crud.create_document(
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=f"Database save failed: {str(e)}")
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:10:00,966 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmpv6k153k9\38de9857-6b78-4248-896f-00c1e0468c93.pdf
+2024-11-20 17:13:46,062 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 17:13:46,068 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 17:13:46,072 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 17:13:46,075 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 17:13:46,077 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 17:13:46,082 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpx9a3grnm
+2024-11-20 17:13:46,087 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmpx9a3grnm\bcbb84b3-8317-4b61-baad-8ff021ce781d.pdf
+2024-11-20 17:13:46,090 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 17:13:46,094 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 17:13:53,248 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 17:13:53,251 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 17:14:05,047 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 17:14:05,051 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Project on Company Information and Culture
+
+## 1. Introduction
+   1.1 Purpose of the Training  
+   1.2 Overview of the Company  
+   1.3 Importance of Understanding Company Cultu...
+2024-11-20 17:14:05,056 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key ca81be5f-e869-479d-b64b-eba8d8d73034.pdf
+2024-11-20 17:14:08,627 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/ca81be5f-e869-479d-b64b-eba8d8d73034.pdf
+2024-11-20 17:14:08,631 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:14:08,635 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    except Exception as e:
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:14:08,639 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmpx9a3grnm\bcbb84b3-8317-4b61-baad-8ff021ce781d.pdf
+2024-11-20 17:22:16,500 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 17:22:16,505 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 17:22:16,508 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 17:22:16,511 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 17:22:16,516 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 17:22:16,520 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmp_d0rpq47
+2024-11-20 17:22:16,525 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmp_d0rpq47\0761662c-1dca-4297-aaf0-8b12157ec9c1.pdf
+2024-11-20 17:22:16,529 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 17:22:16,532 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 17:22:24,496 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 17:22:24,501 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 17:22:36,806 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 17:22:36,810 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Project Title: [To Be Specified]
+
+## 1. Introduction
+   1.1. Purpose of the Training
+      - Define the objectives and expected outcomes of the training.
+   1.2. Background Info...
+2024-11-20 17:22:36,814 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key 977807f4-b02d-4290-8cf6-0d074b19f619.pdf
+2024-11-20 17:22:40,859 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/977807f4-b02d-4290-8cf6-0d074b19f619.pdf
+2024-11-20 17:22:40,864 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:22:40,867 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    except Exception as e:
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:22:40,872 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmp_d0rpq47\0761662c-1dca-4297-aaf0-8b12157ec9c1.pdf
+2024-11-20 17:22:49,690 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 17:22:49,696 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 17:22:49,701 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 17:22:49,704 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 17:22:49,709 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"1"}
+2024-11-20 17:22:49,713 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmptez1tvvp
+2024-11-20 17:22:49,718 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmptez1tvvp\9a1aa31d-e32a-4b18-8a71-4479135e6ecc.pdf
+2024-11-20 17:22:49,721 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '1'}
+2024-11-20 17:22:49,724 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 17:22:58,313 - CloudStorage.routes - INFO - AsyncTrainingDocGenerator initialized successfully
+2024-11-20 17:22:58,317 - CloudStorage.routes - INFO - Starting outline generation
+2024-11-20 17:23:10,651 - CloudStorage.routes - INFO - Outline generated successfully
+2024-11-20 17:23:10,654 - CloudStorage.routes - DEBUG - Generated outline: # Training Outline for Alibaba Group
+
+## 1. Introduction
+   1.1. Purpose of the Training
+   1.2. Overview of Alibaba Group
+      - Brief history and mission
+      - Importance in the e-commerce indust...
+2024-11-20 17:23:10,659 - CloudStorage.routes - DEBUG - Uploading file faqs-corporate-information - 副本.pdf to S3 with key 5227d102-1611-4cab-8b62-6ea63d6d4323.pdf
+2024-11-20 17:23:15,555 - CloudStorage.routes - INFO - Successfully uploaded file faqs-corporate-information - 副本.pdf to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/5227d102-1611-4cab-8b62-6ea63d6d4323.pdf
+2024-11-20 17:23:15,559 - CloudStorage.routes - ERROR - Error saving document faqs-corporate-information - 副本.pdf to database: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:23:15,565 - CloudStorage.routes - ERROR - Error processing request: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 186, in generate_outline_and_upload
+    raise HTTPException(status_code=500, detail=str(e))
+AttributeError: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\CloudStorage\routes.py", line 195, in generate_outline_and_upload
+    except Exception as e:
+fastapi.exceptions.HTTPException: 500: Database save failed: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:23:15,569 - CloudStorage.routes - DEBUG - Cleaned up temp file: C:\Users\dorot\AppData\Local\Temp\tmptez1tvvp\9a1aa31d-e32a-4b18-8a71-4479135e6ecc.pdf
+2024-11-20 17:28:27,375 - CloudStorage.routes - INFO - Starting document generation with template
+2024-11-20 17:28:27,381 - CloudStorage.routes - INFO - Template: new_employee_orientation
+2024-11-20 17:28:27,385 - CloudStorage.routes - INFO - Description: {"title":"新员工入职培训手册","subtitle":"欢迎加入我们的团队！","overview":"本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。","checklist":[{"id":"task1","content":"完成人事部门的入职文件"},{"id":"task2","content":"领取办公设备（电脑、门禁卡等）"},{"id":"task3","content":"设置公司邮箱和内部系统账号"},{"id":"task4","content":"熟悉部门同事和工作环境"},{"id":"task5","content":"与直属上级进行工作交接"}]}
+2024-11-20 17:28:27,390 - CloudStorage.routes - INFO - Number of files: 1
+2024-11-20 17:28:27,395 - CloudStorage.routes - INFO - Created temp directory: C:\Users\dorot\AppData\Local\Temp\tmp8yz0dfk9
+2024-11-20 17:28:27,400 - CloudStorage.routes - INFO - Processing file faqs-corporate-information.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp8yz0dfk9\ab623547-f949-409c-a7f1-41e202715ef2.pdf
+2024-11-20 17:28:27,404 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information.pdf
+2024-11-20 17:28:27,407 - CloudStorage.routes - INFO - Successfully parsed description JSON
+2024-11-20 17:28:27,412 - CloudStorage.routes - INFO - Initializing document generator
+2024-11-20 17:28:35,670 - CloudStorage.routes - INFO - Document generator initialized
+2024-11-20 17:28:35,675 - CloudStorage.routes - INFO - Starting full document generation
+2024-11-20 17:29:16,149 - CloudStorage.routes - INFO - Document generation completed
+2024-11-20 17:29:16,152 - CloudStorage.routes - INFO - Uploading file to S3: faqs-corporate-information.pdf -> 5d74a3f7-f76b-437b-bf31-95e357330097.pdf
+2024-11-20 17:29:19,738 - CloudStorage.routes - INFO - File uploaded to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/5d74a3f7-f76b-437b-bf31-95e357330097.pdf
+2024-11-20 17:29:19,741 - CloudStorage.routes - ERROR - Error processing file faqs-corporate-information.pdf: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:29:19,745 - CloudStorage.routes - INFO - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp8yz0dfk9\ab623547-f949-409c-a7f1-41e202715ef2.pdf
+2024-11-20 17:29:19,748 - CloudStorage.routes - INFO - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp8yz0dfk9
+2024-11-20 17:43:01,468 - CloudStorage.routes - INFO - Starting document generation with template
+2024-11-20 17:43:01,474 - CloudStorage.routes - INFO - Template: new_employee_orientation
+2024-11-20 17:43:01,480 - CloudStorage.routes - INFO - Description: {"title":"新员工入职培训手册","subtitle":"欢迎加入我们的团队！","overview":"本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。","checklist":[{"id":"task1","content":"完成人事部门的入职文件"},{"id":"task2","content":"领取办公设备（电脑、门禁卡等）"},{"id":"task3","content":"设置公司邮箱和内部系统账号"},{"id":"task4","content":"熟悉部门同事和工作环境"},{"id":"task5","content":"与直属上级进行工作交接"}]}
+2024-11-20 17:43:01,484 - CloudStorage.routes - INFO - Number of files: 1
+2024-11-20 17:43:01,489 - CloudStorage.routes - INFO - Created temp directory: C:\Users\dorot\AppData\Local\Temp\tmp3o7augmr
+2024-11-20 17:43:01,494 - CloudStorage.routes - INFO - Processing file faqs-corporate-information - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp3o7augmr\980f5f2c-4f25-4ac1-8fdb-10c50400cd77.pdf
+2024-11-20 17:43:01,499 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本 - 副本.pdf
+2024-11-20 17:43:01,504 - CloudStorage.routes - INFO - Successfully parsed description JSON
+2024-11-20 17:43:01,509 - CloudStorage.routes - INFO - Initializing document generator
+2024-11-20 17:43:09,472 - CloudStorage.routes - INFO - Document generator initialized
+2024-11-20 17:43:09,475 - CloudStorage.routes - INFO - Starting full document generation
+2024-11-20 17:43:40,008 - CloudStorage.routes - INFO - Document generation completed
+2024-11-20 17:43:40,011 - CloudStorage.routes - INFO - Uploading file to S3: faqs-corporate-information - 副本 - 副本.pdf -> 171c16d0-f5bc-4d4c-b49a-e7ff88b6406d.pdf
+2024-11-20 17:43:43,550 - CloudStorage.routes - INFO - File uploaded to S3: https://agi-assets.s3.amazonaws.com/common/file/2024/11/20/171c16d0-f5bc-4d4c-b49a-e7ff88b6406d.pdf
+2024-11-20 17:43:43,554 - CloudStorage.routes - ERROR - Error processing file faqs-corporate-information - 副本 - 副本.pdf: 'CRUDGeneratedDocument' object has no attribute 'create_document'
+2024-11-20 17:43:43,556 - CloudStorage.routes - INFO - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp3o7augmr\980f5f2c-4f25-4ac1-8fdb-10c50400cd77.pdf
+2024-11-20 17:43:43,561 - CloudStorage.routes - INFO - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp3o7augmr
+2024-11-20 18:03:19,509 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:03:19,512 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:03:19,516 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 18:03:19,519 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:03:19,523 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:03:19,536 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpgl8ejsay
+2024-11-20 18:03:19,541 - CloudStorage.routes - DEBUG - Successfully saved file faqs-corporate-information - 副本.pdf to C:\Users\dorot\AppData\Local\Temp\tmpgl8ejsay\d49e41db-3dfe-4c6b-86a8-60dce1e6506e.pdf
+2024-11-20 18:03:19,546 - CloudStorage.routes - DEBUG - Parsed description: {'industry_info': '1', 'audience_info': '1', 'company_name': '1', 'company_culture': '1', 'company_industry': '1', 'company_competition': '1', 'user_role': '1', 'project_title': '1', 'project_dutys': '1', 'project_goals': '1', 'project_theme': '1', 'project_aim': '1', 'content_needs': '1', 'format_style': '1', 'file_or_not': '11'}
+2024-11-20 18:03:19,551 - CloudStorage.routes - INFO - Initializing AsyncTrainingDocGenerator
+2024-11-20 18:03:58,987 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:03:58,991 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:05:38,931 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:05:38,936 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:05:54,621 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:05:54,628 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:06:50,941 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:06:50,947 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:13:21,397 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:13:21,401 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:14:37,642 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:14:37,646 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:14:42,014 - CloudStorage.routes - ERROR - Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:14:42,021 - CloudStorage.routes - ERROR - Error in download_document: 500: Failed to upload to S3: name 's3_client' is not defined
+2024-11-20 18:17:24,131 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:17:24,133 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:17:24,137 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 18:17:24,140 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:17:24,143 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:17:24,147 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpita4jx4f
+2024-11-20 18:17:24,151 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpita4jx4f\c07e0d03-85f8-454b-9826-296973a7e506.pdf
+2024-11-20 18:17:24,155 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:17:24,158 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:17:24,161 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:17:24,165 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpita4jx4f\c07e0d03-85f8-454b-9826-296973a7e506.pdf
+2024-11-20 18:17:24,169 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpita4jx4f
+2024-11-20 18:17:24,960 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:17:24,964 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:17:24,967 - CloudStorage.routes - DEBUG - Number of files: 1
+2024-11-20 18:17:24,969 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:17:24,973 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:17:24,977 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpq8p_0qbj
+2024-11-20 18:17:24,980 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpq8p_0qbj\46df65ce-369f-4acb-b535-6cdc4bc96bdb.pdf
+2024-11-20 18:17:24,985 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:17:24,988 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:17:24,991 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:17:24,995 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpq8p_0qbj\46df65ce-369f-4acb-b535-6cdc4bc96bdb.pdf
+2024-11-20 18:17:24,999 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpq8p_0qbj
+2024-11-20 18:23:31,790 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:23:31,793 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:23:31,795 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:23:31,798 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:23:31,801 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:23:31,805 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8
+2024-11-20 18:23:31,808 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8\f55975c7-ecbf-44ba-8ed1-f86b60ce0fe6.pdf
+2024-11-20 18:23:31,810 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:23:31,813 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8\b3fe1a1b-2df8-443e-8157-684b3e6aecf5.pdf
+2024-11-20 18:23:31,818 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:23:31,823 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:23:31,825 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:23:31,828 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8\f55975c7-ecbf-44ba-8ed1-f86b60ce0fe6.pdf
+2024-11-20 18:23:31,833 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8\b3fe1a1b-2df8-443e-8157-684b3e6aecf5.pdf
+2024-11-20 18:23:31,840 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpilm0lh_8
+2024-11-20 18:27:16,189 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:27:16,195 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:27:16,199 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:27:16,201 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:27:16,204 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:27:16,208 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmp055ou63y
+2024-11-20 18:27:16,212 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp055ou63y\4f784fcf-56d7-4924-8494-24b71da9583f.pdf
+2024-11-20 18:27:16,225 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:27:16,229 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp055ou63y\f3b7c0a7-47f6-4b9d-8c65-355fa92bbc49.pdf
+2024-11-20 18:27:16,234 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:27:16,236 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:27:16,240 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:27:16,244 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp055ou63y\4f784fcf-56d7-4924-8494-24b71da9583f.pdf
+2024-11-20 18:27:16,248 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp055ou63y\f3b7c0a7-47f6-4b9d-8c65-355fa92bbc49.pdf
+2024-11-20 18:27:16,251 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp055ou63y
+2024-11-20 18:27:27,736 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:27:27,739 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:27:27,743 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:27:27,747 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:27:27,750 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:27:27,754 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid
+2024-11-20 18:27:27,758 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid\1d44419b-3749-4b75-9c21-f1375005cf58.pdf
+2024-11-20 18:27:27,763 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:27:27,767 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid\64a44c13-6772-4782-8a0f-9b071cb3cbf8.pdf
+2024-11-20 18:27:27,773 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:27:27,777 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:27:27,779 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:27:27,783 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid\1d44419b-3749-4b75-9c21-f1375005cf58.pdf
+2024-11-20 18:27:27,786 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid\64a44c13-6772-4782-8a0f-9b071cb3cbf8.pdf
+2024-11-20 18:27:27,790 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpyyqqepid
+2024-11-20 18:30:02,826 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:30:02,829 - CloudStorage.routes - DEBUG - Requirements: None
+2024-11-20 18:30:02,832 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:30:02,836 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:30:02,839 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:30:02,842 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb
+2024-11-20 18:30:02,845 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb\7fc3a1c3-3c3d-4816-afa6-91405aa73e32.pdf
+2024-11-20 18:30:02,848 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:30:02,851 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb\5b786ae5-520f-4960-8502-603c9e79e40b.pdf
+2024-11-20 18:30:02,856 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:30:02,859 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:30:02,862 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:30:02,867 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb\7fc3a1c3-3c3d-4816-afa6-91405aa73e32.pdf
+2024-11-20 18:30:02,872 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb\5b786ae5-520f-4960-8502-603c9e79e40b.pdf
+2024-11-20 18:30:02,875 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpdox1okpb
+2024-11-20 18:37:46,252 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:37:46,254 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:37:46,258 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:37:46,260 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:37:46,262 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:37:46,265 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa
+2024-11-20 18:37:46,268 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa\7d6b391c-6c7d-4099-b29a-f94e229e291f.pdf
+2024-11-20 18:37:46,271 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:37:46,274 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa\2b735bfc-f702-478d-8146-b35b0035cf92.pdf
+2024-11-20 18:37:46,278 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:37:46,282 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:37:46,283 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:37:46,287 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa\7d6b391c-6c7d-4099-b29a-f94e229e291f.pdf
+2024-11-20 18:37:46,291 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa\2b735bfc-f702-478d-8146-b35b0035cf92.pdf
+2024-11-20 18:37:46,295 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmph72r5wpa
+2024-11-20 18:39:37,751 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:39:37,755 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:39:37,759 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:39:37,763 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:39:37,766 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:39:37,768 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a
+2024-11-20 18:39:37,772 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a\e6c91982-b752-464f-82ae-0c63132506d0.pdf
+2024-11-20 18:39:37,775 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:39:37,778 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a\65c67f08-ffc2-4c2f-aa30-3577df28b16b.pdf
+2024-11-20 18:39:37,782 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:39:37,785 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:39:37,789 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:39:37,792 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a\e6c91982-b752-464f-82ae-0c63132506d0.pdf
+2024-11-20 18:39:37,795 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a\65c67f08-ffc2-4c2f-aa30-3577df28b16b.pdf
+2024-11-20 18:39:37,798 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmptfuzzn6a
+2024-11-20 18:50:16,766 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:50:16,770 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:50:16,774 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:50:16,777 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:50:16,781 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:50:16,783 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm
+2024-11-20 18:50:16,788 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm\96ef1474-19f4-4f90-8f47-68b5331f3769.pdf
+2024-11-20 18:50:16,791 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:50:16,795 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm\00cd65b4-254d-4931-a3e3-e263c782a3b0.pdf
+2024-11-20 18:50:16,802 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:50:16,805 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:50:16,809 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:50:16,814 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm\96ef1474-19f4-4f90-8f47-68b5331f3769.pdf
+2024-11-20 18:50:16,819 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm\00cd65b4-254d-4931-a3e3-e263c782a3b0.pdf
+2024-11-20 18:50:16,823 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp8rzahgxm
+2024-11-20 18:52:38,411 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:52:38,415 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:52:38,419 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:52:38,422 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:52:38,426 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:52:38,429 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w
+2024-11-20 18:52:38,433 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w\0ba7bda8-bf4b-4739-929a-cc32b5d62219.pdf
+2024-11-20 18:52:38,437 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:52:38,440 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w\e939f2b3-7548-4ebe-b4a6-a49afd2ea4be.pdf
+2024-11-20 18:52:38,448 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:52:38,451 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:52:38,456 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:52:38,460 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w\0ba7bda8-bf4b-4739-929a-cc32b5d62219.pdf
+2024-11-20 18:52:38,467 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w\e939f2b3-7548-4ebe-b4a6-a49afd2ea4be.pdf
+2024-11-20 18:52:38,473 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpa0l_xx8w
+2024-11-20 18:52:42,745 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:52:42,751 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:52:42,755 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:52:42,759 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:52:42,762 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:52:42,781 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax
+2024-11-20 18:52:42,788 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax\ed89e4bf-76ce-4c4a-b6dc-868da377b412.pdf
+2024-11-20 18:52:42,792 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:52:42,798 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax\bb5ec6d4-8858-403a-b1be-277eb6f8befd.pdf
+2024-11-20 18:52:42,806 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:52:42,811 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:52:42,816 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:52:42,822 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax\ed89e4bf-76ce-4c4a-b6dc-868da377b412.pdf
+2024-11-20 18:52:42,827 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax\bb5ec6d4-8858-403a-b1be-277eb6f8befd.pdf
+2024-11-20 18:52:42,831 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpbjk675ax
+2024-11-20 18:53:54,024 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:53:54,029 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:53:54,032 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:53:54,036 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:53:54,039 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:53:54,043 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d
+2024-11-20 18:53:54,047 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d\c47eef76-b030-4060-ae76-2336696f350e.pdf
+2024-11-20 18:53:54,061 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:53:54,066 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d\e67e08d5-bf55-4f1f-8715-b2b1608aac85.pdf
+2024-11-20 18:53:54,073 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:53:54,078 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:53:54,082 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:53:54,087 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d\c47eef76-b030-4060-ae76-2336696f350e.pdf
+2024-11-20 18:53:54,092 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d\e67e08d5-bf55-4f1f-8715-b2b1608aac85.pdf
+2024-11-20 18:53:54,096 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpv8oin22d
+2024-11-20 18:53:58,559 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:53:58,564 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:53:58,567 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:53:58,570 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:53:58,575 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:53:58,581 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2
+2024-11-20 18:53:58,584 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2\d3b19804-c5b7-4769-9af1-0a43edc6e8e3.pdf
+2024-11-20 18:53:58,590 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:53:58,595 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2\7295959f-a984-482d-8984-0ea76fcef088.pdf
+2024-11-20 18:53:58,601 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:53:58,605 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:53:58,608 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:53:58,612 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2\d3b19804-c5b7-4769-9af1-0a43edc6e8e3.pdf
+2024-11-20 18:53:58,616 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2\7295959f-a984-482d-8984-0ea76fcef088.pdf
+2024-11-20 18:53:58,620 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpz_5y5jj2
+2024-11-20 18:56:00,836 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:56:00,842 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:56:00,846 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:56:00,851 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:56:00,855 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:56:00,858 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpellzi337
+2024-11-20 18:56:00,862 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpellzi337\b85cb291-3f8b-4272-84d2-e98964a9b088.pdf
+2024-11-20 18:56:00,865 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:56:00,869 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpellzi337\da836a8f-e9ac-494e-a712-48929bad22fc.pdf
+2024-11-20 18:56:00,875 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:56:00,878 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:56:00,882 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:56:00,887 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpellzi337\b85cb291-3f8b-4272-84d2-e98964a9b088.pdf
+2024-11-20 18:56:00,893 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpellzi337\da836a8f-e9ac-494e-a712-48929bad22fc.pdf
+2024-11-20 18:56:00,897 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpellzi337
+2024-11-20 18:57:38,465 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:57:38,470 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:57:38,472 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:57:38,476 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:57:38,479 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:57:38,483 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y
+2024-11-20 18:57:38,487 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y\cfbdce15-d37d-4d4e-b2c0-dcc39aa22631.pdf
+2024-11-20 18:57:38,492 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:57:38,495 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y\4bc7a638-460e-41f1-a749-e2452c7837ed.pdf
+2024-11-20 18:57:38,501 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:57:38,505 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:57:38,509 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:57:38,513 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y\cfbdce15-d37d-4d4e-b2c0-dcc39aa22631.pdf
+2024-11-20 18:57:38,518 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y\4bc7a638-460e-41f1-a749-e2452c7837ed.pdf
+2024-11-20 18:57:38,522 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmps2jo9g9y
+2024-11-20 18:59:56,728 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 18:59:56,732 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 18:59:56,737 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 18:59:56,743 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 18:59:56,746 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 18:59:56,753 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7
+2024-11-20 18:59:56,757 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7\b9c983b4-9a96-4547-b2f1-a636eb367b57.pdf
+2024-11-20 18:59:56,762 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 18:59:56,766 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7\f729960a-11df-445a-9cd4-a816efc29b02.pdf
+2024-11-20 18:59:56,773 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 18:59:56,776 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 18:59:56,779 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 18:59:56,782 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7\b9c983b4-9a96-4547-b2f1-a636eb367b57.pdf
+2024-11-20 18:59:56,787 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7\f729960a-11df-445a-9cd4-a816efc29b02.pdf
+2024-11-20 18:59:56,790 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp1m_ska_7
+2024-11-20 19:01:50,881 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:01:50,885 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:01:50,890 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:01:50,893 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:01:50,897 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:01:50,901 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs
+2024-11-20 19:01:50,905 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs\fa46dcba-de96-4cb6-b22a-cf20e39f793c.pdf
+2024-11-20 19:01:50,909 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:01:50,913 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs\e024e24d-1df0-4772-91a0-7da98e2bf3d5.pdf
+2024-11-20 19:01:50,921 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:01:50,926 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:01:50,931 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:01:50,937 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs\fa46dcba-de96-4cb6-b22a-cf20e39f793c.pdf
+2024-11-20 19:01:50,942 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs\e024e24d-1df0-4772-91a0-7da98e2bf3d5.pdf
+2024-11-20 19:01:50,947 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpdo8162rs
+2024-11-20 19:02:25,137 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:02:25,141 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:02:25,145 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:02:25,149 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:02:25,152 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:02:25,155 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz
+2024-11-20 19:02:25,158 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz\9d70efa2-e072-4cf1-9c35-45e8e1f1aa8d.pdf
+2024-11-20 19:02:25,163 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:02:25,166 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz\158232d2-7c74-44c0-bdcc-5984852e60cd.pdf
+2024-11-20 19:02:25,173 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:02:25,177 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:02:25,181 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:02:25,185 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz\9d70efa2-e072-4cf1-9c35-45e8e1f1aa8d.pdf
+2024-11-20 19:02:25,190 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz\158232d2-7c74-44c0-bdcc-5984852e60cd.pdf
+2024-11-20 19:02:25,194 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpjmhg32fz
+2024-11-20 19:06:48,146 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:06:48,150 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:06:48,152 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:06:48,155 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:06:48,159 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:06:48,161 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx
+2024-11-20 19:06:48,164 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx\b16b17a7-8e4c-44e4-a1e5-d3ce44511600.pdf
+2024-11-20 19:06:48,167 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:06:48,170 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx\56b9be97-eb1c-42ad-8e3b-ea8768775a31.pdf
+2024-11-20 19:06:48,176 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:06:48,180 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:06:48,183 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:06:48,187 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx\b16b17a7-8e4c-44e4-a1e5-d3ce44511600.pdf
+2024-11-20 19:06:48,190 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx\56b9be97-eb1c-42ad-8e3b-ea8768775a31.pdf
+2024-11-20 19:06:48,195 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpgkgg6ldx
+2024-11-20 19:09:00,628 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:09:00,631 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:09:00,635 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:09:00,639 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:09:00,642 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:09:00,647 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io
+2024-11-20 19:09:00,650 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io\810843fb-0cad-4dab-b4d7-498386ef1a18.pdf
+2024-11-20 19:09:00,654 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:09:00,657 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io\a90845d5-869d-499c-8b5c-e09c28b125d1.pdf
+2024-11-20 19:09:00,664 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:09:00,666 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:09:00,670 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:09:00,674 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io\810843fb-0cad-4dab-b4d7-498386ef1a18.pdf
+2024-11-20 19:09:00,678 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io\a90845d5-869d-499c-8b5c-e09c28b125d1.pdf
+2024-11-20 19:09:00,682 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpe4dz9_io
+2024-11-20 19:10:33,677 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:10:33,681 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:10:33,684 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:10:33,686 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:10:33,690 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:10:33,694 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii
+2024-11-20 19:10:33,697 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii\d2ebaa3a-56d6-4f1d-9edb-758d4436d893.pdf
+2024-11-20 19:10:33,700 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:10:33,704 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii\7f33067a-c870-433f-b1cb-5a6397c6e665.pdf
+2024-11-20 19:10:33,709 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:10:33,713 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:10:33,716 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:10:33,720 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii\d2ebaa3a-56d6-4f1d-9edb-758d4436d893.pdf
+2024-11-20 19:10:33,724 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii\7f33067a-c870-433f-b1cb-5a6397c6e665.pdf
+2024-11-20 19:10:33,728 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpdlz17cii
+2024-11-20 19:12:14,623 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:12:14,626 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:12:14,630 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:12:14,633 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:12:14,637 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:12:14,641 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy
+2024-11-20 19:12:14,645 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy\90cf6675-6ab4-4045-ab15-f70b2eab528c.pdf
+2024-11-20 19:12:14,648 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:12:14,651 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy\26dc8970-edd4-4c93-9872-0d6233b5d81c.pdf
+2024-11-20 19:12:14,657 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:12:14,661 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:12:14,664 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:12:14,668 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy\90cf6675-6ab4-4045-ab15-f70b2eab528c.pdf
+2024-11-20 19:12:14,674 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy\26dc8970-edd4-4c93-9872-0d6233b5d81c.pdf
+2024-11-20 19:12:14,677 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmp8z8slpmy
+2024-11-20 19:14:01,848 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:14:01,852 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:14:01,856 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:14:01,859 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:14:01,863 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:14:01,867 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i
+2024-11-20 19:14:01,872 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i\15277ff6-9cd2-4604-a3ea-bc57583a4e90.pdf
+2024-11-20 19:14:01,877 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:14:01,881 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i\9ed59f35-d909-47a7-80bf-fd43ebc414cc.pdf
+2024-11-20 19:14:01,886 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:14:01,890 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:14:01,894 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:14:01,899 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i\15277ff6-9cd2-4604-a3ea-bc57583a4e90.pdf
+2024-11-20 19:14:01,903 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i\9ed59f35-d909-47a7-80bf-fd43ebc414cc.pdf
+2024-11-20 19:14:01,907 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpznuvyf1i
+2024-11-20 19:23:12,740 - CloudStorage.routes - INFO - Received generate_outline_and_upload request
+2024-11-20 19:23:12,746 - CloudStorage.routes - DEBUG - Requirements: 
+2024-11-20 19:23:12,750 - CloudStorage.routes - DEBUG - Number of files: 2
+2024-11-20 19:23:12,752 - CloudStorage.routes - DEBUG - AI Model: gpt-4o-mini
+2024-11-20 19:23:12,757 - CloudStorage.routes - DEBUG - Description: {"industry_info":"1","audience_info":"1","company_name":"1","company_culture":"1","company_industry":"1","company_competition":"1","user_role":"1","project_title":"1","project_dutys":"1","project_goals":"1","project_theme":"1","project_aim":"1","content_needs":"1","format_style":"1","file_or_not":"11"}
+2024-11-20 19:23:12,761 - CloudStorage.routes - DEBUG - Created temporary directory: C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w
+2024-11-20 19:23:12,765 - CloudStorage.routes - DEBUG - Processing file: faqs-corporate-information - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w\8cfad408-7468-4f99-9c0f-adf66ed93122.pdf
+2024-11-20 19:23:12,777 - CloudStorage.routes - INFO - Successfully saved file: faqs-corporate-information - 副本.pdf
+2024-11-20 19:23:12,779 - CloudStorage.routes - DEBUG - Processing file: How we approach marketing · Resend - 副本 - 副本.pdf -> C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w\4c2ed3f9-fbf3-4e43-8043-568c6b7f090c.pdf
+2024-11-20 19:23:12,787 - CloudStorage.routes - INFO - Successfully saved file: How we approach marketing · Resend - 副本 - 副本.pdf
+2024-11-20 19:23:12,790 - CloudStorage.routes - ERROR - Error initializing doc generator: 'dict' object has no attribute 'email'
+2024-11-20 19:23:12,794 - CloudStorage.routes - ERROR - Unexpected error in generate_outline_and_upload: 500: Error initializing document generator: 'dict' object has no attribute 'email'
+2024-11-20 19:23:12,797 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w\8cfad408-7468-4f99-9c0f-adf66ed93122.pdf
+2024-11-20 19:23:12,802 - CloudStorage.routes - DEBUG - Removed temp file: C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w\4c2ed3f9-fbf3-4e43-8043-568c6b7f090c.pdf
+2024-11-20 19:23:12,808 - CloudStorage.routes - DEBUG - Removed temp directory: C:\Users\dorot\AppData\Local\Temp\tmpy79wei0w
