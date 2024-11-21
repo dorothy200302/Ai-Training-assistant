@@ -152,8 +152,10 @@ async def generate_outline_and_upload(
             # Upload files to S3 and get URLs
             for temp_path in temp_paths:
                 try:
-                    file_type = os.path.splitext(temp_path)[1][1:]  # Remove the dot
-                    url = await upload_to_s3(temp_path, file_type)
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    original_filename = os.path.basename(temp_path)
+                    s3_key = f"{timestamp}_{original_filename}"
+                    url = upload_file_to_s3_by_key(s3_key, temp_path)
                     urls_map[os.path.basename(temp_path)] = url
                     logger.info(f"Successfully uploaded file to S3: {temp_path}")
                     
@@ -569,11 +571,11 @@ async def generate_full_doc_with_template(
         # 上传文件到 S3 并保存到数据库
         for filename, temp_path in urls_map.items():
             try:
-                file_ext = os.path.splitext(filename)[1]
-                safe_key = f"{str(uuid.uuid4())}{file_ext}"
-                logger.info(f"Uploading file to S3: {filename} -> {safe_key}")
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                s3_key = f"{timestamp}_{filename}"
+                logger.info(f"Uploading file to S3: {filename} -> {s3_key}")
                 
-                s3_url = upload_file_to_s3_by_key(safe_key, temp_path)
+                s3_url = upload_file_to_s3_by_key(s3_key, temp_path)
                 if not s3_url:
                     raise HTTPException(status_code=500, detail=f"Failed to upload file {filename} to S3")
                 
@@ -642,7 +644,10 @@ async def upload_document(
             temp_file_path = temp_file.name
 
         # 上传到S3并获取URL
-        s3_url = upload_file_to_s3_by_key(temp_file_path, document_type)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        original_filename = os.path.basename(temp_file_path)
+        s3_key = f"{timestamp}_{original_filename}"
+        s3_url = upload_file_to_s3_by_key(s3_key, temp_file_path)
         
         # 删除临时文件
         os.unlink(temp_file_path)
@@ -687,7 +692,8 @@ async def download_document(
                     f.write(content)
             
             # 上传到S3并获取URL
-            file_key = f"{filename}.{format}"
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            file_key = f"{timestamp}_{filename}.{format}"
             s3_url = upload_file_to_s3_by_key(file_key, temp_file_path)
             if s3_url == "error":
                 raise HTTPException(status_code=500, detail="Failed to upload to S3")

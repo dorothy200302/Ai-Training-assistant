@@ -150,51 +150,58 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
     }
   }
 
-  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
-    if (!uploadSuccess || !files || files.length === 0) {
-      setShowUpload(false);
-      return;
-    }
-    
+  const handleUploadConfirm = async (files: File[], description: string) => {
     try {
       setIsGenerating(true);
-      const formData = new FormData();
       const token = localStorage.getItem('token');
-      
+      if (!token) {
+        throw new Error('Authentication required');
+      }
+
+      const formData = new FormData();
       files.forEach(file => {
         formData.append('files', file);
       });
 
-      formData.append('template', 'quarterly_sales_strategy');
-      formData.append('description', JSON.stringify({
-        title: pageTexts.find(t => t.id === 'overview-title')?.content || '季度销售策略培训',
-        subtitle: pageTexts.find(t => t.id === 'overview-subtitle')?.content || '提升团队销售能力',
-        modules,
-        selectedQuarter,
-        quarters,
-        objectives,
-        steps: actionSteps
-      }));
+      // 添加培训相关信息到描述中
+      const trainingInfo = {
+        quarter: selectedQuarter,
+        modules: modules,
+        objectives: objectives,
+        actionSteps: actionSteps,
+        quarterInfo: quarters.find(q => q.id === selectedQuarter),
+        description: description
+      };
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+      formData.append('description', JSON.stringify(trainingInfo));
+      formData.append('ai_model', 'gpt-4o-mini');
+      formData.append('requirements', '');
+
+      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
         body: formData
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+
       const data = await response.json();
-      setDocumentContent(data.document || data.content || '');
+      setDocumentContent(data.content);
       
       toast({
         title: "生成成功",
-        description: "季度销售策略培训文档已生成",
+        description: "培训大纲已生成",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error in handleUploadConfirm:', error);
       toast({
         title: "生成失败",
-        description: "文档生成失败，请重试",
+        description: error.message || "文件上传过程中发生错误",
         variant: "destructive",
       });
     } finally {
