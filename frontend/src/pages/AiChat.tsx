@@ -68,6 +68,10 @@ export default function Component() {
   const [showUploadDialog, setShowUploadDialog] = React.useState(false)
   const [uploadedUrls, setUploadedUrls] = React.useState<string[]>([])
   const [selectedFiles, setSelectedFiles] = React.useState<FileList | null>(null)
+  const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([])
+  const [documentUrls, setDocumentUrls] = React.useState<string[]>([])
+  const [showUpload, setShowUpload] = React.useState(false)
+  const [hasCompletedConversation, setHasCompletedConversation] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
   const { token } = useAuth()
 
@@ -86,7 +90,7 @@ export default function Component() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8001/api/chatbot/chatbot/upload`, {
+      const response = await fetch(`http://localhost:8001/api/chatbot/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -168,6 +172,43 @@ export default function Component() {
       setLoading(false)
     }
   }
+
+  const handleUploadConfirm = async (files: File[]) => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('files', file);
+      });
+
+      const response = await fetch(`${API_BASE_URL}/chatbot/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+
+      const data = await response.json();
+      setDocumentUrls(data.urls);
+      toast({
+        title: "上传成功",
+        description: "文档已上传并处理完成",
+      });
+      setShowUpload(false);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "上传失败",
+        description: "文档上传失败，请重试",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-screen flex-col bg-gradient-to-br from-amber-50 to-orange-100">
@@ -359,7 +400,7 @@ export default function Component() {
                   <Button 
                     variant="outline" 
                     className="mb-2 w-full border-2 border-dashed border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-300"
-                    onClick={() => setShowUploadDialog(true)}
+                    onClick={() => setShowUpload(true)}
                   >
                     <Upload className="mr-2 h-4 w-4" />
                     上传文档以获得更精准的回答
@@ -388,6 +429,18 @@ export default function Component() {
           </div>
         </div>
       </div>
+      {showUpload && (
+        <DocumentUpload 
+          onUploadComplete={(files) => {
+            setUploadedFiles(files);
+            console.log('Files saved:', files.map(f => f.name));
+          }}
+          maxFileSize={20 * 1024 * 1024}
+          acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
+          onConfirm={handleUploadConfirm}
+          hasCompletedConversation={hasCompletedConversation}
+        />
+      )}
     </div>
   )
 }

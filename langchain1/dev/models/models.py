@@ -1,13 +1,12 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, text, TIMESTAMP
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from sqlalchemy.ext.declarative import declarative_base
 import enum
 from sqlalchemy import Enum, MetaData
+from .base import Base
 
 # Create new MetaData instance
 metadata = MetaData()
-Base = declarative_base(metadata=metadata)
 
 class Users(Base):
     __tablename__ = "users"

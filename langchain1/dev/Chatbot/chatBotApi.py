@@ -27,7 +27,6 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 router = APIRouter(
-    prefix="/chatbot",
 )
 
 class ChatRequest(BaseModel):
@@ -75,35 +74,72 @@ async def upload_chat_document(
     db: Session = Depends(get_db)
 ):
     try:
-        uploaded_urls = []
-        for file in files:
-            # Generate a unique filename
-            file_ext = os.path.splitext(file.filename)[1]
-            unique_filename = f"chat_docs/{str(uuid.uuid4())}{file_ext}"
+        if not files:
+            raise HTTPException(status_code=400, detail="No files provided")
+
+        urls = []
+        temp_paths = []
+
+        try:
+            # Create temporary directory
+            temp_dir = tempfile.mkdtemp()
             
-            # Create a temporary file
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            # Save uploaded files to temp directory
+            for file in files:
+                # Validate file extension
+                file_ext = os.path.splitext(file.filename)[1].lower()
+                if file_ext not in ['.doc', '.docx', '.pdf', '.txt', '.md']:
+                    raise HTTPException(
+                        status_code=400, 
+                        detail=f"Unsupported file type: {file_ext}"
+                    )
+                
+                # Generate safe filename
+                safe_filename = f"{str(uuid.uuid4())}{file_ext}"
+                temp_path = os.path.join(temp_dir, safe_filename)
+                
+                # Save file
                 content = await file.read()
-                temp_file.write(content)
-                temp_file.flush()
-                
-                # Upload to S3
-                s3_url = await upload_file_to_s3_by_key(temp_file.name, unique_filename)
-                uploaded_urls.append(s3_url)
-                
-                # Clean up the temporary file
-                os.unlink(temp_file.name)
-                
-                # Save document URL and user email to the database
-                doc = document_crud.create_document(db, s3_url, current_user.email)
-        
-        return {
-            "message": "文档上传成功",
-            "urls": uploaded_urls
-        }
-        
+                with open(temp_path, 'wb') as out_file:
+                    out_file.write(content)
+                temp_paths.append(temp_path)
+
+            # Upload files to S3 and store URLs
+            for temp_path in temp_paths:
+                try:
+                    s3_key = f"chat_docs/{current_user['email']}/{os.path.basename(temp_path)}"
+                    url = upload_file_to_s3_by_key(s3_key, temp_path)
+                    urls.append(url)
+                    
+                    # Save document record to database
+                    document_crud.create_document(
+                        db=db,
+                        user_email=current_user['email'],
+                        file_name=os.path.basename(temp_path),
+                        file_url=url,
+                        document_type='chat'
+                    )
+                except Exception as e:
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"Failed to upload file to S3: {str(e)}"
+                    )
+
+        finally:
+            # Clean up temporary files
+            for temp_path in temp_paths:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            if os.path.exists(temp_dir):
+                os.rmdir(temp_dir)
+
+        return {"urls": urls}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing upload: {str(e)}"
+        )
 
 @router.post("/chat")
 async def chat_endpoint(

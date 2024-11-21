@@ -1,4 +1,91 @@
-import React, { useState, useEffect, useRef } from 'react';
+const parseOutlineText = (text: string): OutlineSection[] => {
+  const lines = text.split('\n').map(line => line.trim());
+  const outline: OutlineSection[] = [];
+  let currentSection: OutlineSection | null = null;
+  let currentContent: string[] = [];
+  let currentItems: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line && !currentSection) continue;
+
+    if (line.startsWith('#')) {
+      if (currentSection) {
+        if (currentContent.length > 0) {
+          currentSection.content = currentContent.join('\n');
+        }
+        if (currentItems.length > 0) {
+          currentSection.items = currentItems;
+        }
+        outline.push(currentSection);
+        currentContent = [];
+        currentItems = [];
+      }
+
+      const level = line.match(/^#+/)?.[0].length || 1;
+      currentSection = {
+        title: line.replace(/^#+\s*/, ''),
+        level: level,
+        items: [],
+        content: ''
+      };
+    } else if (line.startsWith('-') && currentSection) {
+      if (currentContent.length > 0) {
+        currentSection.content = currentContent.join('\n');
+        currentContent = [];
+      }
+      currentItems.push(line.replace(/^-\s*/, ''));
+    } else if (currentSection) {
+      if (currentItems.length > 0 && line) {
+        currentSection.items = currentItems;
+        currentItems = [];
+      }
+      currentContent.push(line);
+    }
+  }
+
+  if (currentSection) {
+    if (currentContent.length > 0) {
+      currentSection.content = currentContent.join('\n');
+    }
+    if (currentItems.length > 0) {
+      currentSection.items = currentItems;
+    }
+    outline.push(currentSection);
+  }
+
+  return outline;
+};const OutlineEditCard: React.FC<{ outline: string }> = ({ outline }) => {
+  const sections = parseOutlineText(outline);
+  
+  return (
+    <Card className="mt-4 bg-white shadow-sm">
+      <CardContent className="p-6">
+        <div className="prose prose-amber max-w-none">
+          {sections.map((section, index) => (
+            <div key={index} className="mb-4">
+              <div className={`font-bold text-${['2xl', 'xl', 'lg', 'md', 'sm', 'xs'][section.level - 1] || 'md'}`}>
+                {section.title}
+              </div>
+              {section.content && (
+                <div className="mt-2 whitespace-pre-wrap">
+                  {section.content}
+                </div>
+              )}
+              {section.items && section.items.length > 0 && (
+                <ul className="list-disc pl-6 mt-2">
+                  {section.items.map((item, itemIndex) => (
+                    <li key={itemIndex}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Bot, Download, FileText, HelpCircle, LayoutTemplate, Loader2, Plus, Recycle, Send, Eye } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -379,12 +466,7 @@ interface OutlineResponse {
       console.log('response', response);
 
       const data = await response.json();
-      console.log('Received outline data:', data.outline); // Add this debug log
-      
-      // Convert the outline string to OutlineSection array
-      const parsedOutline = parseOutlineText(data.outline);
-      console.log('Parsed outline:', parsedOutline); // Add this debug log
-      setOutline(parsedOutline);
+      setOutline(parseOutlineText(data.outline));
       
     } catch (error) {
       console.error('Error generating outline:', error);
@@ -547,12 +629,7 @@ interface OutlineResponse {
       }
 
       const data = await response.json();
-      console.log('Received outline data:', data.outline); // Add this debug log
-      
-      // Convert the outline string to OutlineSection array
-      const parsedOutline = parseOutlineText(data.outline);
-      console.log('Parsed outline:', parsedOutline); // Add this debug log
-      setOutline(parsedOutline);
+      setOutline(parseOutlineText(data.outline));
       setShowImprovementInput(false);
       setImprovementDirection('');
       
@@ -735,83 +812,210 @@ interface OutlineResponse {
           <Card className="bg-white shadow-sm">
             <CardContent className="p-4">
               <div className="space-y-4">
-                {outline.length > 0 && (
-                  <>
-                    <div className="mt-4">
-                      <h3 className="text-xl font-bold mb-4">生成的大纲</h3>
-                      <div className="prose prose-amber max-w-none">
-                        {outline.map((section, index) => (
-                          <div key={index} className="mb-4">
-                            <div className={`font-bold text-${['2xl', 'xl', 'lg', 'md', 'sm', 'xs'][section.level - 1] || 'md'}`}>
-                              {section.title}
-                            </div>
-                            {section.content && (
-                              <div className="mt-2 whitespace-pre-wrap">
-                                {section.content}
-                              </div>
-                            )}
-                            {section.items && section.items.length > 0 && (
-                              <ul className="list-disc pl-6 mt-2">
-                                {section.items.map((item, itemIndex) => (
-                                  <li key={itemIndex}>{item}</li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
+                {outline.map((section, i) => (
+                  <div key={i}>
+                    <div className="mb-2 flex items-center gap-2">
+                      <Badge variant="outline" className="bg-amber-100 text-amber-600 border-amber-200">
+                        {section.title}
+                      </Badge>
+                      {section.time && (
+                        <Badge variant="outline" className="bg-amber-50 text-amber-500">
+                          {section.time}
+                        </Badge>
+                      )}
+                    </div>
+                    {section.subsections?.map((subsection, j) => (
+                      <div key={j} className="ml-4 mt-2">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium text-amber-600">{subsection.title}</span>
+                          {subsection.time && (
+                            <Badge variant="outline" className="bg-amber-50 text-amber-500">
+                              {subsection.time}
+                            </Badge>
+                          )}
+                        </div>
+                        {subsection.items && (
+                          <ul className="space-y-1 text-sm ml-4">
+                            {subsection.items.map((item, k) => (
+                              <li key={k} className="text-amber-600">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                    {section.items && (
+                      <ul className="space-y-1 text-sm ml-4">
+                        {section.items.map((item, j) => (
+                          <li key={j} className="text-amber-600">
+                            {item}
+                          </li>
                         ))}
+                      </ul>
+                    )}
+                    {i < outline.length - 1 && <Separator className="my-4 bg-amber-200" />}
+                  </div>
+                ))}
+              </div>
+              {showChat && (
+        <div className="mt-6">
+          <ScrollArea className="h-[400px] pr-4">
+            <div className="space-y-4">
+              {chatHistory.map((message, index) => (
+                <div key={index} className="space-y-2">
+                  {message.type === 'bot' && (
+                    <div className="flex justify-start">
+                      <div className="max-w-[80%] rounded-lg p-3 bg-amber-50">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Bot className="h-4 w-4 text-amber-600" />
+                          <span className="text-xs font-medium text-amber-600">AI助理</span>
+                        </div>
+                        <p className="text-sm text-amber-800">{message.content}</p>
                       </div>
                     </div>
-
-                    <div className="mt-4 flex justify-between">
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="border-amber-200 text-amber-600 hover:bg-amber-50"
-                          onClick={handlePreview}
-                          disabled={!outline || outline.length === 0}
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          预览正文
-                        </Button>
-                        <div className="flex gap-2 items-center">
-                          {showImprovementInput && (
-                            <Input
-                              value={improvementDirection}
-                              onChange={(e) => setImprovementDirection(e.target.value)}
-                              placeholder="请输入改进方向..."
-                              className="w-48 border-amber-200"
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && improvementDirection.trim()) {
-                                  handleRegenerateOutline();
-                                }
-                              }}
-                            />
-                          )}
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="border-amber-200 text-amber-600 hover:bg-amber-50"
-                            onClick={handleRegenerateOutline}
-                            disabled={isGenerating}
-                          >
-                            <Recycle className="mr-2 h-4 w-4" />
-                            {showImprovementInput ? '确认改进' : '换个大纲'}
-                          </Button>
-                        </div>
+                  )}
+                  
+                  {message.type === 'user' && (
+                    <div className="flex justify-end">
+                      <div className="max-w-[80%] rounded-lg p-3 bg-gradient-to-r from-amber-600 to-amber-500">
+                        <p className="text-sm text-white">{message.content}</p>
                       </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {showUpload && (
+                <DocumentUpload 
+                  onUploadComplete={(files) => {
+                    setUploadedFiles(files.map(file => file as unknown as File));
+                    console.log('Files saved:', files.map(f => f.name));
+                  }}
+                  maxFileSize={20 * 1024 * 1024}
+                  acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
+                  onConfirm={handleUploadConfirm}
+                  hasCompletedConversation={hasCompletedConversation}
+                />
+              )}
+
+              {!showUpload && (
+                <div className="flex justify-end mt-4">
+                  <div className="max-w-[80%] w-full">
+                    <div className="relative">
+                      <Input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="按回车发送消息..."
+                        className="pr-20 border-amber-200 focus-visible:ring-amber-500 focus-visible:ring-1 focus-visible:border-amber-500"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && input.trim()) {
+                            e.preventDefault();
+                            handleAnswer(input);
+                          }
+                        }}
+                        autoFocus
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {isSubmitting && (
+                <div className="flex items-center justify-center mt-4">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span className="text-sm text-amber-600">正在提交...</span>
+                </div>
+              )}
+
+              <div ref={chatEndRef} />
+            </div>
+          </ScrollArea>
+
+          {currentStep >= questions.length && (
+            <Button
+              className="w-full mt-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
+              onClick={() => generateOutline(input, uploadedFiles)}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              开始生成培训大纲
+            </Button>
+          )}
+        </div>
+      )}
+
+              <div className="mt-4 flex justify-between">
+                <div className="flex flex-col gap-4 flex-grow mr-4">
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                      onClick={handlePreview}
+                      disabled={!outline || outline.length === 0}
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      预览正文
+                    </Button>
+                    <div className="flex gap-2 items-center">
+                      {showImprovementInput && (
+                        <Input
+                          value={improvementDirection}
+                          onChange={(e) => setImprovementDirection(e.target.value)}
+                          placeholder="请输入改进方向..."
+                          className="w-48 border-amber-200"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && improvementDirection.trim()) {
+                              handleRegenerateOutline();
+                            }
+                          }}
+                        />
+                      )}
                       <Button 
+                        variant="outline" 
                         size="sm" 
-                        className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
-                        onClick={handleSelectTemplate}
-                        disabled={!outline || outline.length === 0}
+                        className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                        onClick={handleRegenerateOutline}
+                        disabled={isGenerating}
                       >
-                        <Plus className="mr-2 h-4 w-4" />
-                        挑选PPT模板
+                        <Recycle className="mr-2 h-4 w-4" />
+                        {showImprovementInput ? '确认改进' : '换个大纲'}
                       </Button>
                     </div>
-                  </>
-                )}
+                  </div>
+
+                  {/* 大纲内容显示区域 */}
+                  {outline.length > 0 && (
+                    <div className="p-4 bg-amber-50 rounded-lg">
+                      {outline.map((section, i) => (
+                        <div key={i} className="mb-4">
+                          <div className="font-medium text-amber-700">{section.title}</div>
+                          {section.content && (
+                            <div className="mt-2 text-amber-600 whitespace-pre-wrap">{section.content}</div>
+                          )}
+                          {section.items && section.items.length > 0 && (
+                            <ul className="mt-2 space-y-1 list-disc list-inside">
+                              {section.items.map((item, j) => (
+                                <li key={j} className="text-amber-600">{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <Button 
+                  size="sm" 
+                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
+                  onClick={handleSelectTemplate}
+                  disabled={!outline || outline.length === 0}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  挑选PPT模板
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -837,92 +1041,39 @@ interface OutlineResponse {
               </CardContent>
             </Card>
           )}
-          {showChat && (
-            <div className="mt-6">
-              <ScrollArea className="h-[400px] pr-4">
+          {/* {outline && (
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-4">
                 <div className="space-y-4">
-                  {chatHistory.map((message, index) => (
-                    <div key={index} className="space-y-2">
-                      {message.type === 'bot' && (
-                        <div className="flex justify-start">
-                          <div className="max-w-[80%] rounded-lg p-3 bg-amber-50">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Bot className="h-4 w-4 text-amber-600" />
-                              <span className="text-xs font-medium text-amber-600">AI助理</span>
-                            </div>
-                            <p className="text-sm text-amber-800">{message.content}</p>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {message.type === 'user' && (
-                        <div className="flex justify-end">
-                          <div className="max-w-[80%] rounded-lg p-3 bg-gradient-to-r from-amber-600 to-amber-500">
-                            <p className="text-sm text-white">{message.content}</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {showUpload && (
-                    <DocumentUpload 
-                      onUploadComplete={(files) => {
-                        setUploadedFiles(files.map(file => file as unknown as File));
-                        console.log('Files saved:', files.map(f => f.name));
-                      }}
-                      maxFileSize={20 * 1024 * 1024}
-                      acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
-                      onConfirm={handleUploadConfirm}
-                      hasCompletedConversation={hasCompletedConversation}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-amber-600">
+                      生成的大纲
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleGeneration(uploadedFiles)}
+                      className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                    >
+                      <Recycle className="mr-2 h-4 w-4" />
+                      换个大纲
+                    </Button>
+                  </div>
+                  
+                  <div className="prose prose-amber max-w-none">
+                    <div 
+                      className="outline-content whitespace-pre-wrap"
+                      dangerouslySetInnerHTML={{ 
+                        __html: outline.map(section => 
+                          `${section.title}\n${section.content || ''}`
+                        ).join('\n').replace(/\n/g, '<br/>')
+                      }} 
                     />
-                  )}
-
-                  {!showUpload && (
-                    <div className="flex justify-end mt-4">
-                      <div className="max-w-[80%] w-full">
-                        <div className="relative">
-                          <Input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="按回车发送消息..."
-                            className="pr-20 border-amber-200 focus-visible:ring-amber-500 focus-visible:ring-1 focus-visible:border-amber-500"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && input.trim()) {
-                                e.preventDefault();
-                                handleAnswer(input);
-                              }
-                            }}
-                            autoFocus
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {isSubmitting && (
-                    <div className="flex items-center justify-center mt-4">
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      <span className="text-sm text-amber-600">正在提交...</span>
-                    </div>
-                  )}
-
-                  <div ref={chatEndRef} />
+                  </div>
                 </div>
-              </ScrollArea>
-
-              {currentStep >= questions.length && (
-                <Button
-                  className="w-full mt-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
-                  onClick={() => generateOutline(input, uploadedFiles)}
-                  disabled={loading}
-                >
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  开始生成培训大纲
-                </Button>
-              )}
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          )} */}
         </div>
       </main>
      

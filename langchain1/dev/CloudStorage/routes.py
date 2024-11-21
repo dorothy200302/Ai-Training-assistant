@@ -16,6 +16,7 @@ from docx import Document
 from docx.shared import Inches
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+import traceback
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -706,7 +707,7 @@ async def download_document(
                         "document_name": data.get("filename", "Generated Document"),
                         "document_type": format,
                         "url": s3_url,
-                        "user_id": current_user.id
+                        "user_id": current_user.user_id
                     }
                 )
                 return {
@@ -738,7 +739,7 @@ async def create_generated_document(
 ):
     document = generated_document_crud.create(
         db=db,
-        user_id=current_user.id,
+        user_id=current_user.user_id,
         document_name=document_name,
         document_type=document_type,
         url=url
@@ -764,7 +765,7 @@ async def get_generated_document(
     document = generated_document_crud.get_by_id(db, document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
-    if document.user_id != current_user.id:
+    if document.user_id != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized to access this document")
     
     return {
@@ -783,24 +784,46 @@ async def get_generated_document(
 async def list_generated_documents(
     skip: int = 0,
     limit: int = 100,
-    current_user = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    documents = generated_document_crud.get_by_user_id(db, current_user.id, skip, limit)
-    return {
-        "status": "success",
-        "data": [
-            {
-                "id": doc.id,
-                "document_name": doc.document_name,
-                "document_type": doc.document_type,
-                "url": doc.url,
-                "created_at": doc.created_at,
-                "updated_at": doc.updated_at
-            }
-            for doc in documents
-        ]
-    }
+    try:
+        # 从字典中获取用户ID
+        user_id = current_user.get('user_id')  # 改为使用 user_id
+        if not user_id:
+            logging.error(f"Invalid user data: {current_user}")
+            raise HTTPException(status_code=400, detail="Invalid user data: missing user ID")
+            
+        # 记录用户ID和查询参数
+        logging.info(f"Fetching documents for user_id: {user_id}, skip: {skip}, limit: {limit}")
+        
+        documents = generated_document_crud.get_by_user_id(db, user_id, skip, limit)
+        
+        # 记录找到的文档数量
+        logging.info(f"Found {len(documents)} documents for user_id: {user_id}")
+        
+        return {
+            "status": "success",
+            "data": [
+                {
+                    "id": doc.id,
+                    "document_name": doc.document_name,
+                    "document_type": doc.document_type,
+                    "url": doc.url,
+                    "created_at": doc.created_at,
+                    "updated_at": doc.updated_at
+                }
+                for doc in documents
+            ]
+        }
+    except Exception as e:
+        logging.error(f"Error in list_generated_documents: {str(e)}")
+        logging.error(f"Current user data: {current_user}")
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching documents: {str(e)}"
+        )
 
 @router.put("/generated-documents/{document_id}", response_model=dict)
 async def update_generated_document(
@@ -815,7 +838,7 @@ async def update_generated_document(
     existing_document = generated_document_crud.get_by_id(db, document_id)
     if not existing_document:
         raise HTTPException(status_code=404, detail="Document not found")
-    if existing_document.user_id != current_user.id:
+    if existing_document.user_id != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized to update this document")
 
     document = generated_document_crud.update(
@@ -848,7 +871,7 @@ async def delete_generated_document(
     existing_document = generated_document_crud.get_by_id(db, document_id)
     if not existing_document:
         raise HTTPException(status_code=404, detail="Document not found")
-    if existing_document.user_id != current_user.id:
+    if existing_document.user_id != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this document")
 
     success = generated_document_crud.delete(db, document_id)

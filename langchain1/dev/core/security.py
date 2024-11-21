@@ -91,33 +91,33 @@ class Security:
                         detail="Invalid token format: email field missing"
                     )
 
-                if not token_data["email"]:
+                email = token_data["email"]
+                if not email:
                     logging.error(f"[verify_token] Email field is empty in token data: {token_data}")
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
                         detail="Invalid token: email field is empty"
                     )
 
-                # 检查过期时间
-                if "exp" not in token_data:
-                    logging.error(f"[verify_token] Expiration field missing in token data: {token_data}")
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Invalid token format: expiration field missing"
-                    )
-
-                if token_data["exp"] < int(datetime.utcnow().timestamp()):
-                    self.redis_client.delete(token_key)  # 清除过期的token
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Token has expired"
-                    )
-
-                # 确保返回的是一个带有email字段的字典
-                email = token_data["email"]
-                result = {"email": email}
-                logging.info(f"[verify_token] Returning user data: {result}")
-                return result
+                # 从数据库获取用户信息
+                from dev.crud.crud_user import user_crud
+                from dev.database import SessionLocal
+                
+                db = SessionLocal()
+                try:
+                    user = user_crud.get_by_email(db, email)
+                    if not user:
+                        raise HTTPException(
+                            status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="User not found"
+                        )
+                    return {
+                        "user_id": user.user_id,  # 使用 user_id 而不是 id
+                        "email": user.email,
+                        "is_active": True  # Users table doesn't have is_active field
+                    }
+                finally:
+                    db.close()
 
             except json.JSONDecodeError as e:
                 logging.error(f"[verify_token] Failed to parse token data: {e}")
@@ -132,7 +132,7 @@ class Security:
             logging.error(f"[verify_token] Unexpected error: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error verifying token: {str(e)}"
+                detail="Internal server error during token verification"
             )
 
     @staticmethod

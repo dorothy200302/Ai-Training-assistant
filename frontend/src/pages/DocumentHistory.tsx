@@ -8,12 +8,21 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+interface GeneratedDocument {
+  id: number;
+  document_name: string;
+  document_type: string;
+  url: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function DocumentHistory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState<GeneratedDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,9 +32,11 @@ export default function DocumentHistory() {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/documents', {
+      const response = await fetch('http://localhost:8001/api/storage/generated-documents/', {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
         }
       });
 
@@ -34,7 +45,13 @@ export default function DocumentHistory() {
       }
 
       const data = await response.json();
-      setDocuments(data);
+      console.log('Fetched documents:', data);
+      if (data.status === 'success' && Array.isArray(data.data)) {
+        setDocuments(data.data);
+      } else {
+        console.error('Unexpected data format:', data);
+        throw new Error('Unexpected data format from server');
+      }
     } catch (error) {
       console.error('Error fetching documents:', error);
     } finally {
@@ -42,42 +59,25 @@ export default function DocumentHistory() {
     }
   };
 
-  const handleDownload = async (documentId: number) => {
+  const handlePreview = async (url: string) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/documents/${documentId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Error previewing document:', error);
+    }
+  };
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch document');
-      }
-
-      const document = await response.json();
-      const content = JSON.parse(document.content);
-
-      // Create and download document
-      const element = document.createElement('a');
-      const file = new Blob([JSON.stringify(content, null, 2)], {type: 'application/json'});
-      element.href = URL.createObjectURL(file);
-      element.download = `${document.title || 'document'}.json`;
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+  const handleDownload = async (url: string) => {
+    try {
+      window.open(url, '_blank');
     } catch (error) {
       console.error('Error downloading document:', error);
     }
   };
 
-  const categories = ['全部', '培训文档', '工作报告', '会议记录', '项目方案'];
-  const documentTypes = ['全部', 'PPT', 'Word', 'PDF', 'Excel'];
-
   const filteredDocuments = documents.filter(doc =>
-    doc.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedCategory === 'all' || doc.category === selectedCategory) &&
-    (selectedType === 'all' || doc.type === selectedType)
+    doc.document_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedType === 'all' || doc.document_type === selectedType)
   );
 
   return (
@@ -109,22 +109,12 @@ export default function DocumentHistory() {
                   className="pl-10 border-orange-200 focus:border-orange-300 focus:ring-orange-300"
                 />
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[180px] border-orange-200">
-                  <SelectValue placeholder="文档分类" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <Select value={selectedType} onValueChange={setSelectedType}>
                 <SelectTrigger className="w-[180px] border-orange-200">
                   <SelectValue placeholder="文档类型" />
                 </SelectTrigger>
                 <SelectContent>
-                  {documentTypes.map(type => (
+                  {['全部', 'PPT', 'Word', 'PDF', 'Excel'].map(type => (
                     <SelectItem key={type} value={type}>{type}</SelectItem>
                   ))}
                 </SelectContent>
@@ -155,47 +145,35 @@ export default function DocumentHistory() {
                       transition={{ duration: 0.3 }}
                       className="bg-white border border-orange-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                     >
-                      <div className="aspect-video bg-orange-50 relative">
-                        <img
-                          src={doc.thumbnail}
-                          alt={doc.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-2 right-2 flex gap-1">
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
                       <div className="p-4">
-                        <h3 className="font-medium text-orange-800 mb-2 truncate">{doc.title}</h3>
+                        <h3 className="font-medium text-orange-800 mb-2 truncate">{doc.document_name}</h3>
                         <div className="flex items-center justify-between text-sm text-orange-600">
                           <span className="flex items-center">
                             <Calendar className="h-4 w-4 mr-1" />
-                            {doc.date}
+                            {new Date(doc.created_at).toLocaleDateString()}
                           </span>
                           <span className="flex items-center">
                             <FileText className="h-4 w-4 mr-1" />
-                            {doc.type}
+                            {doc.document_type}
                           </span>
                         </div>
                         <div className="mt-4 flex justify-between items-center">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            doc.status === '已完成' 
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-orange-100 text-orange-800'
-                          }`}>
-                            {doc.status}
-                          </span>
                           <div className="flex gap-2">
-                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => handleDownload(doc.id)}>
-                              <Download className="h-4 w-4" />
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              className="h-8 w-8 p-0"
+                              onClick={() => handlePreview(doc.url)}
+                            >
+                              <Eye className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-600 hover:text-red-700">
-                              <Trash2 className="h-4 w-4" />
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              className="h-8 w-8 p-0"
+                              onClick={() => handleDownload(doc.url)}
+                            >
+                              <Download className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
@@ -204,45 +182,40 @@ export default function DocumentHistory() {
                   ))}
                 </div>
               ) : (
-                <div className="divide-y divide-orange-200">
+                <div className="space-y-4">
                   {filteredDocuments.map((doc) => (
                     <motion.div
                       key={doc.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="py-4 flex items-center justify-between"
+                      className="bg-white p-4 rounded-lg border border-orange-200 flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <FileText className="h-6 w-6 text-orange-500" />
-                        </div>
+                        <FileText className="h-6 w-6 text-orange-500" />
                         <div>
-                          <h3 className="font-medium text-orange-800">{doc.title}</h3>
-                          <div className="flex items-center text-sm text-orange-600">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            {doc.date}
-                            <span className="mx-2">•</span>
-                            <FileText className="h-4 w-4 mr-1" />
-                            {doc.type}
-                          </div>
+                          <h3 className="font-medium text-orange-800">{doc.document_name}</h3>
+                          <p className="text-sm text-orange-600">
+                            {new Date(doc.created_at).toLocaleDateString()} · {doc.document_type}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700">
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => handlePreview(doc.url)}
+                        >
                           <Eye className="h-4 w-4 mr-2" />
-                          查看
+                          预览
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700">
-                          <Edit className="h-4 w-4 mr-2" />
-                          编辑
-                        </Button>
-                        <Button size="sm" variant="ghost" className="text-orange-600 hover:text-orange-700" onClick={() => handleDownload(doc.id)}>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => handleDownload(doc.url)}
+                        >
                           <Download className="h-4 w-4 mr-2" />
                           下载
-                        </Button>
-                        <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
-                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </motion.div>

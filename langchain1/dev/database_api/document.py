@@ -94,7 +94,7 @@ def save_generated_document(
     try:
         # Add timestamp and user information
         document.created_at = datetime.now()
-        document.user_id = current_user.id
+        document.user_id = current_user.user_id
         
         return document_crud.create(db=db, obj_in=document)
     except Exception as e:
