@@ -114,10 +114,9 @@ async def upload_chat_document(
                     # Save document record to database
                     document_crud.create_document(
                         db=db,
-                        user_email=current_user['email'],
-                        file_name=os.path.basename(temp_path),
-                        file_url=url,
-                        document_type='chat'
+                        upload_file_name=os.path.basename(temp_path),
+                        url=url,
+                        user_email=current_user['email']
                     )
                 except Exception as e:
                     raise HTTPException(
@@ -148,7 +147,7 @@ async def chat_endpoint(
     db: Session = Depends(get_db),
 ):
     try:
-        document_urls = get_user_documents(db, current_user.email)
+        document_urls = request.document_urls
         
         if not document_urls:
             return {"response": "您还没有上传任何文档。请先上传文档再进行对话。"}
@@ -159,47 +158,111 @@ async def chat_endpoint(
             try:
                 temp_file = await download_file(url)
                 if temp_file:
-                    temp_files.append(temp_file)
+                    # 验证文件是否存在且可读
+                    if not os.path.exists(temp_file):
+                        print(f"Downloaded file does not exist: {temp_file}")
+                        continue
+                    try:
+                        with open(temp_file, 'rb') as f:
+                            # 尝试读取文件的前几个字节来验证可读性
+                            f.read(1024)
+                        temp_files.append(temp_file)
+                        print(f"Successfully validated file: {temp_file}")
+                    except Exception as e:
+                        print(f"Error validating file {temp_file}: {str(e)}")
+                        continue
             except Exception as e:
                 print(f"Error downloading file {url}: {str(e)}")
+                continue
 
         if not temp_files:
-            return {"response": "无法访问您的文档。请确保文档已正确上传。"}
+            return {"response": "无法访问您的文档。请确保文档已正确上传并且格式正确。"}
 
-        # 创建文档聊天实例
-        doc_chat = DocumentChat(model_name=request.model_name)
-        
-        # 加载所有文档
-        doc_chat.load_document(temp_files)
+        try:
+            # 创建文档聊天实例
+            doc_chat = DocumentChat(model_name=request.model_name)
+            
+            # 打印文件信息
+            for file_path in temp_files:
+                file_size = os.path.getsize(file_path)
+                print(f"Loading file: {file_path}, Size: {file_size} bytes")
+            
+            # 加载所有文档
+            try:
+                load_result = doc_chat.load_document(temp_files)
+                print(f"Document loading result: {load_result}")
+            except Exception as e:
+                print(f"Error in load_document: {str(e)}")
+                if hasattr(e, '__traceback__'):
+                    import traceback
+                    traceback.print_exc()
+                raise
             
             # 获取回答
-        response = doc_chat.chat(request.query)
-
-        # 清理临时文件
-        for temp_file in temp_files:
-            try:
-                os.remove(temp_file)
-            except Exception as e:
-                print(f"Error removing temp file {temp_file}: {str(e)}")
-            
+            response = doc_chat.chat(request.query)
             return {"response": response}
+
+        finally:
+            # 清理临时文件
+            for temp_file in temp_files:
+                try:
+                    if os.path.exists(temp_file):
+                        os.remove(temp_file)
+                        print(f"Successfully removed temp file: {temp_file}")
+                    else:
+                        print(f"Temp file already removed: {temp_file}")
+                except Exception as e:
+                    print(f"Error removing temp file {temp_file}: {str(e)}")
                 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
+        print(f"Chat error: {str(e)}")
+        if hasattr(e, '__traceback__'):
+            import traceback
+            traceback.print_exc()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"处理文档时出错: {str(e)}。请确保文档格式正确且未损坏。"
+        )
 
 async def download_file(url: str) -> str:
+    """从URL下载文件到临时目录"""
+    try:
+        # 从URL中提取文件扩展名，并确保以点号开始
+        file_ext = os.path.splitext(url)[1]
+        if not file_ext and '.' in url:
+            file_ext = '.' + url.split('.')[-1]
+        
+        # 创建临时文件时添加扩展名
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=file_ext)
+        temp_file_path = temp_file.name
+        temp_file.close()  # 立即关闭文件，避免 Windows 上的文件锁定问题
+
+        print(f"Downloading file to: {temp_file_path} with extension: {file_ext}")
+        
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 if response.status == 200:
-                    temp_file = tempfile.NamedTemporaryFile(delete=False)
-                    temp_file_path = temp_file.name
-                
-                    content = await response.read()
-                    with open(temp_file_path, 'wb') as f:
-                        f.write(content)
-                
-                    return temp_file_path
+                    try:
+                        content = await response.read()
+                        with open(temp_file_path, 'wb') as f:
+                            f.write(content)
+                        print(f"Successfully downloaded file to: {temp_file_path}")
+                        return temp_file_path
+                    except Exception as e:
+                        # 如果写入失败，清理临时文件
+                        if os.path.exists(temp_file_path):
+                            os.unlink(temp_file_path)
+                        raise Exception(f"文件下载失败: {str(e)}")
                 else:
-                    raise HTTPException(status_code=404, detail="File not found")
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail=f"文件下载失败，服务器返回: {response.status}"
+                    )
+    except Exception as e:
+        # 确保任何错误都能返回有意义的错误信息
+        if isinstance(e, HTTPException):
+            raise
+        raise HTTPException(
+            status_code=500,
+            detail=f"文件下载过程中出错: {str(e)}"
+        )

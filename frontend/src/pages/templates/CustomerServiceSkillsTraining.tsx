@@ -6,6 +6,7 @@ import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FileUp, Loader2, CheckCircle2, FileDown } from 'lucide-react'
+import TemplateFileHandler from '@/components/TemplateFileHandler'
 
 import { useLocation } from 'react-router-dom'
 import { EditableCard } from '@/components/EditableCard'
@@ -376,6 +377,13 @@ const CustomerServiceSkillsTraining: React.FC = () => {
   const navigate = useNavigate();
   const token = useToken();
 
+  const templateDescription = {
+    title: title,
+    subtitle: subtitle,
+    overview: overview,
+    content: documentContent
+  };
+
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
       <div className="w-screen bg-white shadow-lg">
@@ -573,6 +581,11 @@ const CustomerServiceSkillsTraining: React.FC = () => {
                   下载Word
                 </Button>
               </div>
+              <TemplateFileHandler
+                templateId="customer_service_skills"
+                templateDescription={templateDescription}
+                onContentGenerated={setDocumentContent}
+              />
               <div className="prose prose-amber max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {documentContent}

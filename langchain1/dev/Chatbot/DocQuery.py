@@ -36,10 +36,18 @@ class DocumentChat:
                 temperature=0.7
             )
         elif model_name=="Qwen 7B chat":
-            self.llm = ChatQwen(
+            self.llm = ChatOpenAI(  # 使用 ChatOpenAI 替代 ChatQwen
                 model_name="Qwen/Qwen2-7B-Instruct",
                 api_key="as-D73mmid1JVABYjxT4_ncuw",
                 base_url="https://gateway.agione.ai/siliconflow/api/v2",
+                temperature=0.7
+            )
+        else:
+            # 默认使用 GPT-4
+            self.llm = ChatOpenAI(
+                model_name="gpt-4",
+                api_key="as-D73mmid1JVABYjxT4_ncuw",
+                base_url="https://gateway.agione.ai/openai/api/v2",
                 temperature=0.7
             )
         self.memory = ConversationBufferMemory(
@@ -50,41 +58,100 @@ class DocumentChat:
         self.vector_store = None
 
     def load_document(self, file_paths):
-        """加载并处理多篇文档，支持PDF、TXT、Word和PPT格式"""
-        from langchain.document_loaders import UnstructuredWordDocumentLoader
-        from langchain.document_loaders import UnstructuredPowerPointLoader
-        from langchain.document_loaders import UnstructuredHTMLLoader
+        """加载并处理多篇文档，支持PDF、TXT格式"""
         all_documents = []
-        print(file_paths)
+        print(f"Processing {len(file_paths)} files: {file_paths}")
+        
         # 处理每个文件路径
         for file_path in file_paths:
-            # 根据文件类型选择加载器
-            if file_path.endswith('.pdf'):
-                loader = PyPDFLoader(file_path)
-            elif file_path.endswith('.html'):
-                loader = UnstructuredHTMLLoader(file_path)
-            elif file_path.endswith('.docx') or file_path.endswith('.doc'):
-                loader = UnstructuredWordDocumentLoader(file_path)
-            elif file_path.endswith('.pptx') or file_path.endswith('.ppt'):
-                loader = UnstructuredPowerPointLoader(file_path)
-            else:
-                loader = TextLoader(file_path)
-            
-            # 加载文档
-            documents = loader.load()
-            all_documents.extend(documents)
-        
-        # 分割所有文档
-        text_splitter = CharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200
-        )
-        texts = text_splitter.split_documents(all_documents)
-        
-        # 创建向量存储
-        self.vector_store = FAISS.from_documents(texts, self.embeddings)
-        
-        return f"成功加载 {len(file_paths)} 篇文档"
+            try:
+                print(f"Loading file: {file_path}")
+                # 检查文件是否存在且有内容
+                if not os.path.exists(file_path):
+                    print(f"File does not exist: {file_path}")
+                    continue
+                    
+                if os.path.getsize(file_path) == 0:
+                    print(f"File is empty: {file_path}")
+                    continue
+
+                # 获取真实的文件扩展名（小写）
+                file_ext = os.path.splitext(file_path)[1].lower()
+                print(f"File extension: {file_ext}")
+
+                # 根据文件类型选择加载器
+                if file_ext == '.pdf':
+                    try:
+                        loader = PyPDFLoader(file_path)
+                        print("Using PyPDFLoader")
+                    except Exception as e:
+                        print(f"PyPDFLoader failed: {str(e)}")
+                        continue
+                else:
+                    # 对于其他文件类型，使用TextLoader
+                    encodings = ['utf-8', 'gbk', 'latin1']
+                    loader = None
+                    for encoding in encodings:
+                        try:
+                            loader = TextLoader(file_path, encoding=encoding)
+                            print(f"Using TextLoader with {encoding} encoding")
+                            # 尝试读取一小部分内容来验证编码
+                            with open(file_path, 'r', encoding=encoding) as f:
+                                f.read(1024)
+                            break
+                        except UnicodeDecodeError:
+                            continue
+                        except Exception as e:
+                            print(f"TextLoader failed with {encoding}: {str(e)}")
+                            continue
+                    
+                    if loader is None:
+                        print(f"Failed to load file with any encoding: {file_path}")
+                        continue
+
+                # 加载文档
+                print(f"Loading document with {loader.__class__.__name__}")
+                try:
+                    documents = loader.load()
+                    if not documents:
+                        print(f"No content loaded from file: {file_path}")
+                        continue
+                    print(f"Successfully loaded {len(documents)} documents from {file_path}")
+                    all_documents.extend(documents)
+                except Exception as e:
+                    print(f"Error loading content from {file_path}: {str(e)}")
+                    continue
+                
+            except Exception as e:
+                print(f"Error processing file {file_path}: {str(e)}")
+                if hasattr(e, '__traceback__'):
+                    import traceback
+                    traceback.print_exc()
+                continue
+
+        if not all_documents:
+            raise Exception("无法加载任何文档。请确保文件为PDF或文本格式（如.txt）且未损坏。")
+
+        try:
+            # 分割所有文档
+            text_splitter = CharacterTextSplitter(
+                chunk_size=1000,
+                chunk_overlap=200
+            )
+            texts = text_splitter.split_documents(all_documents)
+            print(f"Split documents into {len(texts)} chunks")
+
+            # 创建向量存储
+            self.vector_store = FAISS.from_documents(texts, self.embeddings)
+            print("Successfully created vector store")
+
+            return f"成功加载 {len(file_paths)} 篇文档"
+        except Exception as e:
+            print(f"Error processing documents: {str(e)}")
+            if hasattr(e, '__traceback__'):
+                import traceback
+                traceback.print_exc()
+            raise
 
     def chat(self, query):
         """与文档进行对话"""
@@ -135,5 +202,3 @@ class DocumentChat:
 #     main()
 
 # # 创建实例
-
-

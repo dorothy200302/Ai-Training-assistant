@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Bot, FileText, HelpCircle, MessageSquare, Send, Upload } from "lucide-react"
+import { Bot, FileText, HelpCircle, MessageSquare, Send, Upload, Loader2 } from "lucide-react"
+import DocumentUpload from "./DocumentUpload"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -31,9 +32,20 @@ interface UploadResponse {
   urls: string[]
 }
 
+interface UploadedFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  progress: number;
+  status: 'uploading' | 'success' | 'error';
+  error?: string;
+  originalFile?: File;
+}
+
 const models = [
   {
-    id: "gpt-4o",
+    id: "gpt-4",
     name: "GPT-4",
     description: "最强大的GPT-4模型，支持高级推理和创作",
     category: "OpenAI"
@@ -58,6 +70,23 @@ const models = [
   }
 ]
 
+const convertUploadedFilesToFiles = (uploadedFiles: UploadedFile[]): File[] => {
+  return uploadedFiles.map(uploadedFile => {
+    if (uploadedFile.originalFile) {
+      return uploadedFile.originalFile;
+    }
+    // Fallback in case originalFile is not available
+    return new File(
+      [new ArrayBuffer(0)],
+      uploadedFile.name,
+      {
+        type: uploadedFile.type || 'application/octet-stream',
+        lastModified: Date.now(),
+      }
+    );
+  });
+};
+
 export default function Component() {
   const [messages, setMessages] = React.useState<Message[]>([])
   const [input, setInput] = React.useState("")
@@ -73,14 +102,22 @@ export default function Component() {
   const [showUpload, setShowUpload] = React.useState(false)
   const [hasCompletedConversation, setHasCompletedConversation] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
-  const { token } = useAuth()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFiles(event.target.files)
   }
-
+  const token=localStorage.getItem('token')
   const handleFileUpload = async () => {
     if (!selectedFiles || selectedFiles.length === 0) return
+
+    if (!token) {
+      toast({
+        title: "认证错误",
+        description: "请先登录后再上传文件",
+        variant: "destructive",
+      })
+      return;
+    }
 
     setUploadProgress(0)
     const formData = new FormData()
@@ -133,45 +170,28 @@ export default function Component() {
   }
 
   const handleSend = async () => {
-    if (!input.trim()) return
-
-    const userMessage = { role: 'user' as const, content: input }
-    setMessages(prev => [...prev, userMessage])
-    setInput('')
-    setLoading(true)
+    if (!input.trim() || loading) return;
+    
+    setMessages(prev => [...prev, { role: 'user', content: input }]);
+    setInput('');
+    setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/chatbot/chat`, {
+      const { response } = await fetch(`http://localhost:8001/api/chatbot/chat`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: input,
-          model_name: selectedModel,
-          document_urls: uploadedUrls
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to get response')
-      }
-
-      const data = await response.json()
-      const assistantMessage = { role: 'assistant' as const, content: data.response }
-      setMessages(prev => [...prev, assistantMessage])
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ query: input, model_name: selectedModel, document_urls: uploadedUrls }),
+      }).then(res => res.ok ? res.json() : Promise.reject(`Error: ${res.status}`));
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
-      console.error('Chat error:', error)
-      toast({
-        title: "发送失败",
-        description: "无法获取回复，请重试",
-        variant: "destructive",
-      })
+      console.error(error);
+      toast({ title: "发送失败", description: "请重试", variant: "destructive" });
+      setMessages(prev => prev.slice(0, -1));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleUploadConfirm = async (files: File[]) => {
     try {
@@ -180,7 +200,7 @@ export default function Component() {
         formData.append('files', file);
       });
 
-      const response = await fetch(`${API_BASE_URL}/chatbot/upload`, {
+      const response = await fetch(`http://localhost:8001/api/chatbot/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -190,11 +210,14 @@ export default function Component() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        throw new Error(`上传失败: ${errorText}`);
       }
 
       const data = await response.json();
-      setDocumentUrls(data.urls);
+      setUploadedUrls(prev => [...prev, ...data.urls]);
+      setMessages(prev => [...prev, 
+        { role: 'assistant', content: '文档上传成功！我已经阅读了文档内容，您可以开始提问了。' }
+      ]);
       toast({
         title: "上传成功",
         description: "文档已上传并处理完成",
@@ -204,9 +227,23 @@ export default function Component() {
       console.error('Upload error:', error);
       toast({
         title: "上传失败",
-        description: "文档上传失败，请重试",
+        description: error instanceof Error ? error.message : "文档上传失败，请重试",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleUploadComplete = (uploadedFiles: UploadedFile[]) => {
+    const files = uploadedFiles.map(f => f.originalFile).filter((f): f is File => f !== undefined);
+    if (files.length > 0) {
+      setMessages(prev => [...prev, 
+        { role: 'assistant', content: '文档上传成功！我已经阅读了文档内容，您可以开始提问了。' }
+      ]);
+      toast({
+        title: "上传成功",
+        description: "文档已上传并处理完成",
+      });
+      setShowUpload(false);
     }
   };
 
@@ -368,43 +405,83 @@ export default function Component() {
                           <MessageSquare className="h-4 w-4 mr-2 text-amber-500" />
                           直接输入问题开始对话
                         </li>
-                        <li className="flex items-center">
-                          <Upload className="h-4 w-4 mr-2 text-amber-500" />
-                          上传文档获得更精准的回答
+                        <li>
+                          <Dialog open={showUpload} onOpenChange={setShowUpload}>
+                            <DialogTrigger asChild>
+                              <div className="flex items-center cursor-pointer hover:text-amber-600">
+                                <Upload className="h-4 w-4 mr-2 text-amber-500" />
+                                上传文档获得更精准的回答
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>上传文档</DialogTitle>
+                                <DialogDescription>
+                                  上传文档后，AI 将根据文档内容为您提供更精准的回答。
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DocumentUpload 
+                                onUploadComplete={(uploadedFiles) => {
+                                  const files = uploadedFiles.map(f => f.originalFile).filter((f): f is File => !!f);
+                                  if (files.length > 0) {
+                                    handleUploadConfirm(files);
+                                  }
+                                  setShowUpload(false);
+                                }}
+                                maxFileSize={20 * 1024 * 1024}
+                                acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
+                                hasCompletedConversation={hasCompletedConversation}
+                              />
+                            </DialogContent>
+                          </Dialog>
                         </li>
                       </ul>
                     </div>
                   ) : (
-                    messages.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`mb-4 flex ${
-                          message.role === "assistant" ? "justify-start" : "justify-end"
-                        }`}
-                      >
+                    <div className="space-y-4">
+                      {messages.map((message, index) => (
                         <div
-                          className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                            message.role === "assistant"
-                              ? "bg-muted text-muted-foreground"
-                              : "bg-amber-500 text-white"
+                          key={index}
+                          className={`mb-4 flex ${
+                            message.role === "assistant" ? "justify-start" : "justify-end"
                           }`}
                         >
-                          {message.content}
+                          <div
+                            className={`rounded-lg px-4 py-2 max-w-[80%] ${
+                              message.role === "assistant"
+                                ? "bg-muted text-muted-foreground"
+                                : "bg-amber-500 text-white"
+                            }`}
+                          >
+                            {message.content}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+                      {loading && (
+                        <div className="flex justify-start">
+                          <div className="bg-muted rounded-lg px-4 py-2 flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                            <span className="text-sm text-muted-foreground">AI 正在思考...</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </ScrollArea>
                 <div className="mt-4">
                   {/* Upload button */}
-                  <Button 
-                    variant="outline" 
-                    className="mb-2 w-full border-2 border-dashed border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-300"
-                    onClick={() => setShowUpload(true)}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    上传文档以获得更精准的回答
-                  </Button>
+                  <Dialog open={showUpload} onOpenChange={setShowUpload}>
+                    
+                    <DialogContent>
+                      
+                      <DocumentUpload 
+                        onUploadComplete={handleUploadComplete}
+                        maxFileSize={20 * 1024 * 1024}
+                        acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
+                        onCancel={() => setShowUpload(false)}
+                      />
+                    </DialogContent>
+                  </Dialog>
                   
                   {/* Chat input */}
                   <div className="flex items-center gap-2">
@@ -418,29 +495,48 @@ export default function Component() {
                           handleSend()
                         }
                       }}
+                      disabled={loading}
                     />
-                    <Button onClick={handleSend} disabled={loading}>
-                      <Send className="h-4 w-4" />
+                    <Button onClick={handleSend} disabled={loading || !input.trim()}>
+                      {loading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
+            {uploadedUrls.length > 0 && (
+              <div className="p-4 border-t">
+                <h2 className="mb-2 text-lg font-semibold">已上传文件</h2>
+                <div className="space-y-2">
+                  {uploadedUrls.map((url, index) => {
+                    const fileName = decodeURIComponent(url.split('/').pop() || '');
+                    return (
+                      <div key={index} className="flex items-center gap-2 p-2 rounded-lg bg-gray-50">
+                        <FileText className="h-4 w-4 text-blue-500" />
+                        <span className="text-sm truncate flex-1" title={fileName}>
+                          {fileName}
+                        </span>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-500 hover:text-blue-700"
+                        >
+                          查看
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      {showUpload && (
-        <DocumentUpload 
-          onUploadComplete={(files) => {
-            setUploadedFiles(files);
-            console.log('Files saved:', files.map(f => f.name));
-          }}
-          maxFileSize={20 * 1024 * 1024}
-          acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
-          onConfirm={handleUploadConfirm}
-          hasCompletedConversation={hasCompletedConversation}
-        />
-      )}
     </div>
   )
 }

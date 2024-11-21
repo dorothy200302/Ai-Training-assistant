@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useToast } from '@/hooks/use-toast'
-import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FileUp, Loader2, Download, FileDown } from 'lucide-react'
+import TemplateFileHandler from '@/components/TemplateFileHandler'
 import jsPDF from 'jspdf'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 
@@ -58,6 +58,15 @@ const SalesTraining: React.FC = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const { toast } = useToast();
+
+  const templateDescription = {
+    title,
+    subtitle,
+    overview,
+    salesSkills,
+    products,
+    content: documentContent
+  };
 
   const handleAddSkill = () => {
     setSalesSkills([...salesSkills, {
@@ -119,13 +128,7 @@ const SalesTraining: React.FC = () => {
       });
 
       formData.append('template', 'sales_training');
-      formData.append('description', JSON.stringify({
-        title,
-        subtitle,
-        overview,
-        salesSkills,
-        products
-      }));
+      formData.append('description', JSON.stringify(templateDescription));
 
       const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
         method: 'POST',
@@ -420,6 +423,12 @@ const SalesTraining: React.FC = () => {
             )}
           </div>
 
+          <TemplateFileHandler
+            templateId="sales_training"
+            templateDescription={templateDescription}
+            onContentGenerated={setDocumentContent}
+          />
+
           {documentContent && (
             <Card className="mt-6 bg-white">
               <CardContent className="prose max-w-none p-6">
@@ -429,14 +438,6 @@ const SalesTraining: React.FC = () => {
               </CardContent>
             </Card>
           )}
-
-          <DocumentUpload
-            open={showUpload}
-            onClose={handleUploadCancel}
-            onConfirm={handleUploadConfirm}
-            acceptedFileTypes={['pdf', 'doc', 'docx', 'txt']}
-            maxFileSize={5 * 1024 * 1024} // 5MB
-          />
         </div>
       </div>
     </div>

@@ -1,36 +1,8 @@
 import React, { useState } from 'react'
-import { EditableCard } from '@/components/EditableCard'
-import { EditableText } from '@/components/EditableText'
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, Circle, Plus, Save, Trash, Book, Video, FileText, Pencil, Copy } from 'lucide-react'
-import { nanoid } from 'nanoid'
-import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress"
-import { Users, Target, LineChart, FileUp, Loader2, Brain, Presentation, MessageSquare } from 'lucide-react'
-import DocumentUpload from '@/components/DocumentUpload'
+import { Card, CardContent } from "@/components/ui/card"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { useToken, useToast } from '../../hooks/use-token'
-
-interface SkillModule {
-  id: string
-  title: string
-  description: string
-  objectives: string[]
-  content: string
-  completed: boolean
-}
-
-interface ResourceType {
-  id: string;
-  title: string;
-  type: 'pdf' | 'video' | 'case-study';
-  link: string;
-  description?: string;
-}
+import TemplateFileHandler from '@/components/TemplateFileHandler'
 
 const ManagementSkillsTraining: React.FC = () => {
   const [title, setTitle] = useState("管理能力培训课程")
@@ -201,6 +173,13 @@ const ManagementSkillsTraining: React.FC = () => {
       title: "确认成功",
       description: "您已确认阅读完成",
     });
+  };
+
+  const templateDescription = {
+    title: title,
+    subtitle: subtitle,
+    overview: overview,
+    content: documentContent
   };
 
   return (
@@ -500,8 +479,31 @@ const ManagementSkillsTraining: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
-  )
-}
 
-export default ManagementSkillsTraining
+      <div className="container mx-auto py-8">
+        <Card>
+          <CardContent className="p-6">
+            <h1 className="text-2xl font-bold mb-4">{templateDescription.title}</h1>
+            <p className="text-gray-600 mb-6">{templateDescription.overview}</p>
+
+            <TemplateFileHandler
+              templateId="management_skills"
+              templateDescription={templateDescription}
+              onContentGenerated={setDocumentContent}
+            />
+
+            {documentContent && (
+              <div className="mt-6 p-4 border rounded-lg bg-white">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {documentContent}
+                </ReactMarkdown>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default ManagementSkillsTraining;

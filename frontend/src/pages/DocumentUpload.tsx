@@ -46,14 +46,49 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   const [isUploading, setIsUploading] = useState(false)
 
   const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('files', file);
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未登录，请先登录');
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatbot/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`上传失败: ${errorText}`);
+    }
+
+    const data = await response.json();
+    if (onUploadComplete) {
+      onUploadComplete([{
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        progress: 100,
+        status: 'success',
+        originalFile: file
+      }]);
+    }
+
     setFiles(prev => prev.map(f => 
       f.name === file.name ? { 
         ...f, 
         status: 'success', 
         progress: 100 
       } : f
-    ))
-    return Promise.resolve(file.name);
+    ));
+
+    return data.urls[0];
   }
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -65,14 +100,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
       progress: 0,
       status: 'uploading' as const,
       originalFile: file
-    }))
+    }));
 
-    setFiles(prev => [...prev, ...newFiles])
+    setFiles(prev => [...prev, ...newFiles]);
+    setIsUploading(true);
 
     try {
-      await Promise.all(acceptedFiles.map(async (file) => {
-        const currentFile = newFiles.find(f => f.name === file.name)
-        if (!currentFile) return
+      for (const file of acceptedFiles) {
+        const currentFile = newFiles.find(f => f.name === file.name);
+        if (!currentFile) continue;
 
         if (file.size > maxFileSize) {
           setFiles(prev => prev.map(f => 
@@ -81,12 +117,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               status: 'error', 
               error: `文件超过${maxFileSize / 1024 / 1024}MB限制` 
             } : f
-          ))
-          return
+          ));
+          continue;
         }
 
         try {
-          await uploadFile(file)
+          await uploadFile(file);
         } catch (error) {
           setFiles(prev => prev.map(f => 
             f.id === currentFile.id ? { 
@@ -94,17 +130,19 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               status: 'error', 
               error: error instanceof Error ? error.message : '上传失败' 
             } : f
-          ))
+          ));
         }
-      }))
+      }
     } catch (error) {
       toast({
-        title: "上传错误",
-        description: error instanceof Error ? error.message : "文件上传失败",
+        title: "上传失败",
+        description: error instanceof Error ? error.message : "文件上传失败，请重试",
         variant: "destructive",
-      })
+      });
+    } finally {
+      setIsUploading(false);
     }
-  }, [maxFileSize])
+  }, [maxFileSize, onUploadComplete]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
