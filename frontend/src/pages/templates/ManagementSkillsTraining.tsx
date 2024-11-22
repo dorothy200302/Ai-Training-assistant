@@ -1,106 +1,47 @@
 import React, { useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { ClipboardList, Users, BarChart, Calendar, CheckCircle2, FileText, Layers, Target, FileUp, Loader2, FileDown } from 'lucide-react'
+import { toast } from "@/hooks/use-toast"
+import jsPDF from 'jspdf'
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
+import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import TemplateFileHandler from '@/components/TemplateFileHandler'
 
 const ManagementSkillsTraining: React.FC = () => {
-  const [title, setTitle] = useState("管理能力培训课程")
-  const [subtitle, setSubtitle] = useState("提升您的领导力，成为卓越的管理者")
-  const [overview, setOverview] = useState(
-    "欢迎参加我们的管理能力培训课程！本课程旨在提升您的领导技能，帮助您成为一名更加高效、有影响力的管理者。通过一系列精心设计的模块，您将学习到现代管理所需的核心技能。"
-  )
+  const [completedSections, setCompletedSections] = useState<string[]>([])
+  const [documentContent, setDocumentContent] = useState<string>('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [showUpload, setShowUpload] = useState(false)
 
-  const [modules, setModules] = useState<SkillModule[]>([
-    {
-      id: nanoid(),
-      title: '有效沟通技巧',
-      description: '掌握清晰、有效的沟通方法，提高团队协作效率',
-      objectives: [
-        "了解沟通的基本原理和重要性",
-        "学习积极倾听技巧",
-        "掌握非语言沟通的艺术",
-        "提高书面沟通能力",
-        "处理困难对话的策略"
-      ],
-      content: "本模块将帮助您掌握现代管理者必备的沟通技能...",
-      completed: false
-    },
-    // ... 其他模块
-  ])
-
-  const [resources, setResources] = useState<ResourceType[]>([
-    {
-      id: nanoid(),
-      title: '管理技能手册',
-      type: 'pdf',
-      link: '#',
-      description: '请添加资源描述'
-    },
-    {
-      id: nanoid(),
-      title: '领导力视频课程',
-      type: 'video',
-      link: '#',
-      description: '请添加资源描述'
-    },
-    {
-      id: nanoid(),
-      title: '案例研究集锦',
-      type: 'case-study',
-      link: '#',
-      description: '请添加资源描述'
-    }
-  ])
-
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({})
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null)
-  const [showUpload, setShowUpload] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [documentContent, setDocumentContent] = useState<string>('');
-
-  const managementSkills = [
-    { id: 'leadership', name: '领导力', icon: <Users className="w-6 h-6" /> },
-    { id: 'strategic', name: '战略思维', icon: <Target className="w-6 h-6" /> },
-    { id: 'communication', name: '沟通技巧', icon: <MessageSquare className="w-6 h-6" /> },
+  const sections = [
+    { id: 'intro', title: '项目管理简介' },
+    { id: 'planning', title: '项目规划' },
+    { id: 'execution', title: '项目执行' },
+    { id: 'monitoring', title: '监控与控制' },
+    { id: 'closing', title: '项目收尾' },
   ]
 
-  const handleAddModule = () => {
-    setModules([...modules, {
-      id: nanoid(),
-      title: '新管理技能模块',
-      description: '请编辑模块描述',
-      objectives: ['新学习目标'],
-      content: '请编辑模块内容',
-      completed: false
-    }])
+  const toggleSectionCompletion = (sectionId: string) => {
+    setCompletedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    )
   }
 
-  const handleAddResourceType = (type: 'pdf' | 'video' | 'case-study') => {
-    setResources([...resources, {
-      id: nanoid(),
-      title: '新学习资源',
-      type,
-      link: '#',
-      description: '请添加资源描述'
-    }])
+  const calculateProgress = () => {
+    return (completedSections.length / sections.length) * 100
   }
 
-  const handleTitleEdit = (id: string, newValue: string) => {
-    setModules(modules.map(module =>
-      module.id === id ? { ...module, title: newValue } : module
-    ))
-  }
-
-  const toggleEdit = (id: string) => {
-    setIsEditing(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }))
-  }
-
-  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
-    if (!uploadSuccess || !files || files.length === 0) {
+  const handleUploadConfirm = async (files: File[], description: string) => {
+    if (!files || files.length === 0) {
       setShowUpload(false);
       return;
     }
@@ -118,7 +59,12 @@ const ManagementSkillsTraining: React.FC = () => {
       formData.append('description', JSON.stringify({
         title: '管理技能培训',
         subtitle: '提升您的管理能力',
-        overview: '本文档将帮助您掌握卓越的管理技能。'
+        overview: '本文档将帮助您掌握卓越的管理技能。',
+        sections: sections.map(section => ({
+          id: section.id,
+          title: section.title,
+          completed: completedSections.includes(section.id)
+        }))
       }));
 
       console.log('Sending request to generate template...');
@@ -128,7 +74,7 @@ const ManagementSkillsTraining: React.FC = () => {
         token: token ? 'present' : 'missing'
       });
 
-      const response = await fetch('http://localhost:8001/storage/generate_full_doc_with_template/', {
+      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -147,13 +93,13 @@ const ManagementSkillsTraining: React.FC = () => {
       console.log('Response data:', data);
       setDocumentContent(data.document || data.content || '');
       
-      useToast({
+      toast({
         title: "生成成功",
         description: "管理技能培训文档已生成",
       });
     } catch (error) {
       console.error('Generation error:', error);
-      useToast({
+      toast({
         title: "生成失败",
         description: error instanceof Error ? error.message : "文档生成失败，请重试",
         variant: "destructive",
@@ -164,346 +110,413 @@ const ManagementSkillsTraining: React.FC = () => {
     }
   };
 
-  const handleUploadCancel = () => {
-    setShowUpload(false);
+  const handleDownloadPdf = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
+      });
+      
+      doc.setFont('helvetica', 'normal');
+      
+      doc.setFontSize(20);
+      doc.text('管理技能培训手册', 40, 40);
+      
+      doc.setFontSize(12);
+      const contentLines = documentContent.split('\n');
+      let y = 80;
+      
+      contentLines.forEach((line) => {
+        if (y > 780) {
+          doc.addPage();
+          y = 40;
+        }
+        doc.text(line, 40, y);
+        y += 20;
+      });
+      
+      const pdfBlob = doc.output('blob');
+      
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '管理技能培训手册.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast({
+        title: "下载成功",
+        description: "文档已下载为PDF格式",
+      });
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      toast({
+        title: "生成PDF失败",
+        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
-  const handleConfirm = () => {
-    useToast({
-      title: "确认成功",
-      description: "您已确认阅读完成",
-    });
-  };
+  const handleDownloadWord = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "管理技能培训手册",
+              heading: HeadingLevel.HEADING_1,
+            }),
+            new Paragraph({}),
+            ...documentContent.split('\n').map(line => 
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line,
+                    size: 24,
+                  }),
+                ],
+              })
+            ),
+          ],
+        }],
+      });
 
-  const templateDescription = {
-    title: title,
-    subtitle: subtitle,
-    overview: overview,
-    content: documentContent
+      const blob = await Packer.toBlob(doc);
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '管理技能培训手册.docx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "下载成功",
+        description: "文档已下载为Word格式",
+      });
+    } catch (error) {
+      console.error('Word generation error:', error);
+      toast({
+        title: "生成Word失败",
+        description: error instanceof Error ? error.message : "Word生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
       <div className="w-screen bg-white shadow-lg">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
-          <EditableText
-            value={title}
-            onChange={setTitle}
-            className="text-3xl font-bold mb-2"
-          />
-          <EditableText
-            value={subtitle}
-            onChange={setSubtitle}
-            className="text-amber-100"
-          />
+          <h1 className="text-3xl font-bold mb-2">项目管理培训文档</h1>
+          <p className="text-amber-100">掌握项目管理技能，提升团队效率</p>
         </div>
         
         <div className="p-6">
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-amber-800 mb-4">课程概述</h2>
-            <EditableText
-              value={overview}
-              onChange={setOverview}
-              multiline
-              className="text-amber-700"
-            />
+            <h2 className="text-2xl font-semibold text-amber-800 mb-4">培训概述</h2>
+            <p className="text-amber-700 mb-4">
+              本培训旨在帮助学员掌握项目管理的核心概念、方法论和最佳实践。通过理论学习和实践练习，学员将能够有效地规划、执行和控制项目，确保项目按时、按预算完成，并达到预期的质量标准。
+            </p>
           </section>
 
           <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-amber-800">培训模块</h2>
-              <Button
-                onClick={handleAddModule}
-                className="bg-amber-500 hover:bg-amber-600 text-white"
-              >
-                <Plus className="mr-2 h-4 w-4" /> 添加模块
-              </Button>
-            </div>
-
-            <Accordion type="single" collapsible className="space-y-4">
-              {modules.map(module => (
-                <AccordionItem key={module.id} value={module.id}>
-                  <AccordionTrigger className="text-amber-700 hover:text-amber-800">
-                    <div className="flex items-center gap-3">
-                      {isEditing[module.id] ? (
-                        <Input
-                          value={module.title}
-                          onChange={(e) => handleTitleEdit(module.id, e.target.value)}
-                          onBlur={() => toggleEdit(module.id)}
-                          autoFocus
-                          className="max-w-[200px]"
-                        />
-                      ) : (
-                        <span onClick={(e) => {
-                          e.stopPropagation()
-                          toggleEdit(module.id)
-                        }}>
-                          {module.title}
-                        </span>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className={`rounded-full ${
-                          module.completed ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setModules(modules.map(m =>
-                            m.id === module.id ? {...m, completed: !m.completed} : m
-                          ))
-                        }}
-                      >
-                        {module.completed ? <CheckCircle className="h-4 w-4" /> : <Circle className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleEdit(module.id);
-                        }}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const newId = nanoid();
-                          setModules(
-                            modules.map(m =>
-                              m.id === module.id ? { ...m, id: newId } : m
-                            )
-                          );
-                        }}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <EditableCard
-                      title="模块详情"
-                      description={module.description}
-                      onEdit={() => {}}
-                      onTitleChange={() => {}}
-                      onDescriptionChange={(newDesc) => {
-                        setModules(modules.map(m =>
-                          m.id === module.id ? {...m, description: newDesc} : m
-                        ))
-                      }}
-                      onDelete={() => setModules(modules.filter(m => m.id !== module.id))}
-                      className="bg-amber-50 border-amber-200"
-                    >
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold text-amber-800 mb-2">学习目标</h4>
-                          {module.objectives.map((objective, index) => (
-                            <EditableText
-                              key={index}
-                              value={objective}
-                              onChange={(newObjective) => {
-                                setModules(modules.map(m =>
-                                  m.id === module.id
-                                    ? {
-                                        ...m,
-                                        objectives: m.objectives.map((obj, i) =>
-                                          i === index ? newObjective : obj
-                                        )
-                                      }
-                                    : m
-                                ))
-                              }}
-                              className="text-amber-700 mb-2"
-                            />
-                          ))}
-                          <Button
-                            onClick={() => {
-                              setModules(modules.map(m =>
-                                m.id === module.id
-                                  ? {...m, objectives: [...m.objectives, '新学习目标']}
-                                  : m
-                              ))
-                            }}
-                            variant="outline"
-                            size="sm"
-                          >
-                            <Plus className="h-4 w-4 mr-2" /> 添加目标
-                          </Button>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-semibold text-amber-800 mb-2">模块内容</h4>
-                          <EditableText
-                            value={module.content}
-                            onChange={(newContent) => {
-                              setModules(modules.map(m =>
-                                m.id === module.id ? {...m, content: newContent} : m
-                              ))
-                            }}
-                            multiline
-                            className="text-amber-700"
-                          />
-                        </div>
+            <h2 className="text-2xl font-semibold text-amber-800 mb-4">培训模块</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sections.map((section) => (
+                <Card 
+                  key={section.id} 
+                  className={`bg-amber-50 border-amber-200 cursor-pointer transition-all ${
+                    completedSections.includes(section.id) ? 'ring-2 ring-green-500' : ''
+                  }`}
+                  onClick={() => toggleSectionCompletion(section.id)}
+                >
+                  <CardContent className="pt-6 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="bg-amber-100 rounded-full p-3 mr-4">
+                        {section.id === 'intro' && <FileText className="w-6 h-6 text-amber-600" />}
+                        {section.id === 'planning' && <ClipboardList className="w-6 h-6 text-amber-600" />}
+                        {section.id === 'execution' && <Target className="w-6 h-6 text-amber-600" />}
+                        {section.id === 'monitoring' && <BarChart className="w-6 h-6 text-amber-600" />}
+                        {section.id === 'closing' && <CheckCircle2 className="w-6 h-6 text-amber-600" />}
                       </div>
-                    </EditableCard>
-                  </AccordionContent>
-                </AccordionItem>
+                      <div>
+                        <h3 className="text-lg font-semibold text-amber-800">{section.title}</h3>
+                        <p className="text-amber-600 text-sm">
+                          {completedSections.includes(section.id) ? '已完成' : '点击标记为已完成'}
+                        </p>
+                      </div>
+                    </div>
+                    {completedSections.includes(section.id) && (
+                      <CheckCircle2 className="w-6 h-6 text-green-500" />
+                    )}
+                  </CardContent>
+                </Card>
               ))}
-            </Accordion>
+            </div>
           </section>
 
           <section className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-amber-800">学习资源</h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => handleAddResourceType('pdf')}
-                  className="bg-amber-500 hover:bg-amber-600 text-white"
-                >
-                  <Book className="mr-2 h-4 w-4" /> 添加文档
-                </Button>
-                <Button
-                  onClick={() => handleAddResourceType('video')}
-                  className="bg-amber-500 hover:bg-amber-600 text-white"
-                >
-                  <Video className="mr-2 h-4 w-4" /> 添加视频
-                </Button>
-                <Button
-                  onClick={() => handleAddResourceType('case-study')}
-                  className="bg-amber-500 hover:bg-amber-600 text-white"
-                >
-                  <FileText className="mr-2 h-4 w-4" /> 添加案例
-                </Button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {resources.map(resource => (
-                <EditableCard
-                  key={resource.id}
-                  title={resource.title}
-                  description={resource.description}
-                  onTitleChange={(newTitle) => {
-                    setResources(resources.map(r =>
-                      r.id === resource.id ? {...r, title: newTitle} : r
-                    ))
-                  }}
-                  onDescriptionChange={(newDesc) => {
-                    setResources(resources.map(r =>
-                      r.id === resource.id ? {...r, description: newDesc} : r
-                    ))
-                  }}
-                  onDelete={() => setResources(resources.filter(r => r.id !== resource.id))}
-                  onEdit={() => {}}
-                  className="bg-orange-50 border-orange-200"
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {resource.type === 'pdf' && <Book className="text-orange-500" />}
-                      {resource.type === 'video' && <Video className="text-orange-500" />}
-                      {resource.type === 'case-study' && <FileText className="text-orange-500" />}
-                      <EditableText
-                        value={resource.link}
-                        onChange={(newLink) => {
-                          setResources(resources.map(r =>
-                            r.id === resource.id ? {...r, link: newLink} : r
-                          ))
-                        }}
-                        className="text-orange-600 hover:text-orange-700"
-                      />
-                    </div>
-                  </div>
-                </EditableCard>
-              ))}
-            </div>
+            <h2 className="text-2xl font-semibold text-amber-800 mb-4">培训内容详情</h2>
+            <Tabs defaultValue="intro" className="w-full">
+              <TabsList className="grid w-full grid-cols-5 bg-amber-100">
+                {sections.map((section) => (
+                  <TabsTrigger key={section.id} value={section.id} className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
+                    {section.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <TabsContent value="intro">
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="text-amber-800">项目管理简介</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-amber-700">
+                      <li>项目管理的定义和重要性</li>
+                      <li>项目生命周期</li>
+                      <li>项目管理知识领域</li>
+                      <li>项目经理的角色和职责</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="planning">
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="text-amber-800">项目规划</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-amber-700">
+                      <li>制定项目章程</li>
+                      <li>识别干系人</li>
+                      <li>创建工作分解结构（WBS）</li>
+                      <li>进度规划和资源分配</li>
+                      <li>风险识别和管理</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="execution">
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="text-amber-800">项目执行</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-amber-700">
+                      <li>团队管理和领导力</li>
+                      <li>沟通管理</li>
+                      <li>质量保证</li>
+                      <li>采购管理</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="monitoring">
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="text-amber-800">监控与控制</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-amber-700">
+                      <li>进度和成本控制</li>
+                      <li>挣值管理</li>
+                      <li>变更控制</li>
+                      <li>风险监控</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="closing">
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    <CardTitle className="text-amber-800">项目收尾</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-amber-700">
+                      <li>验收和移交</li>
+                      <li>经验教训总结</li>
+                      <li>项目文档归档</li>
+                      <li>团队解散和资源释放</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </section>
 
-          <div className="flex justify-end">
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-amber-800 mb-4">实践练习</h2>
+            <Card className="bg-amber-50 border-amber-200">
+              <CardContent className="pt-6">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="exercise1">
+                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">项目章程编写</AccordionTrigger>
+                    <AccordionContent className="text-amber-600">
+                      <p>练习目标：编写一个完整的项目章程</p>
+                      <ul className="list-disc list-inside mt-2">
+                        <li>定义项目目标和范围</li>
+                        <li>识别关键干系人</li>
+                        <li>列出主要里程碑</li>
+                        <li>估算预算和时间表</li>
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="exercise2">
+                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">风险管理计划</AccordionTrigger>
+                    <AccordionContent className="text-amber-600">
+                      <p>练习目标：为一个虚拟项目创建风险管理计划</p>
+                      <ul className="list-disc list-inside mt-2">
+                        <li>识别潜在风险</li>
+                        <li>评估风险概率和影响</li>
+                        <li>制定风险应对策略</li>
+                        <li>创建风险跟踪矩阵</li>
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="exercise3">
+                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">项目进度规划</AccordionTrigger>
+                    <AccordionContent className="text-amber-600">
+                      <p>练习目标：使用甘特图创建项目进度计划</p>
+                      <ul className="list-disc list-inside mt-2">
+                        <li>定义项目任务和工作包</li>
+                        <li>估算任务持续时间</li>
+                        <li>确定任务依赖关系</li>
+                        <li>分配资源并平衡工作负载</li>
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-amber-800 mb-4">培训进度</h2>
+            <Card className="bg-amber-50 border-amber-200">
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-amber-700 font-semibold">总体完成度</span>
+                      <span className="text-amber-700 font-semibold">{calculateProgress().toFixed(0)}%</span>
+                    </div>
+                    <Progress value={calculateProgress()} className="w-full bg-amber-200"  />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-amber-800 mb-2">已完成模块</h3>
+                    <ul className="space-y-1 text-amber-700">
+                      {completedSections.map(sectionId => {
+                        const section = sections.find(s => s.id === sectionId)
+                        return section ? (
+                          <li key={sectionId} className="flex items-center">
+                            <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+                            {section.title}
+                          </li>
+                        ) : null
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          <div className="flex justify-end space-x-2">
             <Button
+              variant="outline"
+              onClick={() => setShowUpload(true)}
+              disabled={isGenerating}
               className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
             >
-              <Save className="mr-2 h-4 w-4" /> 保存模板
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  生成中...
+                </>
+              ) : (
+                <>
+                  <FileUp className="mr-2 h-4 w-4" />
+                  上传文档
+                </>
+              )}
             </Button>
-            <Button
-              onClick={() => setShowUpload(true)}
-              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600"
-            >
-              <FileUp className="mr-2 h-4 w-4" /> 上传培训资料
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Upload Dialog */}
-      {showUpload && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <DocumentUpload 
-              onConfirm={handleUploadConfirm}
-              onCancel={handleUploadCancel}
-              isLoading={isGenerating}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Document Content Section */}
-      {documentContent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4">
-            <div className="prose prose-amber max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {documentContent}
-              </ReactMarkdown>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Confirm Button */}
-      {documentContent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <Button
-              onClick={handleConfirm}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              <CheckCircle className="mr-2 h-4 w-4" />
-              确认已阅读
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <div className="container mx-auto py-8">
-        <Card>
-          <CardContent className="p-6">
-            <h1 className="text-2xl font-bold mb-4">{templateDescription.title}</h1>
-            <p className="text-gray-600 mb-6">{templateDescription.overview}</p>
-
-            <TemplateFileHandler
-              templateId="management_skills"
-              templateDescription={templateDescription}
-              onContentGenerated={setDocumentContent}
-            />
-
             {documentContent && (
-              <div className="mt-6 p-4 border rounded-lg bg-white">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {documentContent}
-                </ReactMarkdown>
-              </div>
+              <>
+                <Button
+                  variant="outline"
+                  onClick={handleDownloadPdf}
+                  disabled={isDownloading}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                >
+                  {isDownloading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      下载中...
+                    </>
+                  ) : (
+                    <>
+                      <FileDown className="mr-2 h-4 w-4" />
+                      下载PDF
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDownloadWord}
+                  disabled={isDownloading}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                >
+                  {isDownloading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      下载中...
+                    </>
+                  ) : (
+                    <>
+                      <FileDown className="mr-2 h-4 w-4" />
+                      下载Word
+                    </>
+                  )}
+                </Button>
+              </>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
-    </div>
-  );
-};
 
-export default ManagementSkillsTraining;
+      {showUpload && (
+        <DocumentUpload
+          onConfirm={handleUploadConfirm}
+          onCancel={() => setShowUpload(false)}
+        />
+      )}
+
+      {documentContent && (
+        <div className="mt-6 p-6 bg-white rounded-lg shadow">
+          <div className="prose max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {documentContent}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default ManagementSkillsTraining

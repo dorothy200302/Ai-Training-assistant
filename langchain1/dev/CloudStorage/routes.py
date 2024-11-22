@@ -259,6 +259,9 @@ async def generate_full_doc_with_doc(
         )
         full_doc = await g.generate_full_training_doc_async(outline_str)
         
+        if not full_doc:
+            raise HTTPException(status_code=500, detail="Failed to generate document content")
+        
         # Parse the generated document into sections
         sections = []
         current_section = None
@@ -269,8 +272,8 @@ async def generate_full_doc_with_doc(
         content_buffer = []
         
         for line in lines:
-            # Check for main section headers (marked with ### or ####)
-            if line.startswith('### ') or line.startswith('#### '):
+            # Check for main section headers (marked with ## or ###)
+            if line.startswith('## ') or line.startswith('### '):
                 # If we have a previous section, save it
                 if current_section:
                     if content_buffer:
@@ -280,55 +283,27 @@ async def generate_full_doc_with_doc(
                 
                 # Create new section
                 current_section = {
-                    'title': line.replace('### ', '').replace('#### ', '').strip(),
+                    'title': line.lstrip('#').strip(),
                     'content': '',
                     'subsections': []
                 }
-                
-            # Check for subsection headers (marked with numbers or bullets)
-            elif line.strip() and (line[0].isdigit() or line.strip().startswith('-') or line.strip().startswith('*')):
-                if current_subsection and content_buffer:
-                    current_subsection['content'] = '\n'.join(content_buffer)
-                    current_section['subsections'].append(current_subsection)
-                    content_buffer = []
-                
-                current_subsection = {
-                    'title': line.strip(),
-                    'content': ''
-                }
-                
-            # Regular content lines
-            elif line.strip():
+            else:
+                # Add line to current section's content buffer
                 content_buffer.append(line)
-                
-            # Empty lines mark the end of a content block
-            elif content_buffer:
-                if current_subsection:
-                    current_subsection['content'] = '\n'.join(content_buffer)
-                    current_section['subsections'].append(current_subsection)
-                    current_subsection = None
-                elif current_section:
-                    current_section['content'] = '\n'.join(content_buffer)
-                content_buffer = []
         
-        # Add the last section if it exists
-        if current_section:
-            if content_buffer:
-                if current_subsection:
-                    current_subsection['content'] = '\n'.join(content_buffer)
-                    current_section['subsections'].append(current_subsection)
-                else:
-                    current_section['content'] = '\n'.join(content_buffer)
+        # Don't forget to add the last section
+        if current_section and content_buffer:
+            current_section['content'] = '\n'.join(content_buffer)
             sections.append(current_section)
         
-        # Create the response in the format expected by the frontend
-        response_content = {
-            'title': description_dict.get('project_title', '培训大纲'),
-            'overview': description_dict.get('project_theme', ''),
+        # Structure the response
+        document = {
+            'title': 'Generated Document',
+            'content': full_doc,
             'sections': sections
         }
         
-        return response_content
+        return {"document": document}
     
     except Exception as e:
         logger.error(f"Error in generate_full_doc_with_doc: {str(e)}")
@@ -733,10 +708,12 @@ async def download_document(
 async def create_generated_document(
     document_name: str = Form(...),
     document_type: str = Form(...),
-    url: str = Form(...),
+    file: UploadFile = File(...),
+
     current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    url=upload_file_to_s3_by_key(file)
     document = generated_document_crud.create(
         db=db,
         user_id=current_user.user_id,

@@ -6,7 +6,6 @@ import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FileUp, Loader2, CheckCircle2, FileDown } from 'lucide-react'
-import TemplateFileHandler from '@/components/TemplateFileHandler'
 
 import { useLocation } from 'react-router-dom'
 import { EditableCard } from '@/components/EditableCard'
@@ -18,6 +17,8 @@ import { CheckCircle2 as CheckCircle, MessageCircle, ShieldCheck, Zap, HeartHand
 import { nanoid } from 'nanoid'
 import { useNavigate } from 'react-router-dom';
 import { useToken, useToast as useToastHook } from '../../hooks/use-token'
+import jsPDF from 'jspdf';
+import { Document, Paragraph, TextRun, HeadingLevel, Packer } from 'docx';
 
 interface Module {
   id: string
@@ -69,7 +70,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
       id: 'communication',
       name: '有效沟通',
       icon: <MessageCircle className="w-6 h-6" />,
-      content: "掌握有效沟通技巧，提升客户满意度...",
+      content: "掌握有效沟通技巧，提客户满意度...",
       scenarios: [
         {
           id: nanoid(),
@@ -247,23 +248,114 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     });
   };
 
-  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
-    if (!uploadSuccess || !files || files.length === 0) {
-      setShowUpload(false);
-      return;
-    }
-
+  const saveToBackend = async (fileBlob: Blob, fileType: 'pdf' | 'docx') => {
     try {
-      setIsGenerating(true);
       const token = localStorage.getItem('token');
       
-      // Create form data
-      const formData = new FormData();
-      formData.append('file', files[0]);
-      formData.append('template_type', 'customer_service_skills');
+      if (!token) {
+        toast({
+          title: "认证错误",
+          description: "请先登录",
+          variant: "destructive",
+        });
+        throw new Error('未登录');
+      }
+
+      const content = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = reader.result as string;
+          const base64Content = base64String.split(',')[1] || base64String;
+          resolve(base64Content);
+        };
+        reader.readAsDataURL(fileBlob);
+      });
+
+      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: content,
+          format: fileType,
+          filename: '客户服务技能培训手册',
+          isBase64: true
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        if (errorData?.detail === 'Token not found or expired') {
+          localStorage.removeItem('token');
+          toast({
+            title: "认证过期",
+            description: "请重新登录",
+            variant: "destructive",
+          });
+          throw new Error('认证过期');
+        }
+        throw new Error(errorData?.detail || '保存到后端失败');
+      }
+
+      const data = await response.json();
       
-      // First generate outline
-      const outlineResponse = await fetch('http://localhost:8001/api/generate_outline', {
+      const formData = new URLSearchParams();
+      formData.append('document_name', '客户服务技能培训手册');
+      formData.append('document_type', fileType);
+    } catch (error) {
+      console.error('Save to backend error:', error);
+      toast({
+        title: "保存失败",
+        description: error instanceof Error ? error.message : "文档保存失败，请重试",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUploadConfirm = async (files: File[], description: string) => {
+    if (!files || files.length === 0) {
+      return;
+    }
+    
+    try {
+      setIsGenerating(true);
+      const formData = new FormData();
+      const token = localStorage.getItem('token');
+      
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+
+      const sanitizedModules = modules.map(module => ({
+        id: module.id,
+        name: module.name,
+        content: module.content,
+        scenarios: module.scenarios ? module.scenarios.map(scenario => ({
+          id: scenario.id,
+          title: scenario.title,
+          description: scenario.description,
+          points: scenario.points
+        })) : undefined
+      }));
+
+      formData.append('template', 'customer_service_skills');
+      formData.append('description', JSON.stringify({
+        title: title,
+        subtitle: subtitle,
+        overview: overview,
+        modules: sanitizedModules
+      }));
+
+      console.log('Sending request to generate template...');
+      console.log('FormData contents:', {
+        files: files.map(f => f.name),
+        template: 'customer_service_skills',
+        token: token ? 'present' : 'missing'
+      });
+
+      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -271,33 +363,16 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         body: formData
       });
 
-      if (!outlineResponse.ok) {
-        throw new Error('大纲生成失败');
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(errorText || '文档生成失败');
       }
 
-      const outlineData = await outlineResponse.json();
-      
-      // Then generate full document
-      const fullDocResponse = await fetch('http://localhost:8001/api/generate_document', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          outline: outlineData.outline,
-          template_type: 'customer_service_skills',
-          original_file: files[0].name
-        })
-      });
-
-      if (!fullDocResponse.ok) {
-        throw new Error('文档生成失败');
-      }
-
-      const fullDocData = await fullDocResponse.json();
-      setDocumentContent(fullDocData.content);
-      setShowUpload(false);
+      const data = await response.json();
+      console.log('Response data:', data);
+      setDocumentContent(data.document || data.content || '');
       
       toast({
         title: "生成成功",
@@ -312,61 +387,115 @@ const CustomerServiceSkillsTraining: React.FC = () => {
       });
     } finally {
       setIsGenerating(false);
+      setShowUpload(false);  // Hide the upload modal
     }
   };
 
-  const handleUploadCancel = () => {
-    setShowUpload(false);
-  };
-
-  const handleConfirm = () => {
-    toast({
-      title: "确认成功",
-      description: "您已确认阅读完成",
-    });
-  };
-
-  const handleDownload = async (format: 'pdf' | 'docx') => {
+  const handleDownloadPdfFrontend = async () => {
     try {
       setIsDownloading(true);
-      const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:8001/storage/download_document/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: documentContent,
-          format: format,
-          filename: '客户服务技能培训'
-        })
+      const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
       });
-
-      if (!response.ok) {
-        throw new Error('下载失败');
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      
+      doc.setFont('helvetica', 'normal');
+      
+      doc.setFontSize(20);
+      doc.text('客户服务技能培训手册', 40, 40);
+      
+      doc.setFontSize(12);
+      const contentLines = documentContent.split('\n');
+      let y = 80;
+      
+      contentLines.forEach((line) => {
+        if (y > 780) {
+          doc.addPage();
+          y = 40;
+        }
+        doc.text(line, 40, y);
+        y += 20;
+      });
+      
+      const pdfBlob = doc.output('blob');
+      
+      const url = window.URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `客户服务技能培训.${format}`;
+      a.download = '客户服务技能培训手册.pdf';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
+      await saveToBackend(pdfBlob, 'pdf');
+      
       toast({
         title: "下载成功",
-        description: `文档已下载为${format.toUpperCase()}格式`,
+        description: "文档已下载为PDF格式",
       });
     } catch (error) {
-      console.error('Download error:', error);
+      console.error('PDF generation error:', error);
       toast({
-        title: "下载失败",
-        description: error instanceof Error ? error.message : "文档下载失败，请重试",
+        title: "生成PDF失败",
+        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleDownloadWordFrontend = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "客户服务技能培训手册",
+              heading: HeadingLevel.HEADING_1,
+            }),
+            new Paragraph({}),
+            ...documentContent.split('\n').map(line => 
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line,
+                    size: 24,
+                  }),
+                ],
+              })
+            ),
+          ],
+        }],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '客户服务技能培训手册.docx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      await saveToBackend(blob, 'docx');
+
+      toast({
+        title: "下载成功",
+        description: "文档已下载为Word格式",
+      });
+    } catch (error) {
+      console.error('Word generation error:', error);
+      toast({
+        title: "生成Word失败",
+        description: error instanceof Error ? error.message : "Word生成失败，请重试",
         variant: "destructive",
       });
     } finally {
@@ -544,10 +673,9 @@ const CustomerServiceSkillsTraining: React.FC = () => {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
                 <DocumentUpload 
-                  onUpload={handleUploadConfirm}
-                  endpoint="http://localhost:8001/api/upload_document"
-                  isUploading={isGenerating}
-                  setIsUploading={setIsGenerating}
+                  onConfirm={handleUploadConfirm}
+                  isLoading={isGenerating}
+                  onCancel={() => setShowUpload(false)}
                 />
               </div>
             </div>
@@ -558,7 +686,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
             <div className="mt-8">
               <div className="flex gap-2 mb-4">
                 <Button
-                  onClick={() => handleDownload('pdf')}
+                  onClick={handleDownloadPdfFrontend}
                   disabled={isDownloading}
                 >
                   {isDownloading ? (
@@ -569,7 +697,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
                   下载PDF
                 </Button>
                 <Button
-                  onClick={() => handleDownload('docx')}
+                  onClick={handleDownloadWordFrontend}
                   disabled={isDownloading}
                   variant="outline"
                 >
@@ -581,11 +709,6 @@ const CustomerServiceSkillsTraining: React.FC = () => {
                   下载Word
                 </Button>
               </div>
-              <TemplateFileHandler
-                templateId="customer_service_skills"
-                templateDescription={templateDescription}
-                onContentGenerated={setDocumentContent}
-              />
               <div className="prose prose-amber max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {documentContent}
@@ -598,7 +721,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
           {documentContent && (
             <div className="flex justify-center mt-8">
               <Button
-                onClick={handleConfirm}
+                onClick={() => {}}
                 className="bg-green-500 hover:bg-green-600 text-white"
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />

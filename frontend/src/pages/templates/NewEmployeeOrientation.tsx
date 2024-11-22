@@ -218,26 +218,8 @@ const NewEmployeeOrientation: React.FC = () => {
       const formData = new URLSearchParams();
       formData.append('document_name', '新员工入职培训手册');
       formData.append('document_type', fileType);
-      formData.append('url', data.url);
 
-      const recordResponse = await fetch('http://localhost:8001/api/storage/create_generated_document', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: formData
-      });
-
-      if (!recordResponse.ok) {
-        const errorText = await recordResponse.text();
-        throw new Error(errorText || '创建文档记录失败');
-      }
-
-      toast({
-        title: "保存成功",
-        description: "文档已保存到云端",
-      });
+      
     } catch (error) {
       console.error('Save to backend error:', error);
       toast({
@@ -374,16 +356,16 @@ const NewEmployeeOrientation: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100">
-      <div className="bg-white shadow-lg">
-        <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">新员工入职培训手册</h1>
-          <p className="text-amber-100">欢迎加入我们的团队！</p>
-        </div>
-        
-        <div className="p-6 max-w-none">
-          {/* Checklist Section */}
-          <section className="mb-8">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+      <div className="w-screen bg-white shadow-lg">
+        <h1 className="text-3xl font-bold mb-2">新员工入职培训手册</h1>
+        <p className="text-amber-100">欢迎加入我们的团队！</p>
+      </div>
+      
+      <div className="flex-1 p-6 overflow-auto">
+        {/* Checklist Section */}
+        <div className="max-w-none w-full space-y-8">
+          <section>
             <h2 className="text-2xl font-semibold text-amber-800 mb-4">入职清单</h2>
             <Card className="bg-amber-50 border-amber-200">
               <CardContent className="pt-6">
@@ -433,7 +415,7 @@ const NewEmployeeOrientation: React.FC = () => {
 
           {/* Document Content Section */}
           {documentContent && (
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex justify-end gap-2 mb-4">
                 <Button
                   onClick={handleDownloadPdfFrontend}

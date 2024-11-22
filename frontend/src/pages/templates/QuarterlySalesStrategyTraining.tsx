@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Pencil, Save } from 'lucide-react'
 import { FileUp, Loader2, Download, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import DocumentUpload from '@/components/DocumentUpload';
+import DocumentUpload from '../DocumentUpload';
+import jsPDF from 'jspdf';
+import { Document, Paragraph, TextRun, HeadingLevel, Packer } from 'docx';
+import remarkGfm from 'remark-gfm';
+import ReactMarkdown from 'react-markdown';
 
 interface TrainingModule {
   id: string
@@ -77,9 +81,11 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
   ]);
 
   const [documentContent, setDocumentContent] = useState<string>('');
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const { toast } = useToast();
 
   const handleModuleEdit = (moduleId: string, field: 'title' | 'content', value: string) => {
@@ -150,58 +156,67 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
     }
   }
 
-  const handleUploadConfirm = async (files: File[], description: string) => {
+  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
+    if (!uploadSuccess || !files || files.length === 0) {
+      setShowUpload(false);
+      return;
+    }
+    
     try {
       setIsGenerating(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Authentication required');
-      }
-
       const formData = new FormData();
+      const token = localStorage.getItem('token');
+      
       files.forEach(file => {
         formData.append('files', file);
       });
 
-      // 添加培训相关信息到描述中
-      const trainingInfo = {
-        quarter: selectedQuarter,
-        modules: modules,
+      formData.append('template', 'quarterly_sales_strategy');
+      formData.append('description', JSON.stringify({
+        title: '季度销售策略培训手册',
+        subtitle: '提升销售业绩的季度指南',
+        overview: '本手册提供了季度销售策略和目标达成方法。',
         objectives: objectives,
+        modules: modules,
         actionSteps: actionSteps,
-        quarterInfo: quarters.find(q => q.id === selectedQuarter),
-        description: description
-      };
+        selectedQuarter: selectedQuarter
+      }));
 
-      formData.append('description', JSON.stringify(trainingInfo));
-      formData.append('ai_model', 'gpt-4o-mini');
-      formData.append('requirements', '');
+      console.log('Sending request to generate template...');
+      console.log('FormData contents:', {
+        files: files.map(f => f.name),
+        template: 'quarterly_sales_strategy',
+        token: token ? 'present' : 'missing'
+      });
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {
+      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`
         },
         body: formData
       });
 
+      console.log('Response status:', response.status);
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        console.error('Error response:', errorText);
+        throw new Error(errorText || '文档生成失败');
       }
 
       const data = await response.json();
-      setDocumentContent(data.content);
+      console.log('Response data:', data);
+      setDocumentContent(data.document || data.content || '');
       
       toast({
         title: "生成成功",
-        description: "培训大纲已生成",
+        description: "季度销售策略培训文档已生成",
       });
-    } catch (error: any) {
-      console.error('Error in handleUploadConfirm:', error);
+    } catch (error) {
+      console.error('Generation error:', error);
       toast({
         title: "生成失败",
-        description: error.message || "文件上传过程中发生错误",
+        description: error instanceof Error ? error.message : "文档生成失败，请重试",
         variant: "destructive",
       });
     } finally {
@@ -210,11 +225,29 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
     }
   };
 
-  const handleDownload = async (format: 'pdf' | 'docx') => {
+  const saveToBackend = async (fileBlob: Blob, fileType: 'pdf' | 'docx') => {
     try {
-      setIsDownloading(true);
       const token = localStorage.getItem('token');
       
+      if (!token) {
+        toast({
+          title: "认证错误",
+          description: "请先登录",
+          variant: "destructive",
+        });
+        throw new Error('未登录');
+      }
+
+      const content = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = reader.result as string;
+          const base64Content = base64String.split(',')[1] || base64String;
+          resolve(base64Content);
+        };
+        reader.readAsDataURL(fileBlob);
+      });
+
       const response = await fetch('http://localhost:8001/api/storage/download_document', {
         method: 'POST',
         headers: {
@@ -222,31 +255,144 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          content: documentContent,
-          format,
-          filename: '季度销售策略培训',
-          isBase64: false
+          content: content,
+          format: fileType,
+          filename: '季度销售策略培训手册',
+          isBase64: true
         })
       });
 
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        if (errorData?.detail === 'Token not found or expired') {
+          localStorage.removeItem('token');
+          toast({
+            title: "认证过期",
+            description: "请重新登录",
+            variant: "destructive",
+          });
+          throw new Error('认证过期');
+        }
+        throw new Error(errorData?.detail || '保存到后端失败');
+      }
+
+      const data = await response.json();
+      console.log('Save to backend response:', data);
+    } catch (error) {
+      console.error('Save to backend error:', error);
+      toast({
+        title: "保存失败",
+        description: error instanceof Error ? error.message : "文档保存失败，请重试",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownloadPdfFrontend = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
+      });
+      
+      doc.setFont('helvetica', 'normal');
+      
+      doc.setFontSize(20);
+      doc.text('季度销售策略培训手册', 40, 40);
+      
+      doc.setFontSize(12);
+      const contentLines = documentContent.split('\n');
+      let y = 80;
+      
+      contentLines.forEach((line) => {
+        if (y > 780) {
+          doc.addPage();
+          y = 40;
+        }
+        doc.text(line, 40, y);
+        y += 20;
+      });
+      
+      const pdfBlob = doc.output('blob');
+      
+      const url = window.URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `季度销售策略培训.${format}`;
+      a.download = '季度销售策略培训手册.pdf';
       document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+
+      await saveToBackend(pdfBlob, 'pdf');
       
       toast({
         title: "下载成功",
-        description: `文档已下载为${format.toUpperCase()}格式`,
+        description: "文档已下载为PDF格式",
       });
     } catch (error) {
+      console.error('PDF generation error:', error);
       toast({
-        title: "下载失败",
-        description: `${format.toUpperCase()}生成失败，请重试`,
+        title: "生成PDF失败",
+        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleDownloadWordFrontend = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "季度销售策略培训手册",
+              heading: HeadingLevel.HEADING_1,
+            }),
+            new Paragraph({}),
+            ...documentContent.split('\n').map(line => 
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line,
+                    size: 24,
+                  }),
+                ],
+              })
+            ),
+          ],
+        }],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '季度销售策略培训手册.docx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      await saveToBackend(blob, 'docx');
+
+      toast({
+        title: "下载成功",
+        description: "文档已下载为Word格式",
+      });
+    } catch (error) {
+      console.error('Word generation error:', error);
+      toast({
+        title: "生成Word失败",
+        description: error instanceof Error ? error.message : "Word生成失败，请重试",
         variant: "destructive",
       });
     } finally {
@@ -508,7 +654,7 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
           <div className="flex justify-between items-center mb-6">
             <Button
               onClick={() => setShowUpload(true)}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+              className="bg-amber-500 hover:bg-amber-600 text-white"
               disabled={isGenerating}
             >
               {isGenerating ? (
@@ -519,56 +665,56 @@ const QuarterlySalesStrategyTraining: React.FC = () => {
               ) : (
                 <>
                   <FileUp className="mr-2 h-4 w-4" />
-                  上传策略资料
+                  上传文档生成
                 </>
               )}
             </Button>
-
+            
             {documentContent && (
-              <div className="flex gap-2">
+              <>
                 <Button
-                  onClick={() => handleDownload('pdf')}
-                  className="bg-red-500 hover:bg-red-600"
+                  onClick={handleDownloadPdfFrontend}
+                  variant="outline"
                   disabled={isDownloading}
                 >
-                  {isDownloading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Download className="mr-2 h-4 w-4" />
-                  )}
-                  下载PDF
+                  <FileDown className="mr-2 h-4 w-4" />
+                  下载 PDF
                 </Button>
                 <Button
-                  onClick={() => handleDownload('docx')}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleDownloadWordFrontend}
+                  variant="outline"
                   disabled={isDownloading}
                 >
-                  {isDownloading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <FileDown className="mr-2 h-4 w-4" />
-                  )}
-                  下载Word
+                  <FileDown className="mr-2 h-4 w-4" />
+                  下载 Word
                 </Button>
-              </div>
+              </>
             )}
           </div>
 
-          <DocumentUpload
-            open={showUpload}
-            onClose={() => setShowUpload(false)}
-            onConfirm={handleUploadConfirm}
-            acceptedFileTypes={['pdf', 'doc', 'docx', 'txt']}
-            maxFileSize={5 * 1024 * 1024}
-          />
+          {showUpload && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <DocumentUpload 
+                  onConfirm={handleUploadConfirm}
+                  isLoading={isGenerating}
+                  onCancel={() => setShowUpload(false)}
+                />
+              </div>
+            </div>
+          )}
 
-          <div className="flex justify-end">
-            <Button
-              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
-            >
-              开始本季度培训
-            </Button>
-          </div>
+          {documentContent && (
+            <div className="mt-8">
+              <Card className="bg-white">
+                <CardContent className="prose max-w-none p-6">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {documentContent}
+                  </ReactMarkdown>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>

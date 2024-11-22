@@ -16,121 +16,68 @@ const PerformanceReview: React.FC = () => {
   const { toast } = useToast();
 
   const templateDescription = {
-    title: '绩效评估报告',
+    title: '绩效考核评估报告',
     subtitle: '全面评估员工表现',
-    overview: '本报告将帮助您客观评估员工的工作表现和发展潜力。',
+    overview: '本报告提供了详细的绩效评估结果和改进建议。',
     content: documentContent
   };
 
-  const handleDownloadPdfFrontend = async () => {
-    try {
-      setIsDownloading(true);
-      
-      const doc = new jsPDF({
-        unit: 'pt',
-        format: 'a4'
-      });
-      
-      doc.setFont('helvetica', 'normal');
-      
-      doc.setFontSize(20);
-      doc.text('绩效考核报告', 40, 40);
-      
-      doc.setFontSize(12);
-      const contentLines = documentContent.split('\n');
-      let y = 80;
-      
-      contentLines.forEach((line) => {
-        if (y > 780) {
-          doc.addPage();
-          y = 40;
-        }
-        doc.text(line, 40, y);
-        y += 20;
-      });
-      
-      const pdfBlob = doc.output('blob');
-      
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '绩效考核报告.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      await saveToBackend(pdfBlob, 'pdf');
-      
-      toast({
-        title: "下载成功",
-        description: "文档已下载为PDF格式",
-      });
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      toast({
-        title: "生成PDF失败",
-        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
+  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
+    if (!uploadSuccess || !files || files.length === 0) {
+      return;
     }
-  };
-
-  const handleDownloadWordFrontend = async () => {
+    
     try {
-      setIsDownloading(true);
+      setIsGenerating(true);
+      const formData = new FormData();
+      const token = localStorage.getItem('token');
       
-      const doc = new Document({
-        sections: [{
-          properties: {},
-          children: [
-            new Paragraph({
-              text: "绩效考核报告",
-              heading: HeadingLevel.HEADING_1,
-            }),
-            new Paragraph({}),
-            ...documentContent.split('\n').map(line => 
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: line,
-                    size: 24,
-                  }),
-                ],
-              })
-            ),
-          ],
-        }],
+      files.forEach(file => {
+        formData.append('files', file);
       });
 
-      const blob = await Packer.toBlob(doc);
+      formData.append('template', 'performance_review');
+      formData.append('description', JSON.stringify(templateDescription));
+
+      console.log('Sending request to generate template...');
+      console.log('FormData contents:', {
+        files: files.map(f => f.name),
+        template: 'performance_review',
+        token: token ? 'present' : 'missing'
+      });
+
+      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(errorText || '文档生成失败');
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+      setDocumentContent(data.document || data.content || '');
       
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '绩效考核报告.docx';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      await saveToBackend(blob, 'docx');
-
       toast({
-        title: "下载成功",
-        description: "文档已下载为Word格式",
+        title: "生成成功",
+        description: "绩效考核评估报告已生成",
       });
     } catch (error) {
-      console.error('Word generation error:', error);
+      console.error('Generation error:', error);
       toast({
-        title: "生成Word失败",
-        description: error instanceof Error ? error.message : "Word生成失败，请重试",
+        title: "生成失败",
+        description: error instanceof Error ? error.message : "文档生成失败，请重试",
         variant: "destructive",
       });
     } finally {
-      setIsDownloading(false);
+      setIsGenerating(false);
     }
   };
 
@@ -166,7 +113,7 @@ const PerformanceReview: React.FC = () => {
         body: JSON.stringify({
           content: content,
           format: fileType,
-          filename: '绩效考核报告',
+          filename: '绩效考核评估报告',
           isBase64: true
         })
       });
@@ -188,7 +135,7 @@ const PerformanceReview: React.FC = () => {
       const data = await response.json();
       
       const formData = new URLSearchParams();
-      formData.append('document_name', '绩效考核报告');
+      formData.append('document_name', '绩效考核评估报告');
       formData.append('document_type', fileType);
       formData.append('url', data.url);
 
@@ -220,6 +167,118 @@ const PerformanceReview: React.FC = () => {
     }
   };
 
+  const handleDownloadPdfFrontend = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
+      });
+      
+      doc.setFont('helvetica', 'normal');
+      
+      doc.setFontSize(20);
+      doc.text('绩效考核评估报告', 40, 40);
+      
+      doc.setFontSize(12);
+      const contentLines = documentContent.split('\n');
+      let y = 80;
+      
+      contentLines.forEach((line) => {
+        if (y > 780) {
+          doc.addPage();
+          y = 40;
+        }
+        doc.text(line, 40, y);
+        y += 20;
+      });
+      
+      const pdfBlob = doc.output('blob');
+      
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '绩效考核评估报告.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      await saveToBackend(pdfBlob, 'pdf');
+      
+      toast({
+        title: "下载成功",
+        description: "文档已下载为PDF格式",
+      });
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      toast({
+        title: "生成PDF失败",
+        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleDownloadWordFrontend = async () => {
+    try {
+      setIsDownloading(true);
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "绩效考核评估报告",
+              heading: HeadingLevel.HEADING_1,
+            }),
+            new Paragraph({}),
+            ...documentContent.split('\n').map(line => 
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line,
+                    size: 24,
+                  }),
+                ],
+              })
+            ),
+          ],
+        }],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '绩效考核评估报告.docx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      await saveToBackend(blob, 'docx');
+
+      toast({
+        title: "下载成功",
+        description: "文档已下载为Word格式",
+      });
+    } catch (error) {
+      console.error('Word generation error:', error);
+      toast({
+        title: "生成Word失败",
+        description: error instanceof Error ? error.message : "Word生成失败，请重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-100">
       <div className="bg-white shadow-lg">
@@ -233,6 +292,7 @@ const PerformanceReview: React.FC = () => {
             templateId="performance_review"
             templateDescription={templateDescription}
             onContentGenerated={setDocumentContent}
+            onUploadConfirm={handleUploadConfirm}
           />
 
           {documentContent && (

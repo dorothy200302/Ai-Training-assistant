@@ -209,30 +209,44 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             # 1. 创建搜索查询的 prompt
             self.logger.info("Creating search query prompt")
             search_prompt = PromptTemplate(
-                template="""Based on the following background information, generate 3-5 search queries to find relevant training outline structures and best practices:
+                template="""根据以下背景信息，生成3-5个搜索查询来查找相关的培训大纲结构和最佳实践：
                 {background_info}
                 
-                Please return the queries in JSON format as follows:
-                {{"queries": ["query1", "query2", "query3"]}}
+                请以JSON格式返回查询：
+                {{"queries": ["查询1", "查询2", "查询3"]}}
                 """,
                 input_variables=["background_info"]
             )
             
             # 2. 生成搜索查询
             self.logger.info("Generating search queries")
-            chain = LLMChain(llm=self.llm, prompt=search_prompt)
-            json_str = await chain.arun(background_info=json.dumps(self.background_informations))
-            self.logger.info(f"Generated search queries JSON: {json_str}")
+            try:
+                chain = LLMChain(llm=self.llm, prompt=search_prompt)
+                json_str = await chain.arun(background_info=json.dumps(self.background_informations))
+                self.logger.info(f"Generated search queries JSON: {json_str}")
+            except Exception as e:
+                self.logger.error(f"Error generating search queries: {str(e)}")
+                raise TypeError(f"Error generating search queries: {str(e)}")
             
             # 3. 解析查询并搜索
             try:
                 queries_dict = json.loads(json_str)
                 if not isinstance(queries_dict, dict) or "queries" not in queries_dict:
                     self.logger.warning("Invalid queries format, using default queries")
-                    queries_dict = {"queries": ["training outline best practices", "training document structure", "new employee training content"]}
+                    queries_dict = {"queries": [
+                        f"培训大纲最佳实践 {self.background_informations}",
+                        f"培训文档结构 {self.background_informations}",
+                        "培训文档结构",
+                        "新员工培训内容"
+                    ]}
             except json.JSONDecodeError:
                 self.logger.error(f"JSON parsing error: {json_str}")
-                queries_dict = {"queries": ["training outline best practices", "training document structure", "new employee training content"]}
+                queries_dict = {"queries": [
+                    f"培训大纲最佳实践 {self.background_informations}",
+                    f"培训文档结构 {self.background_informations}",
+                    "培训文档结构",
+                    "新员工培训内容"
+                ]}
 
             # 4. 获取本地文档内容
             search_results = []
@@ -245,36 +259,36 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
                 
                 if docs:
                     local_context = "\n\n".join([doc.page_content for doc in docs])
-                    search_results.append(f"Local documents:\n{local_context}")
+                    search_results.append(f"本地文档:\n{local_context}")
                     self.logger.info(f"Found {len(docs)} relevant documents")
                 else:
                     self.logger.warning("No relevant documents found in similarity search")
             except asyncio.TimeoutError:
                 self.logger.error("Similarity search timed out")
-                search_results.append("Search timed out, proceeding with partial results")
+                search_results.append("搜索超时，继续使用部分结果")
             except Exception as e:
                 self.logger.error(f"Error in similarity search: {str(e)}", exc_info=True)
-                search_results.append("No additional context available")
+                search_results.append("没有其他上下文")
 
             # 5. 创建大纲生成的 prompt
             self.logger.info("Creating outline generation prompt")
             outline_prompt = PromptTemplate(
-                template="""As a professional training document expert, please generate a detailed training outline based on the following information:
+                template="""作为专业的培训文档专家，请根据以下信息生成详细的培训大纲：
 
-                Background Information:
+                背景信息：
                 {background_info}
 
-                Reference Materials:
+                参考资料：
                 {search_results}
 
-                Requirements:
-                1. Clear and structured outline
-                2. Use numerical numbering (1., 1.1, 1.1.1)
-                3. Include essential sections (Introduction, Main Content, Summary)
-                4. Consider practicality and completeness
-                5. Cite references using [1], [2] format where appropriate
+                要求：
+                1. 清晰且结构化的大纲
+                2. 使用数字编号（1., 1.1, 1.1.1）
+                3. 包含必要的章节（介绍、主要内容、总结）
+                4. 考虑实用性和完整性
+                5. 适当使用[1]、[2]格式引用参考资料
 
-                Please generate the outline:""",
+                请生成大纲：""",
                 input_variables=["background_info", "search_results"]
             )
 
@@ -282,8 +296,8 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             self.logger.info("Generating outline")
             chain = LLMChain(llm=self.llm, prompt=outline_prompt)
             outline = await chain.arun(
-                background_info=json.dumps(self.background_informations, ensure_ascii=False),
-                search_results="\n\n".join(search_results) if search_results else "No additional context available"
+                background_info=json.dumps(self.background_informations),
+                search_results="\n\n".join(search_results) if search_results else "没有其他上下文"
             )
 
             if not outline or len(outline.strip()) < 10:  # Basic validation
@@ -499,60 +513,121 @@ Content: {doc.page_content}
         logging.info(f"Template: {template}")
         
         try:
-            # First generate the outline
-            logging.info("Generating outline")
-            outline = await self.generate_training_outline()  
+            # 使用模板生成大纲的 prompt
+            outline_prompt = PromptTemplate(
+                template="""作为专业的培训文档专家，请参考以下模板结构和背景信息，生成一个详细的培训大纲：
+
+                模板结构：
+                {template}
+
+                背景信息：
+                {background_info}
+
+                要求：
+                1. 参考模板的结构和风格
+                2. 使用数字编号（1., 1.1, 1.1.1）
+                3. 确保包含所有必要的章节
+                4. 保持内容的完整性和实用性
+                5. 适当扩展模板中未提及但必要的内容
+
+                请生成大纲：""",
+                input_variables=["template", "background_info"]
+            )
+
+            # 生成大纲
+            logging.info("Generating outline based on template")
+            chain = LLMChain(llm=self.llm, prompt=outline_prompt)
+            outline = await chain.arun(
+                template=template,
+                background_info=json.dumps(self.background_informations)
+            )
+
             if not outline:
                 logging.error("Failed to generate outline")
-                raise ValueError("Failed to generate outline")
-            logging.info("Outline generated successfully")
-            logging.info(f"Outline preview: {outline[:200]}...")  
-
-            # Then generate the full document based on the outline
-            system_prompt = f"""You are a professional document writer. 
-            Your task is to generate a detailed document based on the provided outline.
-            The document should be well-structured, professional, and follow markdown format.
-            Use appropriate headings (##, ###) for different sections.
-            Include all necessary information from the outline."""
-
-            user_prompt = f"""Please generate a detailed document based on this outline:
-
-            {outline}
-
-            Additional context:
-            {json.dumps(self.background_informations, indent=2)}
-
-            Requirements:
-            1. Follow the outline structure exactly
-            2. Use markdown formatting
-            3. Be detailed and professional
-            4. Include all sections from the outline
-            5. Keep the content factual and relevant"""
-
-            logging.info("Generating full document")
-            response = await self.chat_completion_with_backoff({
-                "system_prompt": system_prompt,
-                "user_prompt": user_prompt
-            }, temperature=0.7, max_tokens=4000)
-
-            if not response:
-                logging.error("Failed to generate document content")
-                raise ValueError("Failed to generate document content")
-
-            # Clean and format the response
-            document_content = response.strip()
-            if not document_content.startswith('#'):
-                document_content = f"# {template}\n\n{document_content}"
+                return None
+                
+            sections = self._parse_outline(outline)
+            logging.info(f"Parsed sections: {sections}")
+            full_doc = [outline]
             
-            logging.info("Document generation completed")
-            logging.info(f"Document length: {len(document_content)}")
-            logging.info(f"Document preview: {document_content[:200]}...")  
-            return document_content
-
+            async def process_section(section: str) -> List[str]:
+                """并行处理单个章节的所有内容"""
+                # Generate main content first
+                main_content = await self.generate_section_content_async(section, "main")
+                
+                # Generate additional content in parallel
+                tasks = [
+                    self.generate_section_content_async(section, "practice"),
+                    self.generate_section_content_async(section, "case_study"),
+                    self.generate_quiz_async(section),
+                ]
+                
+                results = await asyncio.gather(*tasks)
+                
+                # Structure the section content according to template
+                section_parts = [
+                    f"\n\n## {section}\n{main_content}",
+                    f"\n\n### 实践内容\n{results[0]}",
+                    f"\n\n### 案例分析\n{results[1]}",
+                    f"\n\n### 测试题\n{results[2]}"
+                ]
+                
+                # Add optimization suggestions for the summary section
+                if section.lower().strip() == "总结":
+                    optimization_task = await self.generate_section_content_async(section, "optimization")
+                    self.optimization_suggestions = optimization_task
+                    section_parts.append(f"\n\n### 优化建议\n{optimization_task}")
+                
+                return section_parts
+            
+            # Process all sections in parallel
+            all_section_contents = await asyncio.gather(
+                *[process_section(section) for section in sections]
+            )
+            
+            # Flatten results and add to document
+            for section_contents in all_section_contents:
+                full_doc.extend(section_contents)
+            
+            final_doc = "\n\n".join(full_doc)
+            logging.info("Full document generated successfully")
+            logging.info(f"Document length: {len(final_doc)}")
+            return final_doc
+            
         except Exception as e:
             logging.error(f"Error in generate_fulldoc_with_template: {str(e)}")
-            print(f"Error in generate_fulldoc_with_template: {str(e)}")
             raise
+
+    async def process_section(self, section: str) -> List[str]:
+        """并行处理单个章节的所有内容"""
+        # Generate main content first
+        main_content = await self.generate_section_content_async(section, "main")
+        
+        # Generate additional content
+        tasks = [
+            self.generate_section_content_async(section, "practice"),
+            self.generate_section_content_async(section, "case_study"),
+            self.generate_quiz_async(section),
+        ]
+        
+        results = await asyncio.gather(*tasks)
+        
+        # Structure the section content
+        section_parts = [
+            f"\n\n## {section}\n{main_content}",  # Main content
+            f"\n\n### 实践内容\n{results[0]}",    # Practice content
+            f"\n\n### 案例分析\n{results[1]}",    # Case study
+            f"\n\n### 测试题\n{results[2]}"       # Quiz
+        ]
+        
+        # If this is the final section, generate optimization suggestions for internal use
+        if section.lower().strip() == "总结":
+            optimization_task = await self.generate_section_content_async(section, "optimization")
+            # Store optimization suggestions in a class variable or log them
+            self.optimization_suggestions = optimization_task
+            logging.info(f"Generated optimization suggestions: {optimization_task}")
+        
+        return section_parts
 
     async def generate_section_content_async(self, section_title: str, section_type: str) -> str:
         """异步生成章节内容，包含搜索和引用"""
@@ -624,7 +699,7 @@ Content: {doc.page_content}
             参考资料：
             {references}
             """
-        else:  # case_study
+        elif section_type == "case_study":
             template = prompt_of_informations + """
             特长：制定贴合实际，分析深入，启发性强的案例分析。
             现请根据培训文档中的以下章节内容生成案例分析：
@@ -636,6 +711,45 @@ Content: {doc.page_content}
             2. 分析案例的关键点
             3. 提供解决方案
             4. 总结经验教训
+            5. 适当引用参考资料，使用[数字]格式
+            
+            相关文档内容：
+            {context}
+            
+            参考资料：
+            {references}
+            """
+        # elif section_type == "optimization":
+        #     template = prompt_of_informations + """
+        #     特长：制定优化建议。
+        #     现请根据培训文档中的以下章节内容生成优化建议：
+            
+        #     章节标题: {section_title}
+            
+        #     要求：
+        #     1. 总结主要内容和关键点
+        #     2. 提出优化建议
+        #     3. 解释优化理由
+        #     4. 适当引用参考资料，使用[数字]格式
+            
+        #     相关文档内容：
+        #     {context}
+            
+        #     参考资料：
+        #     {references}
+        #     """
+        else:  # main
+            template = prompt_of_informations + """
+            特长：制定详细，准确，易懂的章节内容。
+            现请根据培训文档中的以下章节内容生成章节内容：
+            
+            章节标题: {section_title}
+            
+            要求：
+            1. 概念解释要清晰准确
+            2. 包含具体的示例
+            3. 突出重点难点
+            4. 添加相关知识链接
             5. 适当引用参考资料，使用[数字]格式
             
             相关文档内容：
@@ -800,23 +914,34 @@ Content: {doc.page_content}
         
         async def process_section(section: str) -> List[str]:
             """并行处理单个章节的所有内容"""
+            # Generate main content first
+            main_content = await self.generate_section_content_async(section, "main")
+            
+            # Generate additional content
             tasks = [
-                self.generate_section_content_async(section, "theory"),
                 self.generate_section_content_async(section, "practice"),
                 self.generate_section_content_async(section, "case_study"),
                 self.generate_quiz_async(section),
-                self.generate_summary_async(section)
             ]
             
             results = await asyncio.gather(*tasks)
             
-            return [
-                f"\n\n## {section} - 理论内容\n{results[0]}",
-                f"\n\n## {section} - 实践内容\n{results[1]}",
-                f"\n\n## {section} - 案例分析\n{results[2]}",
-                f"\n\n## {section} - 测试题\n{results[3]}",
-                f"\n\n## {section} - 总结\n{results[4]}"
+            # Structure the section content
+            section_parts = [
+                f"\n\n## {section}\n{main_content}",  # Main content
+                f"\n\n### 实践内容\n{results[0]}",    # Practice content
+                f"\n\n### 案例分析\n{results[1]}",    # Case study
+                f"\n\n### 测试题\n{results[2]}"       # Quiz
             ]
+            
+            # Only add optimization suggestions at the end of the document
+            if section.lower().strip() == "总结":
+                optimization_task = await self.generate_section_content_async(section, "optimization")
+                # Store optimization suggestions in a class variable or log them
+                self.optimization_suggestions = optimization_task
+                logging.info(f"Generated optimization suggestions: {optimization_task}")
+            
+            return section_parts
         
         # 并行处理所有章节
         all_section_contents = await asyncio.gather(
@@ -908,6 +1033,40 @@ Content: {doc.page_content}
             print(f"Error evaluating document: {str(e)}")
             return {}
 
+    async def _generate_search_queries(self, section_title: str) -> dict:
+        """为章节生成搜索查询"""
+        search_prompt = PromptTemplate(
+            template=self.generate_prompt() + """
+            请为培训文档章节"{section_title}"生成3-5个搜索查询，用于获取相关的专业知识和最新信息。
+            查询应该：
+            1. 针对性强，与章节主题直接相关
+            2. 含专业术语
+            3. 覆盖不同的知识点
+            4. 适合网络搜索
+            
+            请以JSON格式输出，格式如下：
+            {{"queries": ["查询1", "查询2", "查询3"]}}
+            """,
+            input_variables=["section_title"]
+        )
+        
+        chain = LLMChain(llm=self.llm, prompt=search_prompt)
+        try:
+            result = await chain.arun(section_title=section_title)
+            # 清理 JSON 字符串
+            result = result.replace('```json', '').replace('```', '').strip()
+            
+            try:
+                queries_dict = json.loads(result)
+                return queries_dict
+            except json.JSONDecodeError:
+                print(f"JSON parsing failed for result: {result}")
+                return {"queries": [f"最佳实践 {section_title}"]}
+                
+        except Exception as e:
+            print(f"Error generating queries: {str(e)}")
+            return {"queries": [f"best practices {section_title}"]}
+        
 def insert_references(content: str) -> str:
     """
     Insert reference numbers from square brackets into the content.
@@ -920,56 +1079,3 @@ def insert_references(content: str) -> str:
     content = re.sub(r'\[Source (\d+)\]', r'[\1]', content)
     logging.info("References inserted")
     return content
-    
-
-# 测试代码
-async def main():
-    background_informations = {
-        "audience_info": "主要众:abc集团新入职员工,受众特点:年轻化，学历高，学习能力强",
-        "company_name": "123",
-        "company_culture": "客户第一，团队合作，拥抱变化，诚信，激情敬业",
-        "company_industry": "互联网",
-        "company_competition": "行业领先",
-        "user_role": "市场营销经理",
-        "industry_info": "互联网",
-        "project_title": "市场营销经理",
-        "project_dutys": "负责公司市场营销略的制定和执行",
-        "project_goals": "了解公司市场营销策略的制定和执行",
-        "project_theme": "了解司市场营销策略的制定和执行",
-        "project_aim": "了解公司市场营销策略的制定和执行",
-        "content_needs": "市场营销策略的制定和执行",
-        "format_style": " "
-    }
-    
-    file_paths = [
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we approach marketing · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we evolve our knowledge base · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we help users · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we think about design · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we approach CI_CD · Resend.html",
-        r".venv/share/How we receive feedback · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we scale support · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we think about design · Resend.pdf",
-        r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we think about swag · Resend.pdf",
-    ]
-    
-    # 记录开始时间
-    g = AsyncTrainingDocGenerator(file_paths=file_paths, model_name="gpt-4o-mini", user_email="3218961440@qq.com",
-                                background_informations=background_informations)
-    
-    # 使用await调用异步函数
-    outline = await g.generate_training_outline()
-    full_doc = await g.generate_full_training_doc(outline)
-    print(full_doc)
-
-    # 保存结果
-    saved_file = await g.save_full_doc(full_doc)
-    evaluation_results = await g.evaluate_full_doc(outline, full_doc)
-    eval_file, doc_file = await g.save_evaluation_results(evaluation_results, outline, full_doc)
-    
-    print(f"Document saved to: {saved_file}")
-    print(f"Evaluation results saved to: {eval_file}")
-    print(f"Document saved to: {doc_file}")
-
-if __name__ == "__main__":
-    asyncio.run(main())

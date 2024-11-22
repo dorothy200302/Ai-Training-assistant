@@ -51,7 +51,7 @@ const templates: Template[] = [
     category: '项目管理',
     image: 'https://img2.baidu.com/it/u=2203003576,1166201863&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',
     tags: ['入门级', '管理'],
-    path: '/templates/project-management'
+    path: '/templates/management'
   },
 ];
 

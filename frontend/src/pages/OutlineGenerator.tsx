@@ -121,7 +121,8 @@ const OutlineGenerator: React.FC = () => {
   const [input, setInput] = useState<string>(location.state?.topic || "");
   const [loading, setLoading] = useState<boolean>(false);
   const [outline, setOutline] = useState<OutlineSection[]>([]);
-
+  const [generatingOutline, setGeneratingOutline] = useState(false);  // 添加生成中状态
+  
   // 添加新的接口定义
   interface BackgroundInfo {
     industry_info: string;
@@ -210,7 +211,7 @@ const OutlineGenerator: React.FC = () => {
         formData.append('files', file);
       });
 
-      const response = await fetch('/api/generate_outline_and_upload/', {
+      const response = await fetch('/api/storage/generate_outline_and_upload/', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -278,7 +279,7 @@ const OutlineGenerator: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 添加上传文件状态
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const handleAnswer = (answer: string) => {
     if (!answer.trim()) return;
@@ -331,54 +332,91 @@ const OutlineGenerator: React.FC = () => {
   const [hasCompletedConversation, setHasCompletedConversation] = useState<boolean>(false);
 
   // 添加上传确认处理函数
-  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
-    if (!uploadSuccess || !files || files.length === 0) {
+  const handleUploadConfirm = async (uploadSuccess: boolean, uploadedFiles?: File[]) => {
+    if (!uploadSuccess || !uploadedFiles || uploadedFiles.length === 0) {
       return;
     }
 
+    // Store the files for later use
+    setFiles(uploadedFiles);
+
     try {
-      const formData = new FormData();
+      setLoading(true);
+      setGeneratingOutline(true);
       
-      // 添加文件
-      files.forEach((file) => {
+      const formData = new FormData();
+      const token = localStorage.getItem('token');
+      
+      console.log('Using token:', token);  // 调试日志
+      
+      uploadedFiles.forEach((file) => {
         formData.append('files', file);
       });
-      
-      // 添加其他必需参数
-      formData.append('description', JSON.stringify(backgroundInfo));
-      formData.append('ai_model', 'gpt-4o-mini'); // 添加默认的 ai_model
-      formData.append('requirements', ''); // 添加空的 requirements
-      
-      const token = localStorage.getItem('token');
-      console.log('Sending request with:', {
-        files: files.map(f => f.name),
-        description: JSON.stringify(backgroundInfo),
-        token: token ? 'exists' : 'missing'
-      });
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          // 注意：使用 FormData 时不要设置 'Content-Type'，浏览器会自动设置
-        },
-        body: formData
+      const completeBackgroundInfo = {
+        ...backgroundInfo,
+      };
+      formData.append('description', JSON.stringify(completeBackgroundInfo));
+      formData.append('ai_model', 'gpt-4o-mini');
+
+      // 修改请求头的设置方式
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+      // 不要设置 Content-Type，因为是 FormData
+
+      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {        method: 'POST',
+        headers: headers,
+        body: formData,
+        credentials: 'include'  // 添加这个选项
       });
+  
+
+      // 打印响应详情以便调试
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers));
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Server error:', {
-          status: response.status,
-          text: errorText
-        });
+        console.error('Error response:', errorText);  // 试日志
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
+      console.log('response', response);
 
       const data = await response.json();
-      return data;
+      console.log('Received outline data:', data);
+      
+      if (data.outline) {
+        const parsedOutline = parseOutlineText(data.outline);
+        console.log('Parsed outline:', parsedOutline);
+        
+        setOutline(parsedOutline);
+        setHasCompletedConversation(true);
+        
+        toast({
+          title: "生成成功",
+          description: "大纲已生成完成",
+          duration: 3000,
+        });
+      } else {
+        console.error('No outline data received:', data);
+        toast({
+          title: "生成失败",
+          description: "未能生成大纲",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
     } catch (error) {
-      console.error('Error in handleUploadConfirm:', error);
-      throw error;
+      console.error('Error generating outline:', error);
+      toast({
+        title: "生成失败",
+        description: error instanceof Error ? error.message : "生成大纲时发生错误",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+      setGeneratingOutline(false);
     }
   };
 
@@ -397,9 +435,9 @@ const OutlineGenerator: React.FC = () => {
     }
 
     // AI智能生成或导入企业文件生成模式
-    if (uploadedFiles.length > 0) {
+    if (files.length > 0) {
       // 开始生成大纲
-      await handleGeneration(uploadedFiles);
+      await handleGeneration(files);
     } else {
       toast({
         title: "生成失败",
@@ -426,6 +464,7 @@ interface OutlineResponse {
   const handleGeneration = async (files: File[]) => {
     try {
       setIsGenerating(true);
+      setGeneratingOutline(true);  // 添加生成中状态
       
       const formData = new FormData();
       const token = localStorage.getItem('token');
@@ -477,6 +516,7 @@ interface OutlineResponse {
       });
     } finally {
       setIsGenerating(false);
+      setGeneratingOutline(false);  // 清除生成中状态
     }
   };
 
@@ -541,114 +581,107 @@ interface OutlineResponse {
   };
 
   // 添加大纲编辑卡片组件
-  const OutlineEditCard: React.FC<{ outline: string }> = ({ outline }) => {
-    const sections = parseOutlineText(outline);
-    
-    return (
-      <Card className="mt-4 bg-white shadow-sm">
-        <CardContent className="p-6">
-          <div className="prose prose-amber max-w-none">
-            {sections.map((section, index) => (
-              <div key={index} className="mb-4">
-                <div className={`font-bold text-${['2xl', 'xl', 'lg', 'md', 'sm', 'xs'][section.level - 1] || 'md'}`}>
-                  {section.title}
-                </div>
-                {section.content && (
-                  <div className="mt-2 whitespace-pre-wrap">
-                    {section.content}
-                  </div>
-                )}
-                {section.items && section.items.length > 0 && (
-                  <ul className="list-disc pl-6 mt-2">
-                    {section.items.map((item, itemIndex) => (
-                      <li key={itemIndex}>{item}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
+  
 
   // 添加重生成大纲的函数
   const [showImprovementInput, setShowImprovementInput] = useState(false);
   const [improvementDirection, setImprovementDirection] = useState("");
 
   const handleRegenerateOutline = async () => {
-    if (!showImprovementInput) {
-      setShowImprovementInput(true);
-      return;
-    }
-
     if (!improvementDirection.trim()) {
       toast({
-        title: "请输入改进方向",
-        description: "请告诉我您希望如何改进大纲",
+        title: "请输入修改方向",
         variant: "destructive",
+        duration: 3000,
       });
       return;
     }
-
-    // 检查是否有已上传的文件
-    if (!uploadedFiles || uploadedFiles.length === 0) {
-      window.alert("请先上传文件");
-      return;
-    }
+    console.log('improvementDirection', improvementDirection);
 
     try {
-      setIsGenerating(true);
-      const token = localStorage.getItem('token');
-      
+      setLoading(true);
+      setGeneratingOutline(true);
+
+      // Check if we have files
+      if (!files || files.length === 0) {
+        window.alert('Please upload at least one file with content.');
+        setLoading(false);
+        setGeneratingOutline(false);
+        return;
+      }
+
+      // Update background info with improvement direction
+      const updatedBackgroundInfo = {
+        ...backgroundInfo,
+        requirements: improvementDirection.trim()
+      };
+      setBackgroundInfo(updatedBackgroundInfo);
+
       const formData = new FormData();
+      formData.append('description', JSON.stringify(updatedBackgroundInfo));
       
-      // 使用已保存的文件
-      uploadedFiles.forEach(file => {
+      // Add stored files
+      files.forEach((file) => {
         formData.append('files', file);
       });
-
-      formData.append('description', JSON.stringify(backgroundInfo));
+      
       formData.append('ai_model', 'gpt-4o-mini');
-      formData.append('requirements', improvementDirection.trim());
+      
+      const token = localStorage.getItem('token');
+      console.log('FormData contents for regeneration:');
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
 
-      console.log('Using files:', uploadedFiles.map(f => f.name));  // 调试日志
-
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {        method: 'POST',
+      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {
+        method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
         body: formData
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`Failed to regenerate outline: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
 
       const data = await response.json();
-      setOutline(parseOutlineText(data.outline));
-      setShowImprovementInput(false);
-      setImprovementDirection('');
       
-      toast({
-        title: "重新生成成功",
-        description: `已根据您的要求"${improvementDirection}"重新生成大纲`,
-        variant: "default",
-      });
-      
+      if (data.outline) {
+        setOutline(parseOutlineText(data.outline));
+      } else {
+        throw new Error('No outline generated');
+      }
+
     } catch (error) {
       console.error('Error regenerating outline:', error);
       toast({
-        title: "重新生成失败",
-        description: error instanceof Error ? error.message : "生成大纲时发生错误",
-        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to regenerate outline",
+        variant: "destructive"
       });
     } finally {
-      setIsGenerating(false);
+      setLoading(false);
+      setGeneratingOutline(false);
     }
+  };
+
+  const handleRegenerateClick = () => {
+    setShowImprovementInput(true);
+  };
+
+  const handleImprovementSubmit = async () => {
+    if (!improvementDirection.trim()) {
+      toast({
+        title: "请输入修改方向",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+    console.log('improvementDirection', improvementDirection);
+    await handleRegenerateOutline();
   };
 
   // 添加 navigate
@@ -689,9 +722,90 @@ interface OutlineResponse {
       state: { 
         outline: outline,
         backgroundInfo: backgroundInfo,
-        uploadedFiles: uploadedFiles // 添加文件信息
+        uploadedFiles: files // 添加文件信息
       }
     });
+  };
+
+  // Add state for edited outline
+  const [editedOutline, setEditedOutline] = useState<OutlineSection[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Update outline state handling
+  useEffect(() => {
+    setEditedOutline(outline);
+  }, [outline]);
+
+  // Add handlers for editing
+  const handleEditSection = (sectionIndex: number, field: 'title' | 'content', value: string) => {
+    setEditedOutline(prev => prev.map((section, index) => {
+      if (index === sectionIndex) {
+        return { ...section, [field]: value };
+      }
+      return section;
+    }));
+  };
+
+  const handleEditItem = (sectionIndex: number, itemIndex: number, value: string) => {
+    setEditedOutline(prev => prev.map((section, index) => {
+      if (index === sectionIndex) {
+        const newItems = [...(section.items || [])];
+        newItems[itemIndex] = value;
+        return { ...section, items: newItems };
+      }
+      return section;
+    }));
+  };
+
+  const handleSaveOutline = () => {
+    setOutline(editedOutline);
+    setIsEditing(false);
+    toast({
+      title: "保存成功",
+      description: "大纲修改已保存",
+      duration: 3000,
+    });
+  };
+
+  // Update the outline rendering section
+  const [outlineText, setOutlineText] = useState<string>('');
+
+  const outlineToText = (sections: OutlineSection[]): string => {
+    return sections.map(section => {
+      let text = '#'.repeat(section.level) + ' ' + section.title + '\n';
+      if (section.content) {
+        text += section.content + '\n';
+      }
+      if (section.items && section.items.length > 0) {
+        text += section.items.map(item => '- ' + item).join('\n') + '\n';
+      }
+      return text;
+    }).join('\n');
+  };
+
+  const handleOutlineTextChange = (text: string) => {
+    setOutlineText(text);
+    const newOutline = parseOutlineText(text);
+    setOutline(newOutline);
+  };
+
+  useEffect(() => {
+    if (outline.length > 0) {
+      setOutlineText(outlineToText(outline));
+    }
+  }, [outline]);
+
+  const renderEditableOutline = () => {
+    return (
+      <div className="p-4 bg-amber-50 rounded-lg">
+        <textarea
+          value={outlineText}
+          onChange={(e) => handleOutlineTextChange(e.target.value)}
+          className="w-full h-[400px] p-4 font-mono text-amber-600 bg-white border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-amber-300"
+          placeholder="大纲内容..."
+        />
+      </div>
+    );
   };
 
   return (
@@ -811,53 +925,7 @@ interface OutlineResponse {
           </Card>
           <Card className="bg-white shadow-sm">
             <CardContent className="p-4">
-              <div className="space-y-4">
-                {outline.map((section, i) => (
-                  <div key={i}>
-                    <div className="mb-2 flex items-center gap-2">
-                      <Badge variant="outline" className="bg-amber-100 text-amber-600 border-amber-200">
-                        {section.title}
-                      </Badge>
-                      {section.time && (
-                        <Badge variant="outline" className="bg-amber-50 text-amber-500">
-                          {section.time}
-                        </Badge>
-                      )}
-                    </div>
-                    {section.subsections?.map((subsection, j) => (
-                      <div key={j} className="ml-4 mt-2">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-amber-600">{subsection.title}</span>
-                          {subsection.time && (
-                            <Badge variant="outline" className="bg-amber-50 text-amber-500">
-                              {subsection.time}
-                            </Badge>
-                          )}
-                        </div>
-                        {subsection.items && (
-                          <ul className="space-y-1 text-sm ml-4">
-                            {subsection.items.map((item, k) => (
-                              <li key={k} className="text-amber-600">
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))}
-                    {section.items && (
-                      <ul className="space-y-1 text-sm ml-4">
-                        {section.items.map((item, j) => (
-                          <li key={j} className="text-amber-600">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {i < outline.length - 1 && <Separator className="my-4 bg-amber-200" />}
-                  </div>
-                ))}
-              </div>
+              {}
               {showChat && (
         <div className="mt-6">
           <ScrollArea className="h-[400px] pr-4">
@@ -889,7 +957,7 @@ interface OutlineResponse {
               {showUpload && (
                 <DocumentUpload 
                   onUploadComplete={(files) => {
-                    setUploadedFiles(files.map(file => file as unknown as File));
+                    setFiles(files.map(file => file as unknown as File));
                     console.log('Files saved:', files.map(f => f.name));
                   }}
                   maxFileSize={20 * 1024 * 1024}
@@ -935,7 +1003,7 @@ interface OutlineResponse {
           {currentStep >= questions.length && (
             <Button
               className="w-full mt-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
-              onClick={() => generateOutline(input, uploadedFiles)}
+              onClick={() => generateOutline(input, files)}
               disabled={loading}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
@@ -967,7 +1035,7 @@ interface OutlineResponse {
                           className="w-48 border-amber-200"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' && improvementDirection.trim()) {
-                              handleRegenerateOutline();
+                              handleImprovementSubmit();
                             }
                           }}
                         />
@@ -976,7 +1044,7 @@ interface OutlineResponse {
                         variant="outline" 
                         size="sm" 
                         className="border-amber-200 text-amber-600 hover:bg-amber-50"
-                        onClick={handleRegenerateOutline}
+                        onClick={handleRegenerateClick}
                         disabled={isGenerating}
                       >
                         <Recycle className="mr-2 h-4 w-4" />
@@ -988,21 +1056,7 @@ interface OutlineResponse {
                   {/* 大纲内容显示区域 */}
                   {outline.length > 0 && (
                     <div className="p-4 bg-amber-50 rounded-lg">
-                      {outline.map((section, i) => (
-                        <div key={i} className="mb-4">
-                          <div className="font-medium text-amber-700">{section.title}</div>
-                          {section.content && (
-                            <div className="mt-2 text-amber-600 whitespace-pre-wrap">{section.content}</div>
-                          )}
-                          {section.items && section.items.length > 0 && (
-                            <ul className="mt-2 space-y-1 list-disc list-inside">
-                              {section.items.map((item, j) => (
-                                <li key={j} className="text-amber-600">{item}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      ))}
+                      {renderEditableOutline()}
                     </div>
                   )}
                 </div>
@@ -1030,7 +1084,7 @@ interface OutlineResponse {
                 </div>
                 <DocumentUpload 
                   onUploadComplete={(files) => {
-                    setUploadedFiles(files.map(file => file as unknown as File));
+                    setFiles(files.map(file => file as unknown as File));
                     console.log('Files saved:', files.map(f => f.name));
                   }}
                   maxFileSize={20 * 1024 * 1024}
@@ -1041,54 +1095,49 @@ interface OutlineResponse {
               </CardContent>
             </Card>
           )}
-          {/* {outline && (
-            <Card className="bg-white shadow-sm">
-              <CardContent className="p-4">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-amber-600">
-                      生成的大纲
-                    </h3>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleGeneration(uploadedFiles)}
-                      className="border-amber-200 text-amber-600 hover:bg-amber-50"
-                    >
-                      <Recycle className="mr-2 h-4 w-4" />
-                      换个大纲
-                    </Button>
-                  </div>
-                  
-                  <div className="prose prose-amber max-w-none">
-                    <div 
-                      className="outline-content whitespace-pre-wrap"
-                      dangerouslySetInnerHTML={{ 
-                        __html: outline.map(section => 
-                          `${section.title}\n${section.content || ''}`
-                        ).join('\n').replace(/\n/g, '<br/>')
-                      }} 
-                    />
-                  </div>
+          {/* Add improvement direction input dialog */}
+          {showImprovementInput && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-96">
+                <h3 className="text-lg font-medium mb-4">请输入修改方向</h3>
+                <Input
+                  value={improvementDirection}
+                  onChange={(e) => setImprovementDirection(e.target.value)}
+                  placeholder="例如：增加更多技术细节..."
+                  className="mb-4"
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowImprovementInput(false);
+                      setImprovementDirection("");
+                    }}
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    onClick={handleImprovementSubmit}
+                    disabled={!improvementDirection.trim()}
+                  >
+                    确认
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          )} */}
+              </div>
+            </div>
+          )}
         </div>
       </main>
      
-      {isGenerating && (
+      {(isGenerating || generatingOutline) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <Card className="w-[300px] p-6">
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
               <div className="text-center">
-                <h3 className="font-semibold text-lg text-amber-600">
-                  正在生成大纲
-                </h3>
-                <p className="text-sm text-amber-500">
-                  请稍候，这可能需要一些时间...
-                </p>
+                <h3 className="font-semibold text-lg mb-2">正在生成大纲</h3>
+                <p className="text-sm text-gray-500">请稍候，这可能需要一点时间...</p>
               </div>
             </div>
           </Card>

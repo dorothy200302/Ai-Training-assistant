@@ -28,9 +28,9 @@ export default function App() {
   return (
     <UserProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
+        <div className="flex flex-col min-h-screen w-full">
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 w-full">
             <Routes>
               {/* 设置首页路由 */}
               <Route path="/" element={<Home />} />
@@ -60,4 +60,3 @@ export default function App() {
     </UserProvider>
   )
 }
-
