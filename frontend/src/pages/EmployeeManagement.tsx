@@ -61,7 +61,7 @@ interface RoleType {
   name: string;
 }
 
-const API_BASE_URL = 'http://localhost:8001';
+const API_BASE_URL = 'http://localhost:8001/api';
 
 export default function EmployeeManagement() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -126,6 +126,11 @@ export default function EmployeeManagement() {
       });
     }
   };
+
+  useEffect(() => {
+    fetchDepartments();
+    fetchRoles();
+  }, [token]);
 
   // 获取员工列表
   const fetchEmployees = async () => {
@@ -238,24 +243,23 @@ export default function EmployeeManagement() {
 
   const confirmDelete = async () => {
     if (!editingEmployee || !editingEmployee.id) {
-      toast({
-        title: "错误",
-        description: "无效的员工信息",
-        variant: "destructive",
-      });
+      window.alert("错误：无效的员工信息");
       return;
     }
     try {
       await handleDelete(editingEmployee.id);
       setIsDeleteDialogOpen(false);
       setEditingEmployee(null);
+      window.alert("成功：员工信息已成功删除");
     } catch (error) {
       console.error('Confirm delete error:', error);
-      toast({
-        title: "删除失败",
-        description: "删除员工时发生错误",
-        variant: "destructive",
-      });
+      let errorMessage = "删除员工信息时发生错误";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      window.alert("删除失败：" + errorMessage);
     }
   };
 
@@ -273,9 +277,14 @@ export default function EmployeeManagement() {
       });
 
       if (!response.ok) {
-        // 对于204状态码，不需要解析JSON
-        if (response.status !== 204) {
-          const errorData = await response.json();
+        const errorData = await response.json();
+        if (response.status === 403) {
+          throw new Error(errorData.detail || '您没有权限执行此操作');
+        } else if (response.status === 400) {
+          throw new Error(errorData.detail || '无法删除有下属的员工');
+        } else if (response.status === 404) {
+          throw new Error(errorData.detail || '未找到该员工');
+        } else {
           throw new Error(errorData.detail || '删除失败');
         }
       }
@@ -289,11 +298,6 @@ export default function EmployeeManagement() {
       await fetchEmployees();
     } catch (error) {
       console.error('Delete error:', error);
-      toast({
-        title: "删除失败",
-        description: error instanceof Error ? error.message : "删除员工时发生错误",
-        variant: "destructive",
-      });
       throw error;
     }
   };
@@ -668,17 +672,17 @@ export default function EmployeeManagement() {
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-gray-700">部门</label>
                 <div className="relative">
-                  <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400" />
+                  <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400 z-10" />
                   <Select
                     value={formData.department}
                     onValueChange={(value) => setFormData({ ...formData, department: value })}
                   >
-                    <SelectTrigger className="pl-10 border-amber-200">
+                    <SelectTrigger className="w-full pl-10 border-amber-200">
                       <SelectValue placeholder="选择部门" />
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map(dept => (
-                        <SelectItem key={dept.name} value={dept.name}>{dept.name}</SelectItem>
+                        <SelectItem key={dept.id} value={dept.name}>{dept.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -687,17 +691,17 @@ export default function EmployeeManagement() {
               <div className="grid gap-2">
                 <label className="text-sm font-medium text-gray-700">角色</label>
                 <div className="relative">
-                  <UserCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400" />
+                  <UserCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400 z-10" />
                   <Select
                     value={formData.role}
                     onValueChange={(value) => setFormData({ ...formData, role: value })}
                   >
-                    <SelectTrigger className="pl-10 border-amber-200">
+                    <SelectTrigger className="w-full pl-10 border-amber-200">
                       <SelectValue placeholder="选择角色" />
                     </SelectTrigger>
                     <SelectContent>
                       {roles.map(role => (
-                        <SelectItem key={role.name} value={role.name}>{role.name}</SelectItem>
+                        <SelectItem key={role.id} value={role.name}>{role.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

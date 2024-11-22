@@ -24,8 +24,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix="/employee",
-    tags=["employee"]
 )
 
 def handle_exceptions(func):
