@@ -22,6 +22,7 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
   const [showUpload, setShowUpload] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
@@ -130,6 +131,10 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
     }
   };
 
+  const handleUploadCancel = () => {
+    setShowUpload(false);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-2">
@@ -170,8 +175,11 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
 
       {showUpload && (
         <DocumentUpload
-          onCancel={() => setShowUpload(false)}
+          endpoint="/api/documents/upload"
+          isUploading={isUploading}
+          setIsUploading={setIsUploading}
           onConfirm={handleUploadConfirm}
+          onCancel={handleUploadCancel}
         />
       )}
     </div>

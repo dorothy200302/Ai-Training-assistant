@@ -129,6 +129,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [showUpload, setShowUpload] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToastHook();
 
   const handleEdit = (field: string, value: any) => {
@@ -314,8 +315,9 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     }
   };
 
-  const handleUploadConfirm = async (files: File[], description: string) => {
+  const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
+      setShowUpload(false);
       return;
     }
     
@@ -328,30 +330,15 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         formData.append('files', file);
       });
 
-      const sanitizedModules = modules.map(module => ({
-        id: module.id,
-        name: module.name,
-        content: module.content,
-        scenarios: module.scenarios ? module.scenarios.map(scenario => ({
-          id: scenario.id,
-          title: scenario.title,
-          description: scenario.description,
-          points: scenario.points
-        })) : undefined
-      }));
-
-      formData.append('template', 'customer_service_skills');
+      formData.append('template', 'customer_service');
       formData.append('description', JSON.stringify({
-        title: title,
-        subtitle: subtitle,
-        overview: overview,
-        modules: sanitizedModules
+        userDescription: description || ''
       }));
 
       console.log('Sending request to generate template...');
       console.log('FormData contents:', {
         files: files.map(f => f.name),
-        template: 'customer_service_skills',
+        template: 'customer_service',
         token: token ? 'present' : 'missing'
       });
 
@@ -673,9 +660,12 @@ const CustomerServiceSkillsTraining: React.FC = () => {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
                 <DocumentUpload 
+                  endpoint="/api/documents/upload"
+                  isUploading={isUploading}
+                  setIsUploading={setIsUploading}
                   onConfirm={handleUploadConfirm}
-                  isLoading={isGenerating}
                   onCancel={() => setShowUpload(false)}
+                  isLoading={isGenerating}
                 />
               </div>
             </div>

@@ -6,14 +6,19 @@ import { Loader2, X, Upload, FileText } from "lucide-react";
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { Progress } from "@/components/ui/progress";
+import { useToast } from '@/hooks/use-toast';
 
-interface DocumentUploadProps {
-  onConfirm: (files: File[], description?: string) => void;
+export interface DocumentUploadProps {
+  onUpload?: (content: any) => void;
+  endpoint: string;
+  isUploading: boolean;
+  setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
+  onConfirm?: (files: File[], description?: string) => void;
   onCancel?: () => void;
   isLoading?: boolean;
   maxFiles?: number;
-  maxSize?: number; // in bytes
-  acceptedFileTypes?: string[];
+  maxSize?: number;
+  className?: string;
 }
 
 const DEFAULT_MAX_SIZE = 10 * 1024 * 1024; // 10MB
@@ -24,21 +29,26 @@ const DEFAULT_ACCEPTED_TYPES = [
   'text/plain'
 ];
 
-export default function DocumentUpload({ 
-  onConfirm, 
-  onCancel, 
+const DocumentUpload: React.FC<DocumentUploadProps> = ({
+  onUpload,
+  endpoint,
+  isUploading,
+  setIsUploading,
+  onConfirm,
+  onCancel,
   isLoading = false,
   maxFiles = 5,
   maxSize = DEFAULT_MAX_SIZE,
-  acceptedFileTypes = DEFAULT_ACCEPTED_TYPES
-}: DocumentUploadProps) {
+  className
+}) => {
+  const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [description, setDescription] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const validFiles = acceptedFiles.filter(file => {
-      const isValidType = acceptedFileTypes.includes(file.type);
+      const isValidType = DEFAULT_ACCEPTED_TYPES.includes(file.type);
       const isValidSize = file.size <= maxSize;
       return isValidType && isValidSize;
     });
@@ -58,11 +68,11 @@ export default function DocumentUpload({
         clearInterval(interval);
       }
     }, 200);
-  }, [files, maxFiles, maxSize, acceptedFileTypes]);
+  }, [files, maxFiles, maxSize]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: acceptedFileTypes.reduce((acc, type) => ({ ...acc, [type]: [] }), {}),
+    accept: DEFAULT_ACCEPTED_TYPES.reduce((acc, type) => ({ ...acc, [type]: [] }), {}),
     maxSize,
     maxFiles: maxFiles - files.length
   });
@@ -71,8 +81,47 @@ export default function DocumentUpload({
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleUpload = async (files: File[], description?: string) => {
+    if (onConfirm) {
+      onConfirm(files, description);
+    } else if (onUpload) {
+      try {
+        setIsUploading(true);
+        const formData = new FormData();
+        files.forEach(file => {
+          formData.append('file', file);
+        });
+        if (description) {
+          formData.append('description', description);
+        }
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        onUpload(data);
+      } catch (error) {
+        console.error('Upload error:', error);
+        toast({
+          title: "上传失败",
+          description: error instanceof Error ? error.message : "文件上传失败，请重试",
+          variant: "destructive",
+        });
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
   const handleConfirm = () => {
-    onConfirm(files, description);
+    if (files.length === 0) return;
+    handleUpload(files, description);
   };
 
   const formatFileSize = (bytes: number) => {
@@ -84,7 +133,7 @@ export default function DocumentUpload({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", className)}>
       <div 
         {...getRootProps()} 
         className={cn(
@@ -186,3 +235,5 @@ export default function DocumentUpload({
     </div>
   );
 }
+
+export default DocumentUpload;

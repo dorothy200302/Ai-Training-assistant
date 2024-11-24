@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
-import { BookOpen, Briefcase, GraduationCap, LineChart, Target, Users, FileUp, Loader2, FileDown } from 'lucide-react'
-import { useToast } from "@/hooks/use-toast"
-import DocumentUpload from '@/components/DocumentUpload'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import React, { useState } from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { BookOpen, Briefcase, GraduationCap, LineChart, Target, Users, FileDown, FileUp, Loader2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import DocumentUpload from '@/components/DocumentUpload';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const CareerPlanning: React.FC = () => {
   interface CareerPath {
@@ -40,8 +40,8 @@ const CareerPlanning: React.FC = () => {
 
   const [selectedPath, setSelectedPath] = useState<string | null>(null)
   const [documentContent, setDocumentContent] = useState<string>('')
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isDownloading, setIsDownloading] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [showUpload, setShowUpload] = useState(false)
   const [isEditable, setIsEditable] = useState(false)
   const [editableContent, setEditableContent] = useState<EditableContent>({
@@ -337,7 +337,7 @@ const CareerPlanning: React.FC = () => {
                   <div className="space-x-2">
                     <Button
                       onClick={() => saveToBackend(new Blob([documentContent], { type: 'text/plain' }), 'pdf')}
-                      disabled={isDownloading}
+                      disabled={isUploading}
                       variant="outline"
                       className="border-amber-500 text-amber-500 hover:bg-amber-50"
                     >
@@ -346,7 +346,7 @@ const CareerPlanning: React.FC = () => {
                     </Button>
                     <Button
                       onClick={() => saveToBackend(new Blob([documentContent], { type: 'text/plain' }), 'docx')}
-                      disabled={isDownloading}
+                      disabled={isUploading}
                       variant="outline"
                       className="border-amber-500 text-amber-500 hover:bg-amber-50"
                     >
@@ -359,8 +359,11 @@ const CareerPlanning: React.FC = () => {
 
               {showUpload && (
                 <DocumentUpload
-                  onCancel={handleUploadCancel}
+                  endpoint="/api/documents/upload"
+                  isUploading={isGenerating}
+                  setIsUploading={setIsGenerating}
                   onConfirm={handleUploadConfirm}
+                  onCancel={handleUploadCancel}
                   isLoading={isGenerating}
                 />
               )}

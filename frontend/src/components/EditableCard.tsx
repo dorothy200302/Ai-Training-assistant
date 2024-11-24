@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card'
-import { EditableText } from './EditableText'
-import { Plus, Trash } from 'lucide-react'
-import { Button } from './ui/button'
+import React from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { EditableText } from './EditableText';
+import { Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface EditableCardProps {
   title: string
@@ -63,4 +63,4 @@ export const EditableCard: React.FC<EditableCardProps> = ({
       {extraButtons}
     </Card>
   )
-} 
+}

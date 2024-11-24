@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from '@/hooks/use-toast';
 import DocumentUpload from '@/components/DocumentUpload';
-import { FileUp, Loader2, FileDown } from 'lucide-react';
+import { Loader2, FileDown } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 interface DocumentHandlerProps {

@@ -12,6 +12,7 @@ interface FileUploadComponentProps {
 export default function FileUploadComponent({ onUploadSuccess }: FileUploadComponentProps) {
   const [showUpload, setShowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
@@ -68,6 +69,10 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
     }
   };
 
+  const handleUploadCancel = () => {
+    setShowUpload(false);
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -99,9 +104,12 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
 
         {showUpload && (
           <DocumentUpload
-            onCancel={() => setShowUpload(false)}
+            endpoint="/api/documents/upload"
+            isUploading={isUploading}
+            setIsUploading={setIsUploading}
             onConfirm={handleUploadConfirm}
-            isLoading={isUploading}
+            onCancel={handleUploadCancel}
+            isLoading={isLoading}
           />
         )}
       </CardContent>

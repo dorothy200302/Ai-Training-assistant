@@ -214,21 +214,8 @@ const SalesTraining: React.FC = () => {
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        if (errorData?.detail === 'Token not found or expired') {
-          localStorage.removeItem('token');
-          toast({
-            title: "认证过期",
-            description: "请重新登录",
-            variant: "destructive",
-          });
-          throw new Error('认证过期');
-        }
-        throw new Error(errorData?.detail || '保存到后端失败');
-      }
-
-      const data = await response.json();
+      const responseData = await response.json();
+      console.log('Download response:', responseData);
       
       const formData = new URLSearchParams();
       formData.append('document_name', '销售培训手册');
@@ -318,6 +305,7 @@ const SalesTraining: React.FC = () => {
     }
   };
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const handleDownloadWordFrontend = async () => {
     try {
       setIsDownloading(true);

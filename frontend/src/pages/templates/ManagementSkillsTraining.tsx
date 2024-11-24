@@ -19,6 +19,7 @@ const ManagementSkillsTraining: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
+  const [isUploading, setIsUploading] = useState(false);
 
   const sections = [
     { id: 'intro', title: '项目管理简介' },
@@ -559,8 +560,12 @@ const ManagementSkillsTraining: React.FC = () => {
 
       {showUpload && (
         <DocumentUpload
+          endpoint="/api/documents/upload"
+          isUploading={isUploading}
+          setIsUploading={setIsUploading}
           onConfirm={handleUploadConfirm}
           onCancel={handleUploadCancel}
+          isLoading={isGenerating}
         />
       )}
 
