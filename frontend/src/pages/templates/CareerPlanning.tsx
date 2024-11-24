@@ -11,13 +11,40 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 const CareerPlanning: React.FC = () => {
+  interface CareerPath {
+    id: string;
+    name: string;
+  }
+
+  interface EditableContent {
+    title: string;
+    subtitle: string;
+    careerPaths: CareerPath[];
+    skillsTitle: string;
+    skillsDescription: string;
+    trainingTitle: string;
+    trainingDescription: string;
+    internalTrainingTitle: string;
+    externalCoursesTitle: string;
+    mentorshipTitle: string;
+    technicalSkills: string[];
+    managementSkills: string[];
+    projectSkills: string[];
+    internalTraining: string[];
+    externalCourses: string[];
+    mentorship: string;
+    nextStepsTitle: string;
+    discussionTitle: string;
+    discussionDescription: string;
+  }
+
   const [selectedPath, setSelectedPath] = useState<string | null>(null)
   const [documentContent, setDocumentContent] = useState<string>('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
   const [isEditable, setIsEditable] = useState(false)
-  const [editableContent, setEditableContent] = useState({
+  const [editableContent, setEditableContent] = useState<EditableContent>({
     title: '职业发展规划',
     subtitle: '探索您的职业道路，实现自我提升',
     careerPaths: [
@@ -44,21 +71,35 @@ const CareerPlanning: React.FC = () => {
   })
   const { toast } = useToast()
 
-  const handleContentEdit = (section: keyof typeof editableContent, index: number | null, newValue: string) => {
+  const handleContentEdit = (section: keyof EditableContent, index: number | null, newValue: string) => {
     setEditableContent(prev => {
       const newContent = { ...prev };
       
-      // If index is null, it means we're editing a string property
-      if (index === null) {
-        newContent[section] = newValue;
-        return newContent;
+      // Handle array of objects (careerPaths)
+      if (section === 'careerPaths' && index !== null) {
+        const careerPaths = [...newContent.careerPaths];
+        careerPaths[index] = { ...careerPaths[index], name: newValue };
+        return { ...newContent, careerPaths };
       }
       
-      // If the section is an array, update the specific index
-      if (Array.isArray(newContent[section])) {
-        const updatedArray = [...(newContent[section] as string[])];
-        updatedArray[index] = newValue;
-        newContent[section] = updatedArray;
+      // Handle arrays of strings
+      const stringArrayKeys: (keyof EditableContent)[] = [
+        'technicalSkills',
+        'managementSkills',
+        'projectSkills',
+        'internalTraining',
+        'externalCourses'
+      ];
+      
+      if (stringArrayKeys.includes(section) && index !== null) {
+        const array = [...(newContent[section] as string[])];
+        array[index] = newValue;
+        return { ...newContent, [section]: array };
+      }
+      
+      // Handle string values
+      if (index === null) {
+        return { ...newContent, [section]: newValue };
       }
       
       return newContent;
