@@ -13,9 +13,12 @@ import SalesTraining from "./pages/templates/SalesTraining"
 import CareerPlanning from "./pages/templates/CareerPlanning"
 import QuarterlySalesStrategyTraining from "./pages/templates/QuarterlySalesStrategyTraining"
 import CustomerServiceSkillsTraining from "./pages/templates/CustomerServiceSkillsTraining"
+import MockPayment from "./pages/MockPayment"
 import { UserProvider } from "./contexts/UserContext"
 import { Header } from "./components/Header"
 import GeneratedDocument from "./pages/GeneratedDocument"
+import PerformanceManagement from "./pages/templates/PerformanceReview"
+import DocumentPreview from "./pages/document-preview"
 export default function App() {
   // 这里的用户信息可能来自登录过程或其他来源
   // const userInfo = {
@@ -43,12 +46,15 @@ export default function App() {
               <Route path="/templates" element={<Templates />} />
               <Route path="/employees" element={<EmployeeManagement />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/mock-payment" element={<MockPayment />} />
+              <Route path="/document-preview" element={<DocumentPreview />} />
               {/* 模板页面路由 */}
               <Route path="/templates/management" element={<Management />} />
               <Route path="/templates/new-employee" element={<NewEmployee />} />
               <Route path="/templates/sales-training" element={<SalesTraining />} />
               <Route path="/templates/career-planning" element={<CareerPlanning />} />
               <Route path="/templates/quarterly-sales" element={<QuarterlySalesStrategyTraining />} />
+              <Route path="/templates/performance-management" element={<PerformanceManagement />} />
               <Route path="/templates/customer-service" element={<CustomerServiceSkillsTraining />} />
 
               <Route path="/generated-document" element={<GeneratedDocument />} />

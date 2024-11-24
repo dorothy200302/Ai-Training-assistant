@@ -53,6 +53,24 @@ const templates: Template[] = [
     tags: ['入门级', '管理'],
     path: '/templates/management'
   },
+  {
+    id: '5',
+    title: '工作回顾',
+    description: '制定高效的工作回顾计划',
+    category: '工作回顾',
+    image: 'https://img0.baidu.com/it/u=613695575,3816983384&fm=253&fmt=auto?w=761&h=500',
+    tags: ['入门级', '管理'],
+    path: '/templates/performance-management'
+  },
+  {
+    id: '6',
+    title: '工作计划',
+    description: '制定目标和计划',
+    category: 'OKR',
+    image: 'https://img2.baidu.com/it/u=3501828502,4236535459&fm=253&fmt=auto&app=120&f=JPEG?w=1138&h=800',
+    tags: ['入门级', '管理'],
+    path: '/templates/career-planning'
+  },
 ];
 
 interface TemplateProps {

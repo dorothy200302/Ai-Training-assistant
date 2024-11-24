@@ -572,11 +572,11 @@ Content: {doc.page_content}
                     f"\n\n### 测试题\n{results[2]}"
                 ]
                 
-                # Add optimization suggestions for the summary section
-                if section.lower().strip() == "总结":
-                    optimization_task = await self.generate_section_content_async(section, "optimization")
-                    self.optimization_suggestions = optimization_task
-                    section_parts.append(f"\n\n### 优化建议\n{optimization_task}")
+                # # Add optimization suggestions for the summary section
+                # if section.lower().strip() == "总结":
+                #     optimization_task = await self.generate_section_content_async(section, "optimization")
+                #     self.optimization_suggestions = optimization_task
+                #     section_parts.append(f"\n\n### 优化建议\n{optimization_task}")
                 
                 return section_parts
             

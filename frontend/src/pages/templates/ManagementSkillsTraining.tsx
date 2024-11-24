@@ -40,7 +40,7 @@ const ManagementSkillsTraining: React.FC = () => {
     return (completedSections.length / sections.length) * 100
   }
 
-  const handleUploadConfirm = async (files: File[], description: string) => {
+  const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
       setShowUpload(false);
       return;
@@ -57,10 +57,11 @@ const ManagementSkillsTraining: React.FC = () => {
 
       formData.append('template', 'management_skills');
       formData.append('description', JSON.stringify({
-        title: '管理技能培训',
+        title: '管理技能培训手册',
         subtitle: '提升您的管理能力',
-        overview: '本文档将帮助您掌握卓越的管理技能。',
-        sections: sections.map(section => ({
+        overview: '本手册旨在帮助您掌握核心管理技能，提高团队效率。',
+        content: documentContent,
+        training_sections: sections.map(section => ({
           id: section.id,
           title: section.title,
           completed: completedSections.includes(section.id)
@@ -91,12 +92,20 @@ const ManagementSkillsTraining: React.FC = () => {
 
       const data = await response.json();
       console.log('Response data:', data);
-      setDocumentContent(data.document || data.content || '');
+      setDocumentContent(data.document ?? data.content ?? '');
       
       toast({
         title: "生成成功",
         description: "管理技能培训文档已生成",
       });
+
+      // Scroll to the generated content
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
     } catch (error) {
       console.error('Generation error:', error);
       toast({
@@ -107,6 +116,79 @@ const ManagementSkillsTraining: React.FC = () => {
     } finally {
       setIsGenerating(false);
       setShowUpload(false);
+    }
+  };
+
+  const handleUploadCancel = () => {
+    setShowUpload(false);
+  };
+
+  const saveToBackend = async (fileBlob: Blob, fileType: 'pdf' | 'docx') => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        toast({
+          title: "认证错误",
+          description: "请先登录",
+          variant: "destructive",
+        });
+        throw new Error('未登录');
+      }
+
+      // 将文件内容转换为base64字符串
+      const content = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = reader.result as string;
+          // 移除base64前缀（例如："data:application/pdf;base64,"）
+          const base64Content = base64String.split(',')[1] || base64String;
+          resolve(base64Content);
+        };
+        reader.readAsDataURL(fileBlob);
+      });
+
+      // 使用现有的download_document接口
+      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: content,
+          format: fileType,
+          filename: '管理技能培训手册',
+          isBase64: true
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.detail || '保存到后端失败');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `管理技能培训手册.${fileType}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "下载成功",
+        description: `文档已保存为${fileType.toUpperCase()}格式`,
+      });
+    } catch (error) {
+      console.error('Save to backend error:', error);
+      toast({
+        title: "保存失败",
+        description: error instanceof Error ? error.message : "文档保存失败，请重试",
+        variant: "destructive",
+      });
     }
   };
 
@@ -139,19 +221,7 @@ const ManagementSkillsTraining: React.FC = () => {
       
       const pdfBlob = doc.output('blob');
       
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '管理技能培训手册.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast({
-        title: "下载成功",
-        description: "文档已下载为PDF格式",
-      });
+      await saveToBackend(pdfBlob, 'pdf');
     } catch (error) {
       console.error('PDF generation error:', error);
       toast({
@@ -193,19 +263,7 @@ const ManagementSkillsTraining: React.FC = () => {
 
       const blob = await Packer.toBlob(doc);
       
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '管理技能培训手册.docx';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast({
-        title: "下载成功",
-        description: "文档已下载为Word格式",
-      });
+      await saveToBackend(blob, 'docx');
     } catch (error) {
       console.error('Word generation error:', error);
       toast({
@@ -502,7 +560,7 @@ const ManagementSkillsTraining: React.FC = () => {
       {showUpload && (
         <DocumentUpload
           onConfirm={handleUploadConfirm}
-          onCancel={() => setShowUpload(false)}
+          onCancel={handleUploadCancel}
         />
       )}
 
@@ -510,7 +568,7 @@ const ManagementSkillsTraining: React.FC = () => {
         <div className="mt-6 p-6 bg-white rounded-lg shadow">
           <div className="prose max-w-none">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {documentContent}
+              {documentContent || ''}
             </ReactMarkdown>
           </div>
         </div>

@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
 from sqlalchemy import Enum, MetaData
+from sqlalchemy.sql import func
 from .base import Base
 
 # Create new MetaData instance
@@ -16,8 +17,8 @@ class Users(Base):
     password = Column(String(255), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
     role = Column(String(20))
-    created_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
-    updated_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     company_id = Column(Integer)
     department = Column(String(50))
     privilege = Column(Integer, default=0)

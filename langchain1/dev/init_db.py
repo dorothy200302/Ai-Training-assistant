@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.models import Base, Departments, Roles, Employees
+from models.models import Base, Departments, Roles, Employees, Users
+from models.generated_document import GeneratedDocument
 
 # SQLite configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

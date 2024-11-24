@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { Progress } from "@/components/ui/progress";
 
 interface DocumentUploadProps {
-  onConfirm: (files: File[], description: string) => void;
+  onConfirm: (files: File[], description?: string) => void;
   onCancel?: () => void;
   isLoading?: boolean;
   maxFiles?: number;
@@ -100,12 +100,12 @@ export default function DocumentUpload({
             {isDragActive ? (
               <p>将文件拖放到此处...</p>
             ) : (
-              <>
+              < >
                 <p>点击或拖放文件到此处上传</p>
                 <p className="text-xs text-gray-400">
                   支持的文件类型: PDF, Word, TXT | 最大文件大小: {formatFileSize(maxSize)}
                 </p>
-              </>
+              </ >
             )}
           </div>
         </div>
@@ -174,10 +174,10 @@ export default function DocumentUpload({
           className="min-w-[100px]"
         >
           {isLoading ? (
-            <>
+            < >
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               生成中...
-            </>
+            </ >
           ) : (
             '确认上传'
           )}

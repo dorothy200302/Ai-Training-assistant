@@ -3,26 +3,28 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { FileUp, Loader2, Download } from 'lucide-react';
 import DocumentUpload from './DocumentUpload';
-import { Document, Packer } from 'docx';
+import { Document, Paragraph, TextRun, Packer } from 'docx';
 import jsPDF from 'jspdf';
 
 interface TemplateFileHandlerProps {
   templateId: string;
   templateDescription: any;
   onContentGenerated: (content: string) => void;
+  onUploadConfirm: (files: File[]) => Promise<void>;
 }
 
 const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
   templateId,
   templateDescription,
-  onContentGenerated
+  onContentGenerated,
+  onUploadConfirm
 }) => {
   const [showUpload, setShowUpload] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
-    if (!uploadSuccess || !files || files.length === 0) {
+  const handleUploadConfirm = async (files: File[], description?: string) => {
+    if (!files || files.length === 0) {
       setShowUpload(false);
       return;
     }
@@ -37,7 +39,10 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
       });
 
       formData.append('template', templateId);
-      formData.append('description', JSON.stringify(templateDescription));
+      formData.append('description', JSON.stringify({
+        ...templateDescription,
+        userDescription: description || ''
+      }));
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
@@ -165,7 +170,7 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
 
       {showUpload && (
         <DocumentUpload
-          onClose={() => setShowUpload(false)}
+          onCancel={() => setShowUpload(false)}
           onConfirm={handleUploadConfirm}
         />
       )}

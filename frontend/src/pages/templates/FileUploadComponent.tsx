@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useToast } from '@/hooks/use-toast';
+import { FileUp, Loader2 } from 'lucide-react';
 import DocumentUpload from '@/components/DocumentUpload';
+import { toast } from '@/hooks/use-toast';
 
 interface FileUploadComponentProps {
-  templateType: string;
-  onUploadSuccess: (content: string) => void;
+  onUploadSuccess?: (content: string) => void;
 }
 
-const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ templateType, onUploadSuccess }) => {
+export default function FileUploadComponent({ onUploadSuccess }: FileUploadComponentProps) {
   const [showUpload, setShowUpload] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleUploadConfirm = async (files: File[], description: string) => {
+  const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
       setShowUpload(false);
       return;
     }
 
     try {
-      setIsGenerating(true);
+      setIsUploading(true);
       const formData = new FormData();
       const token = localStorage.getItem('token');
 
@@ -28,9 +28,11 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ templateType,
         formData.append('files', file);
       });
 
-      formData.append('template', templateType);
+      if (description) {
+        formData.append('description', description);
+      }
 
-      const response = await fetch('http://localhost:8001/storage/generate_full_doc_with_template/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/storage/upload/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -39,48 +41,70 @@ const FileUploadComponent: React.FC<FileUploadComponentProps> = ({ templateType,
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || '文档生成失败');
+        throw new Error('Failed to upload files');
       }
 
       const data = await response.json();
-      onUploadSuccess(data.document || data.content || '');
+      
+      if (onUploadSuccess) {
+        onUploadSuccess(data.content);
+      }
 
       toast({
-        title: "生成成功",
-        description: "文档已生成",
+        title: "上传成功",
+        description: "文件已成功上传",
       });
+      
+      setShowUpload(false);
     } catch (error) {
-      console.error('Generation error:', error);
+      console.error('Error uploading files:', error);
       toast({
-        title: "生成失败",
-        description: error instanceof Error ? error.message : "文档生成失败，请重试",
+        title: "上传失败",
+        description: "文件上传过程中出现错误，请重试",
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
-      setShowUpload(false);
+      setIsUploading(false);
     }
   };
 
   return (
-    <>
-      <Button onClick={() => setShowUpload(true)} className="bg-blue-500 hover:bg-blue-600 text-white">
-        上传文档
-      </Button>
-      {showUpload && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <DocumentUpload 
-              onConfirm={handleUploadConfirm}
-              onCancel={() => setShowUpload(false)}
-              isLoading={isGenerating}
-            />
-          </div>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>上传文件</CardTitle>
+        <CardDescription>
+          上传文档以生成模板或直接处理
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col space-y-4">
+          <Button
+            onClick={() => setShowUpload(true)}
+            disabled={isUploading}
+            className="w-full"
+          >
+            {isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                上传中...
+              </>
+            ) : (
+              <>
+                <FileUp className="mr-2 h-4 w-4" />
+                上传文件
+              </>
+            )}
+          </Button>
         </div>
-      )}
-    </>
-  );
-};
 
-export default FileUploadComponent; 
+        {showUpload && (
+          <DocumentUpload
+            onCancel={() => setShowUpload(false)}
+            onConfirm={handleUploadConfirm}
+            isLoading={isUploading}
+          />
+        )}
+      </CardContent>
+    </Card>
+  );
+}

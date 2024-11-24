@@ -289,10 +289,7 @@ export default function EmployeeManagement() {
         }
       }
 
-      toast({
-        title: "成功",
-        description: "员工已删除",
-      });
+      window.alert("成功：员工已删除");
       
       // 重新获取员工列表
       await fetchEmployees();
@@ -331,11 +328,7 @@ export default function EmployeeManagement() {
         throw new Error(errorData.detail || '状态更新失败');
       }
 
-      toast({
-        title: "更新成功",
-        description: "员工状态已更新",
-        variant: "default",
-      });
+      window.alert("成功：员工状态已成功更新");
 
       // 重新获取员工列表
       await fetchEmployees();
@@ -406,11 +399,7 @@ export default function EmployeeManagement() {
 
     try {
       if (!formData.name || !formData.email || !formData.department || !formData.role || (!editingEmployee && !formData.password)) {
-        toast({
-          title: "验证失败",
-          description: "请填写所有必填字段",
-          variant: "destructive",
-        });
+        window.alert("请填写所有必填字段");
         return;
       }
 
@@ -454,6 +443,9 @@ export default function EmployeeManagement() {
         throw new Error(errorData.detail || '操作失败');
       }
 
+      // Get the updated data from response
+      const updatedEmployee = await response.json();
+
       setIsEditDialogOpen(false);
       setFormData({
         name: '',
@@ -464,12 +456,33 @@ export default function EmployeeManagement() {
       });
       setEditingEmployee(null);
 
+      // Update the local state immediately
+      if (editingEmployee) {
+        setEmployees(prevEmployees => 
+          prevEmployees.map(emp => 
+            emp.id === editingEmployee.id 
+              ? {
+                  ...emp,
+                  name: employeeData.name,
+                  email: employeeData.email,
+                  department: departments.find(d => d.id === employeeData.department_id) || emp.department,
+                  role: roles.find(r => r.id === employeeData.role_id) || emp.role,
+                  department_id: employeeData.department_id,
+                  role_id: employeeData.role_id
+                }
+              : emp
+          )
+        );
+      }
+
+      window.alert(`员工信息${editingEmployee ? '已更新' : '已添加'}`);
       toast({
-        title: "成功",
-        description: editingEmployee ? "员工信息已更新" : "新员工已添加",
+        title: "操作成功",
+        description: `员工信息${editingEmployee ? '已更新' : '已添加'}`,
+        variant: "default",
       });
 
-      // 重新获取员工列表
+      // Refresh the employee list to ensure data consistency
       await fetchEmployees();
     } catch (error) {
       console.error('Failed to submit:', error);

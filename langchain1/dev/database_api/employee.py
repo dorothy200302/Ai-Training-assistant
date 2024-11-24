@@ -184,7 +184,7 @@ async def delete_employee(
         if current_user_record.role_name not in ["admin", "manager"]:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Not enough permissions. Only admin or manager can delete employees. Your role: {current_user_record.role_name}"
+                detail=f"权限不够. Only admin or manager can delete employees. Your role: {current_user_record.role_name}"
             )
         
         # 查找员工

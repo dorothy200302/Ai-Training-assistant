@@ -6,7 +6,7 @@ class GeneratedDocument(Base):
     __tablename__ = "generated_documents"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     document_name = Column(String(100), nullable=False)
     document_type = Column(String(100), nullable=False)
     url = Column(Text, nullable=False)

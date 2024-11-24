@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useNavigate } from 'react-router-dom';
 
 interface GeneratedDocument {
   id: number;
@@ -18,6 +19,7 @@ interface GeneratedDocument {
 }
 
 export default function DocumentHistory() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -59,11 +61,12 @@ export default function DocumentHistory() {
     }
   };
 
-  const handlePreview = async (url: string) => {
+  const handlePreview = async (doc: GeneratedDocument) => {
     try {
-      window.open(url, '_blank');
+      // 使用路由导航到预览页面，并传递文档信息
+      navigate(`/document-preview?url=${encodeURIComponent(doc.url)}&name=${encodeURIComponent(doc.document_name)}&type=${encodeURIComponent(doc.document_type)}`);
     } catch (error) {
-      console.error('Error previewing document:', error);
+      console.error('Error navigating to preview:', error);
     }
   };
 
@@ -163,7 +166,7 @@ export default function DocumentHistory() {
                               size="sm" 
                               variant="ghost" 
                               className="h-8 w-8 p-0"
-                              onClick={() => handlePreview(doc.url)}
+                              onClick={() => handlePreview(doc)}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
@@ -204,7 +207,7 @@ export default function DocumentHistory() {
                         <Button 
                           size="sm" 
                           variant="ghost"
-                          onClick={() => handlePreview(doc.url)}
+                          onClick={() => handlePreview(doc)}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           预览

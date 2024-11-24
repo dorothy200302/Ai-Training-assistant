@@ -5,6 +5,7 @@ import os
 from dev.models import *
 from dev.config.database import SessionLocal
 from dev.crud import document_crud
+from typing import Tuple
 
 def get_file_type(file_key):
     image_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp')
@@ -156,3 +157,19 @@ def download_file_from_s3(file_key: str, user_email: str) -> str:
     except Exception as e:
         print(f"下载出错: {str(e)}")
         return "error"
+
+def download_file_by_url(url: str) -> Tuple[bytes, str]:
+    """根据文件URL下载文件，返回文件内容和MIME类型"""
+    try:
+        # 下载文件
+        response = requests.get(url)
+        if response.status_code == 200:
+            # 获取文件类型
+            content_type = response.headers.get('Content-Type', 'application/octet-stream')
+            return response.content, content_type
+        else:
+            print(f"下载失败: {response.status_code}")
+            return None, None
+    except Exception as e:
+        print(f"下载出错: {str(e)}")
+        return None, None

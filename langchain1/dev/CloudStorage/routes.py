@@ -41,7 +41,8 @@ from dev.crud.crud_generated_document import generated_document_crud
 from dev.CloudStorage.aws import upload_file_to_s3_by_key
 from dev.Generate.AsyncTrainingDocGenerator import AsyncTrainingDocGenerator
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
+from .aws import download_file_by_url
 import mimetypes
 from pathlib import Path
 
@@ -638,8 +639,7 @@ async def upload_document(
 async def download_document(
     request: Request,
     data: dict = Body(...),
-
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     try:
@@ -651,6 +651,11 @@ async def download_document(
         if not content:
             raise HTTPException(status_code=400, detail="Content is required")
         
+        # 获取用户ID
+        user = db.query(User).filter(User.email == current_user['email']).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+            
         # 创建临时目录
         temp_dir = tempfile.mkdtemp()
         temp_file_path = os.path.join(temp_dir, f"{filename}.{format}")
@@ -678,12 +683,10 @@ async def download_document(
             try:
                 document = generated_document_crud.create(
                     db=db,
-                    obj_in={
-                        "document_name": data.get("filename", "Generated Document"),
-                        "document_type": format,
-                        "url": s3_url,
-                        "user_id": current_user.user_id
-                    }
+                    user_id=user.user_id,
+                    document_name=data.get("filename", "Generated Document"),
+                    document_type=format,
+                    url=s3_url
                 )
                 return {
                     "url": s3_url,
@@ -704,6 +707,31 @@ async def download_document(
     except Exception as e:
         logger.error(f"Error in download_document: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/document-content/")
+async def get_document_content(
+    url: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    获取文档内容
+    """
+    try:
+        # 下载文件内容
+        content, content_type = download_file_by_url(url)
+        if content is None:
+            raise HTTPException(status_code=404, detail="Document not found")
+            
+        # 直接返回文件内容和类型
+        return Response(
+            content=content,
+            media_type=content_type
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting document content: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 @router.post("/generated-documents/", response_model=dict)
 async def create_generated_document(
     document_name: str = Form(...),
