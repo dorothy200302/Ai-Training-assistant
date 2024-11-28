@@ -1,116 +1,105 @@
 import React, { useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { useToast } from '@/hooks/use-toast'
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PlusCircle, Trash2, Save, Edit2, FileDown, FileUp, Loader2 } from 'lucide-react'
+import DocumentUpload from '../DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { FileUp, Loader2, Download, FileDown } from 'lucide-react'
-import DocumentUpload from '../DocumentUpload'
-import jsPDF from 'jspdf'
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
-
-interface SalesSkill {
-  id: string;
-  title: string;
-  description: string;
-  points: string[];
-}
-
-interface ProductInfo {
-  id: string;
-  name: string;
-  features: string[];
-  targetCustomers: string[];
-}
+import { API_BASE_URL } from "../../config/constants";
+import { toast } from "@/hooks/use-toast"
+import { Loading } from '@/components/ui/loading'
 
 const SalesTraining: React.FC = () => {
-  const [title, setTitle] = useState("销售技能培训手册")
-  const [subtitle, setSubtitle] = useState("提升您的销售能力，成为销售精英！")
-  const [overview, setOverview] = useState(
-    "本培训手册旨在帮助您掌握先进的销售技巧，提高客户转化率，实现销售目标。无论您是新人还是经验丰富的销售人员，这里的内容都将为您的职业发展提供有力支持。"
-  )
-
-  const [salesSkills, setSalesSkills] = useState<SalesSkill[]>([
+  const [sections, setSections] = useState([
     {
-      id: "1",
-      title: "需求分析",
-      description: "深入了解客户需求，提供个性化解决方案",
-      points: [
-        "倾听客户诉求",
-        "提出针对性问题",
-        "记录关键信息"
+      id: '1',
+      title: '销售基础',
+      content: '销售是一门艺术，也是一门科学。本节将介绍销售的基本概念和原则。',
+      subsections: [
+        { id: '1-1', title: '什么是销售', content: '销售是通过有效沟通和说服，将产品或服务转化为客户价值的过程。' },
+        { id: '1-2', title: '销售流程', content: '了解客户需求 → 提供解决方案 → 处理异议 → 达成交易 → 后续跟进' },
+      ]
+    },
+    {
+      id: '2',
+      title: '沟通技巧',
+      content: '有效的沟通是成功销售的关键。本节将介绍如何提升您的沟通技巧。',
+      subsections: [
+        { id: '2-1', title: '积极倾听', content: '专注于客户的话语，理解他们的需求和关切。' },
+        { id: '2-2', title: '提问技巧', content: '使用开放式问题深入了解客户需求，引导对话方向。' },
       ]
     },
   ])
 
-  const [products, setProducts] = useState<ProductInfo[]>([
-    {
-      id: "1",
-      name: "智能家居系统",
-      features: ["远程控制", "能源管理", "安全监控"],
-      targetCustomers: ["科技爱好者", "新房业主"]
-    },
-  ])
-
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({})
+  const [editingSection, setEditingSection] = useState<string | null>(null)
+  const [editingSubsection, setEditingSubsection] = useState<string | null>(null)
   const [documentContent, setDocumentContent] = useState<string>('');
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [isDownloading, setIsDownloading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
-  const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  
+  const Base_URL = API_BASE_URL;
 
-  const templateDescription = {
-    title,
-    subtitle,
-    overview,
-    salesSkills,
-    products,
-    content: documentContent
-  };
-
-  const handleAddSkill = () => {
-    setSalesSkills([...salesSkills, {
-      id: "new",
-      title: "新销售技能",
-      description: "请编辑技能描述",
-      points: ["新要点"]
-    }])
+  const handleAddSection = () => {
+    const newSection = {
+      id: `${sections.length + 1}`,
+      title: '新章节',
+      content: '请在此输入章节内容。',
+      subsections: []
+    }
+    setSections([...sections, newSection])
   }
 
-  const handleAddProduct = () => {
-    setProducts([...products, {
-      id: "new",
-      name: "新产品",
-      features: ["功能1"],
-      targetCustomers: ["目标客户"]
-    }])
+  const handleDeleteSection = (id: string) => {
+    setSections(sections.filter(section => section.id !== id))
   }
 
-  const handleTitleEdit = (id: string, newValue: string) => {
-    setSalesSkills(salesSkills.map(skill => 
-      skill.id === id ? { ...skill, title: newValue } : skill
+  const handleEditSection = (id: string, field: 'title' | 'content', value: string) => {
+    setSections(sections.map(section => 
+      section.id === id ? { ...section, [field]: value } : section
     ))
   }
 
-  const toggleEdit = (id: string) => {
-    setIsEditing(prev => ({
-      ...prev,
-      [id]: !prev[id]
+  const handleAddSubsection = (sectionId: string) => {
+    setSections(sections.map(section => {
+      if (section.id === sectionId) {
+        const newSubsection = {
+          id: `${sectionId}-${section.subsections.length + 1}`,
+          title: '新小节',
+          content: '请在此输入小节内容。'
+        }
+        return { ...section, subsections: [...section.subsections, newSubsection] }
+      }
+      return section
     }))
   }
 
-  const handleCopySkill = (skillId: string) => {
-    setSalesSkills(prev => {
-      const skillToCopy = prev.find(skill => skill.id === skillId);
-      if (!skillToCopy) return prev;
-      
-      return [...prev, {
-        ...skillToCopy,
-        id: "new",
-        title: `${skillToCopy.title} (复制)`,
-      }];
-    });
-  };
+  const handleDeleteSubsection = (sectionId: string, subsectionId: string) => {
+    setSections(sections.map(section => {
+      if (section.id === sectionId) {
+        return { ...section, subsections: section.subsections.filter(sub => sub.id !== subsectionId) }
+      }
+      return section
+    }))
+  }
+
+  const handleEditSubsection = (sectionId: string, subsectionId: string, field: 'title' | 'content', value: string) => {
+    setSections(sections.map(section => {
+      if (section.id === sectionId) {
+        return {
+          ...section,
+          subsections: section.subsections.map(sub => 
+            sub.id === subsectionId ? { ...sub, [field]: value } : sub
+          )
+        }
+      }
+      return section
+    }))
+  }
 
   const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
     if (!uploadSuccess || !files || files.length === 0) {
@@ -128,16 +117,15 @@ const SalesTraining: React.FC = () => {
       });
 
       formData.append('template', 'sales_training');
-      formData.append('description', JSON.stringify(templateDescription));
+      formData.append('description', JSON.stringify({
+        sections: sections.map(section => ({
+          title: section.title,
+          content: section.content,
+          subsections: section.subsections
+        }))
+      }));
 
-      console.log('Sending request to generate template...');
-      console.log('FormData contents:', {
-        files: files.map(f => f.name),
-        template: 'sales_training',
-        token: token ? 'present' : 'missing'
-      });
-
-      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+      const response = await fetch(`${Base_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -145,15 +133,11 @@ const SalesTraining: React.FC = () => {
         body: formData
       });
 
-      console.log('Response status:', response.status);
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(errorText || '文档生成失败');
+        throw new Error('文档生成失败');
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
       setDocumentContent(data.document || data.content || '');
       
       toast({
@@ -177,164 +161,22 @@ const SalesTraining: React.FC = () => {
     setShowUpload(false);
   };
 
-  const saveToBackend = async (fileBlob: Blob, fileType: 'pdf' | 'docx') => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        toast({
-          title: "认证错误",
-          description: "请先登录",
-          variant: "destructive",
-        });
-        throw new Error('未登录');
-      }
-
-      const content = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64String = reader.result as string;
-          const base64Content = base64String.split(',')[1] || base64String;
-          resolve(base64Content);
-        };
-        reader.readAsDataURL(fileBlob);
-      });
-
-      const response = await fetch('http://localhost:8001/api/storage/download_document', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          content: content,
-          format: fileType,
-          filename: '销售培训手册',
-          isBase64: true
-        })
-      });
-
-      const responseData = await response.json();
-      console.log('Download response:', responseData);
-      
-      const formData = new URLSearchParams();
-      formData.append('document_name', '销售培训手册');
-      formData.append('document_type', fileType);
-
-      const recordResponse = await fetch('http://localhost:8001/api/storage/create_generated_document', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: formData
-      });
-
-      if (!recordResponse.ok) {
-        const errorText = await recordResponse.text();
-        throw new Error(errorText || '创建文档记录失败');
-      }
-
-      toast({
-        title: "保存成功",
-        description: "文档已保存到云端",
-      });
-    } catch (error) {
-      console.error('Save to backend error:', error);
-      toast({
-        title: "保存失败",
-        description: error instanceof Error ? error.message : "文档保存失败，请重试",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDownloadPdfFrontend = async () => {
-    try {
-      setIsDownloading(true);
-      
-      const doc = new jsPDF({
-        unit: 'pt',
-        format: 'a4'
-      });
-      
-      doc.setFont('helvetica', 'normal');
-      
-      doc.setFontSize(20);
-      doc.text('销售培训手册', 40, 40);
-      
-      doc.setFontSize(12);
-      const contentLines = documentContent.split('\n');
-      let y = 80;
-      
-      contentLines.forEach((line) => {
-        if (y > 780) {
-          doc.addPage();
-          y = 40;
-        }
-        doc.text(line, 40, y);
-        y += 20;
-      });
-      
-      const pdfBlob = doc.output('blob');
-      
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '销售培训手册.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      await saveToBackend(pdfBlob, 'pdf');
-      
-      toast({
-        title: "下载成功",
-        description: "文档已下载为PDF格式",
-      });
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      toast({
-        title: "生成PDF失败",
-        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const handleDownloadWordFrontend = async () => {
     try {
       setIsDownloading(true);
-      
-      const doc = new Document({
-        sections: [{
-          properties: {},
-          children: [
-            new Paragraph({
-              text: "销售培训手册",
-              heading: HeadingLevel.HEADING_1,
-            }),
-            new Paragraph({}),
-            ...documentContent.split('\n').map(line => 
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: line,
-                    size: 24,
-                  }),
-                ],
-              })
-            ),
-          ],
-        }],
+      const response = await fetch(`${Base_URL}/api/word/generate/?template=sales_training`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sections }),
       });
 
-      const blob = await Packer.toBlob(doc);
-      
+      if (!response.ok) {
+        throw new Error('下载失败');
+      }
+
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -344,17 +186,14 @@ const SalesTraining: React.FC = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      await saveToBackend(blob, 'docx');
-
       toast({
         title: "下载成功",
-        description: "文档已下载为Word格式",
+        description: "文档已成功下载到您的设备",
       });
     } catch (error) {
-      console.error('Word generation error:', error);
       toast({
-        title: "生成Word失败",
-        description: error instanceof Error ? error.message : "Word生成失败，请重试",
+        title: "下载失败",
+        description: error instanceof Error ? error.message : "文档下载失败，请重试",
         variant: "destructive",
       });
     } finally {
@@ -363,144 +202,175 @@ const SalesTraining: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-bold mb-2">{title}</h1>
-                <p className="text-gray-600">{subtitle}</p>
-              </div>
-              <div className="space-x-2">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+      {isGenerating && <Loading text="正在生成文档..." />}
+      <div className="w-screen bg-white shadow-lg">
+        <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
+          <h1 className="text-3xl font-bold mb-2">销售技能培训手册</h1>
+          <p className="text-amber-100">提升您的销售技能，成为顶尖销售精英</p>
+        </div>
+        
+        <div className="p-6">
+          <Tabs defaultValue={sections[0]?.id} className="w-full">
+            <div className="flex justify-between items-center mb-4">
+              <TabsList className="bg-amber-100">
+                {sections.map((section) => (
+                  <TabsTrigger key={section.id} value={section.id} className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
+                    {section.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <Button onClick={handleAddSection} className="bg-green-500 hover:bg-green-600 text-white">
+                <PlusCircle className="w-4 h-4 mr-2" /> 添加章节
+              </Button>
+            </div>
+            {sections.map((section) => (
+              <TabsContent key={section.id} value={section.id}>
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardHeader>
+                    {editingSection === section.id ? (
+                      <div className="space-y-2">
+                        <Input
+                          value={section.title}
+                          onChange={(e) => handleEditSection(section.id, 'title', e.target.value)}
+                          className="font-bold text-xl text-amber-800"
+                        />
+                        <Textarea
+                          value={section.content}
+                          onChange={(e) => handleEditSection(section.id, 'content', e.target.value)}
+                          className="text-amber-700"
+                        />
+                        <Button onClick={() => setEditingSection(null)} className="bg-amber-500 hover:bg-amber-600 text-white">
+                          <Save className="w-4 h-4 mr-2" /> 保存
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <CardTitle className="text-amber-800 flex justify-between items-center">
+                          {section.title}
+                          <div>
+                            <Button onClick={() => setEditingSection(section.id)} variant="ghost" size="sm" className="mr-2">
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button onClick={() => handleDeleteSection(section.id)} variant="ghost" size="sm" className="text-red-500 hover:text-red-700">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </CardTitle>
+                        <p className="text-amber-700 mt-2">{section.content}</p>
+                      </div>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible className="w-full">
+                      {section.subsections.map((subsection) => (
+                        <AccordionItem key={subsection.id} value={subsection.id}>
+                          <AccordionTrigger className="text-amber-800 hover:text-amber-900">
+                            {subsection.title}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            {editingSubsection === subsection.id ? (
+                              <div className="space-y-2">
+                                <Input
+                                  value={subsection.title}
+                                  onChange={(e) => handleEditSubsection(section.id, subsection.id, 'title', e.target.value)}
+                                  className="font-semibold text-amber-800"
+                                />
+                                <Textarea
+                                  value={subsection.content}
+                                  onChange={(e) => handleEditSubsection(section.id, subsection.id, 'content', e.target.value)}
+                                  className="text-amber-700"
+                                />
+                                <Button onClick={() => setEditingSubsection(null)} className="bg-amber-500 hover:bg-amber-600 text-white">
+                                  <Save className="w-4 h-4 mr-2" /> 保存
+                                </Button>
+                              </div>
+                            ) : (
+                              <div>
+                                <p className="text-amber-700">{subsection.content}</p>
+                                <div className="flex justify-end mt-2">
+                                  <Button onClick={() => setEditingSubsection(subsection.id)} variant="ghost" size="sm" className="mr-2">
+                                    <Edit2 className="w-4 h-4" />
+                                  </Button>
+                                  <Button onClick={() => handleDeleteSubsection(section.id, subsection.id)} variant="ghost" size="sm" className="text-red-500 hover:text-red-700">
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                    <Button onClick={() => handleAddSubsection(section.id)} className="mt-4 bg-amber-500 hover:bg-amber-600 text-white">
+                      <PlusCircle className="w-4 h-4 mr-2" /> 添加小节
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            ))}
+          </Tabs>
+
+          {/* 添加上传按钮 */}
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={() => setShowUpload(true)}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  生成中...
+                </>
+              ) : (
+                <>
+                  <FileUp className="mr-2 h-4 w-4" />
+                  上传培训资料
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* 文档内容展示区域 */}
+          {documentContent && (
+            <div className="bg-white rounded-lg shadow-lg p-8 mt-4">
+              <div className="flex justify-end gap-2 mb-4">
                 <Button
-                  variant="outline"
-                  onClick={() => setShowUpload(true)}
-                  disabled={isGenerating}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      生成中...
-                    </>
-                  ) : (
-                    <>
-                      <FileUp className="mr-2 h-4 w-4" />
-                      上传文档
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleDownloadPdfFrontend}
-                  disabled={isDownloading || !documentContent}
+                  onClick={handleDownloadWordFrontend}
+                  disabled={!documentContent || isDownloading}
+                  className="bg-green-500 hover:bg-green-600 text-white"
                 >
                   {isDownloading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      下载中...
-                    </>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <>
-                      <FileDown className="mr-2 h-4 w-4" />
-                      下载文档
-                    </>
+                    <FileDown className="mr-2 h-4 w-4" />
                   )}
+                  下载Word文档
                 </Button>
               </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="text-gray-700">{overview}</p>
-            </div>
-
-            {/* Sales Skills Section */}
-            <div className="mt-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">销售技能</h2>
-                <Button variant="outline" onClick={handleAddSkill}>
-                  添加技能
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {salesSkills.map((skill) => (
-                  <Card key={skill.id}>
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold">{skill.title}</h3>
-                        <p className="text-gray-600">{skill.description}</p>
-                        <ul className="list-disc list-inside space-y-1">
-                          {skill.points.map((point, index) => (
-                            <li key={index}>{point}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="prose max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{documentContent}</ReactMarkdown>
               </div>
             </div>
+          )}
 
-            {/* Products Section */}
-            <div className="mt-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">产品信息</h2>
-                <Button variant="outline" onClick={handleAddProduct}>
-                  添加产品
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {products.map((product) => (
-                  <Card key={product.id}>
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold">{product.name}</h3>
-                        <div>
-                          <h4 className="font-medium">产品特点：</h4>
-                          <ul className="list-disc list-inside">
-                            {product.features.map((feature, index) => (
-                              <li key={index}>{feature}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-medium">目标客户：</h4>
-                          <ul className="list-disc list-inside">
-                            {product.targetCustomers.map((customer, index) => (
-                              <li key={index}>{customer}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+          {/* 上传对话框 */}
+          {showUpload && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+                <DocumentUpload 
+                  onConfirm={handleUploadConfirm}
+                  onCancel={handleUploadCancel}
+                  isLoading={isGenerating}
+                />
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {showUpload && (
-        <DocumentUpload
-          onConfirm={handleUploadConfirm}
-          onCancel={() => setShowUpload(false)}
-        />
-      )}
-
-      {documentContent && (
-        <Card className="mt-6">
-          <CardContent className="pt-6">
-            <div className="prose max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {documentContent}
-              </ReactMarkdown>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </div>
+      </div>
     </div>
   )
-};
+}
 
-export default SalesTraining;
+export default SalesTraining

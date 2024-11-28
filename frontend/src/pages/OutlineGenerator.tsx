@@ -1,92 +1,5 @@
-const parseOutlineText = (text: string): OutlineSection[] => {
-  const lines = text.split('\n').map(line => line.trim());
-  const outline: OutlineSection[] = [];
-  let currentSection: OutlineSection | null = null;
-  let currentContent: string[] = [];
-  let currentItems: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line && !currentSection) continue;
-
-    if (line.startsWith('#')) {
-      if (currentSection) {
-        if (currentContent.length > 0) {
-          currentSection.content = currentContent.join('\n');
-        }
-        if (currentItems.length > 0) {
-          currentSection.items = currentItems;
-        }
-        outline.push(currentSection);
-        currentContent = [];
-        currentItems = [];
-      }
-
-      const level = line.match(/^#+/)?.[0].length || 1;
-      currentSection = {
-        title: line.replace(/^#+\s*/, ''),
-        level: level,
-        items: [],
-        content: ''
-      };
-    } else if (line.startsWith('-') && currentSection) {
-      if (currentContent.length > 0) {
-        currentSection.content = currentContent.join('\n');
-        currentContent = [];
-      }
-      currentItems.push(line.replace(/^-\s*/, ''));
-    } else if (currentSection) {
-      if (currentItems.length > 0 && line) {
-        currentSection.items = currentItems;
-        currentItems = [];
-      }
-      currentContent.push(line);
-    }
-  }
-
-  if (currentSection) {
-    if (currentContent.length > 0) {
-      currentSection.content = currentContent.join('\n');
-    }
-    if (currentItems.length > 0) {
-      currentSection.items = currentItems;
-    }
-    outline.push(currentSection);
-  }
-
-  return outline;
-};const OutlineEditCard: React.FC<{ outline: string }> = ({ outline }) => {
-  const sections = parseOutlineText(outline);
-  
-  return (
-    <Card className="mt-4 bg-white shadow-sm">
-      <CardContent className="p-6">
-        <div className="prose prose-amber max-w-none">
-          {sections.map((section, index) => (
-            <div key={index} className="mb-4">
-              <div className={`font-bold text-${['2xl', 'xl', 'lg', 'md', 'sm', 'xs'][section.level - 1] || 'md'}`}>
-                {section.title}
-              </div>
-              {section.content && (
-                <div className="mt-2 whitespace-pre-wrap">
-                  {section.content}
-                </div>
-              )}
-              {section.items && section.items.length > 0 && (
-                <ul className="list-disc pl-6 mt-2">
-                  {section.items.map((item, itemIndex) => (
-                    <li key={itemIndex}>{item}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Bot, Download, FileText, HelpCircle, LayoutTemplate, Loader2, Plus, Recycle, Send, Eye } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, Bot, FileText, HelpCircle, LayoutTemplate, Loader2,  Recycle, Send, Eye } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Badge } from "@/components/ui/badge";
@@ -94,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import DocumentUpload from './DocumentUpload';
 import { toast } from "@/hooks/use-toast"
+import { API_BASE_URL } from '../config/constants';
 
 interface OutlineSection {
   title: string;
@@ -107,13 +20,6 @@ interface OutlineSection {
   time?: string;
 }
 
-// 添加新的接口定义
-interface OutlineResponse {
-  title: string;
-  content?: string;
-  items?: string[];
-  urls_map?: Record<string, string>;
-}
 
 const OutlineGenerator: React.FC = () => {
   const location = useLocation();
@@ -184,11 +90,10 @@ const OutlineGenerator: React.FC = () => {
     { key: 'content_needs', question: '对培训内容有什么具体要求？' },
     { key: 'format_style', question: '期望的培训格式和风格是怎样的？' },
     { key: 'audience_info', question: '培训对象是哪些人员？' },
-    { key: 'file_or_not', question: '您想要上传文件并据此生成（1）还是直成文档（2）？' },
-    // { key: 'page_num', question: '您期望的数是多少？' },
-    // { key: 'page_style', question: '您期望的文档样的？' },
-    // { key: 'page_theme', question: '您期望的文档主题是样的？' },
+    { key: 'file_or_not', question: '您想要上传文件并据此生成文档还是使用模板？' },
+   
   ];
+  const base_url = API_BASE_URL;
 
   useEffect(() => {
     if (location.state?.topic) {
@@ -202,16 +107,20 @@ const OutlineGenerator: React.FC = () => {
   const generateOutline = async (description: string, files: File[] = []) => {
     setLoading(true);
     try {
+
+
+
+
       const formData = new FormData();
       formData.append('description', description);
       formData.append('ai_model', 'gpt-4o-mini');
       
       // Add files if available
-      files.forEach((file, index) => {
+      files.forEach((file) => {
         formData.append('files', file);
       });
 
-      const response = await fetch('/api/storage/generate_outline_and_upload/', {
+      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -243,12 +152,6 @@ const OutlineGenerator: React.FC = () => {
     }
   };
 
-  // 修改按钮点击处理函数
-  const handleGenerateClick = () => {
-    if (input.trim()) {
-      generateOutline(input);
-    }
-  };
 
   const handleAIGenerate = () => {
     console.log("Starting AI chat...");
@@ -276,7 +179,7 @@ const OutlineGenerator: React.FC = () => {
     "跨部门协作培训"
   ];
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
 
   // 添加上传文件状态
   const [files, setFiles] = useState<File[]>([]);
@@ -364,7 +267,8 @@ const OutlineGenerator: React.FC = () => {
       headers.append('Authorization', `Bearer ${token}`);
       // 不要设置 Content-Type，因为是 FormData
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {        method: 'POST',
+      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+        method: 'POST',
         headers: headers,
         body: formData,
         credentials: 'include'  // 添加这个选项
@@ -453,11 +357,7 @@ const OutlineGenerator: React.FC = () => {
     }
   }, [currentStep]);
 // 添加类型定义
-interface OutlineResponse {
-  outline: string;
-  temp_paths: string[];
-  urls_map?: Record<string, string>;
-}
+
   // 添加生成函数
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -486,7 +386,8 @@ interface OutlineResponse {
       headers.append('Authorization', `Bearer ${token}`);
       // 不要设置 Content-Type，因为是 FormData
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {        method: 'POST',
+      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+        method: 'POST',
         headers: headers,
         body: formData,
         credentials: 'include'  // 添加这个选项
@@ -633,7 +534,7 @@ interface OutlineResponse {
         console.log(pair[0] + ': ' + pair[1]);
       }
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_outline_and_upload/', {
+      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -690,21 +591,8 @@ interface OutlineResponse {
   // Add new state for mode selection
   const [selectedMode, setSelectedMode] = useState<number>(0);
 
-  // Update the button handlers
-  const handleModeSelection = (mode: number) => {
-    setSelectedMode(mode);
-    if (mode === 1) {
-      // AI智能生成：先问答再上传
-      handleAIGenerate();
-    } else if (mode === 2 || mode === 3) {
-      // 使用模板生成或混合模板：直接开始问答，完成后跳转
-      handleAIGenerate();
-    }
-  };
+ 
 
-  const handleSelectTemplate = () => {
-    navigate('/templates', { state: { outline } });
-  };
 
   const handlePreview = () => {
     // 如果没有大纲数据，直接返回
@@ -727,48 +615,15 @@ interface OutlineResponse {
     });
   };
 
-  // Add state for edited outline
-  const [editedOutline, setEditedOutline] = useState<OutlineSection[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-
-  // Update outline state handling
-  useEffect(() => {
-    setEditedOutline(outline);
-  }, [outline]);
-
-  // Add handlers for editing
-  const handleEditSection = (sectionIndex: number, field: 'title' | 'content', value: string) => {
-    setEditedOutline(prev => prev.map((section, index) => {
-      if (index === sectionIndex) {
-        return { ...section, [field]: value };
-      }
-      return section;
-    }));
-  };
-
-  const handleEditItem = (sectionIndex: number, itemIndex: number, value: string) => {
-    setEditedOutline(prev => prev.map((section, index) => {
-      if (index === sectionIndex) {
-        const newItems = [...(section.items || [])];
-        newItems[itemIndex] = value;
-        return { ...section, items: newItems };
-      }
-      return section;
-    }));
-  };
-
-  const handleSaveOutline = () => {
-    setOutline(editedOutline);
-    setIsEditing(false);
-    toast({
-      title: "保存成功",
-      description: "大纲修改已保存",
-      duration: 3000,
-    });
-  };
-
-  // Update the outline rendering section
+  // 修复状态声明
   const [outlineText, setOutlineText] = useState<string>('');
+
+  // 添加处理函数
+  const handleOutlineTextChange = (text: string) => {
+    setOutlineText(text);
+    const newOutline = parseOutlineText(text);
+    setOutline(newOutline);
+  };
 
   const outlineToText = (sections: OutlineSection[]): string => {
     return sections.map(section => {
@@ -783,11 +638,6 @@ interface OutlineResponse {
     }).join('\n');
   };
 
-  const handleOutlineTextChange = (text: string) => {
-    setOutlineText(text);
-    const newOutline = parseOutlineText(text);
-    setOutline(newOutline);
-  };
 
   useEffect(() => {
     if (outline.length > 0) {
@@ -811,13 +661,22 @@ interface OutlineResponse {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300">
       <header className="flex h-14 items-center gap-4 border-b bg-white px-6">
-        <Link to="#" className="flex items-center gap-2">
+        <Link 
+          to="#" 
+          className="flex items-center gap-2"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(-1);
+          }}
+        >
           <ArrowLeft className="h-5 w-5 text-amber-600" />
         </Link>
         <div className="ml-auto flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <HelpCircle className="h-5 w-5 text-amber-600" />
-          </Button>
+          <Link to="/help">
+            <Button variant="ghost" size="icon">
+              <HelpCircle className="h-5 w-5 text-amber-600" />
+            </Button>
+          </Link>
           <Button variant="ghost" size="icon">
             <Recycle className="h-5 w-5 text-amber-600" />
           </Button>
@@ -1016,6 +875,7 @@ interface OutlineResponse {
               <div className="mt-4 flex justify-between">
                 <div className="flex flex-col gap-4 flex-grow mr-4">
                   <div className="flex gap-2">
+                    
                     <Button 
                       variant="outline" 
                       size="sm" 
@@ -1061,15 +921,7 @@ interface OutlineResponse {
                   )}
                 </div>
 
-                <Button 
-                  size="sm" 
-                  className="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white"
-                  onClick={handleSelectTemplate}
-                  disabled={!outline || outline.length === 0}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  挑选PPT模板
-                </Button>
+                
               </div>
             </CardContent>
           </Card>
@@ -1088,7 +940,7 @@ interface OutlineResponse {
                     console.log('Files saved:', files.map(f => f.name));
                   }}
                   maxFileSize={20 * 1024 * 1024}
-                  acceptedFileTypes={['.doc', '.docx', '.pdf', '.txt', '.md']}
+                  acceptedFileTypes={['.doc', '.docx', '.pdf', '.md']}
                   onConfirm={handleUploadConfirm}
                   hasCompletedConversation={hasCompletedConversation}
                 />

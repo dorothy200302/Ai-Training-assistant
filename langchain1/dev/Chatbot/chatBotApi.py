@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import aiohttp
 import tempfile
 import os
-from .DocQuery import DocumentChat
+from dev.Chatbot.DocQuery import DocumentChat
 from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
@@ -261,8 +261,7 @@ async def download_file(url: str) -> str:
     except Exception as e:
         # 确保任何错误都能返回有意义的错误信息
         if isinstance(e, HTTPException):
-            raise
-        raise HTTPException(
+            raise HTTPException(
             status_code=500,
             detail=f"文件下载过程中出错: {str(e)}"
         )

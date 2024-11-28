@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../config/constants';
+
 export interface DocumentService {
   generateDocument(params: { title: string; content: string; format: 'pdf' | 'docx' }): Promise<Blob>;
   downloadDocument(blob: Blob, filename: string): Promise<void>;
@@ -6,7 +8,7 @@ export interface DocumentService {
 }
 
 class DocumentServiceImpl implements DocumentService {
-  private baseUrl = 'http://localhost:8001/api';
+  private baseUrl = API_BASE_URL;
 
   async generateDocument(params: { title: string; content: string; format: 'pdf' | 'docx' }): Promise<Blob> {
     const response = await fetch(`${this.baseUrl}/api/documents/generate`, {

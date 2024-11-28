@@ -1,24 +1,21 @@
 import React, { useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useToast } from '@/hooks/use-toast'
 import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { FileUp, Loader2, CheckCircle2, FileDown } from 'lucide-react'
+import {  Loader2, CheckCircle2, FileDown } from 'lucide-react'
 
-import { useLocation } from 'react-router-dom'
 import { EditableCard } from '@/components/EditableCard'
 import { EditableText } from '@/components/EditableText'
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { CheckCircle2 as CheckCircle, MessageCircle, ShieldCheck, Zap, HeartHandshake, ThumbsUp, Plus, Save, Trash, Copy, FileUp as FileUpIcon, Loader2 as Loader, HeartHandshake as HeartHandshakeIcon } from 'lucide-react'
+import { CheckCircle2 as MessageCircle, ShieldCheck, Zap, HeartHandshake, Plus, Save, Copy, FileUp as FileUpIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
-import { useNavigate } from 'react-router-dom';
-import { useToken, useToast as useToastHook } from '../../hooks/use-token'
+import {  useToast as useToastHook } from '../../hooks/use-token'
 import jsPDF from 'jspdf';
 import { Document, Paragraph, TextRun, HeadingLevel, Packer } from 'docx';
+import { API_BASE_URL } from '@/config/constants'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface Module {
   id: string
@@ -43,21 +40,10 @@ interface ProgressSection {
   pendingModules: Array<{ id: string; name: string }>;// 
 }
 
-interface DocumentContent {
-  title: string;
-  overview: string;
-  sections: Array<{
-    title: string;
-    content: string;
-    subsections?: Array<{
-      title: string;
-      content: string;
-    }>;
-  }>;
-}
 
 const CustomerServiceSkillsTraining: React.FC = () => {
-  const location = useLocation();
+  const API_URL = API_BASE_URL
+
 
   const [title, setTitle] = useState("客户服务技巧培训")
   const [subtitle, setSubtitle] = useState("提升客户满意度的服务技巧")
@@ -110,7 +96,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
 
   const [completedModules, setCompletedModules] = useState<string[]>([])
 
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({})
+  const [isEditing] = useState<{ [key: string]: boolean }>({})
 
   const [progressData, setProgressData] = useState<ProgressSection>({
     id: 'progress1',
@@ -139,37 +125,10 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     }));
   };
 
-  const addCompletedModule = () => {
-    setProgressData(prev => ({
-      ...prev,
-      completedModules: [...prev.completedModules, {
-        id: `cm${prev.completedModules.length + 1}`,
-        name: '新完成模块'
-      }]
-    }));
-  };
-
-  const addPendingModule = () => {
-    setProgressData(prev => ({
-      ...prev,
-      pendingModules: [...prev.pendingModules, {
-        id: `pm${prev.pendingModules.length + 1}`,
-        name: '新待完成模块'
-      }]
-    }));
-  };
-
   const handleModuleNameEdit = (id: string, newValue: string) => {
     setModules(modules.map(module =>
       module.id === id ? { ...module, name: newValue } : module
     ))
-  }
-
-  const toggleEdit = (id: string) => {
-    setIsEditing(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }))
   }
 
   const toggleModuleCompletion = (moduleId: string) => {
@@ -180,9 +139,6 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     )
   }
 
-  const calculateProgress = () => {
-    return (completedModules.length / modules.length) * 100
-  }
 
   const handleAddModule = () => {
     const newModule: Module = {
@@ -200,27 +156,6 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     setCompletedModules(completedModules.filter(id => id !== moduleId))
   }
 
-  const handleAddScenario = (moduleId: string) => {
-    const newScenario: Scenario = {
-      id: nanoid(),
-      title: "新场景",
-      description: "请编辑场景描述...",
-      points: ["添加练习要点"]
-    }
-    setModules(modules.map(module =>
-      module.id === moduleId
-        ? { ...module, scenarios: [...(module.scenarios || []), newScenario] }
-        : module
-    ))
-  }
-
-  const handleDeleteScenario = (moduleId: string, scenarioId: string) => {
-    setModules(modules.map(module =>
-      module.id === moduleId
-        ? { ...module, scenarios: module.scenarios?.filter(s => s.id !== scenarioId) }
-        : module
-    ))
-  }
 
   const handleSaveTemplate = () => {
     console.log('Saving template...', {
@@ -272,7 +207,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         reader.readAsDataURL(fileBlob);
       });
 
-      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+      const response = await fetch(`${API_URL}/api/storage/download_document`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -300,7 +235,6 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         throw new Error(errorData?.detail || '保存到后端失败');
       }
 
-      const data = await response.json();
       
       const formData = new URLSearchParams();
       formData.append('document_name', '客户服务技能培训手册');
@@ -342,7 +276,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         token: token ? 'present' : 'missing'
       });
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+      const response = await fetch(`${API_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -490,15 +424,6 @@ const CustomerServiceSkillsTraining: React.FC = () => {
     }
   };
 
-  const navigate = useNavigate();
-  const token = useToken();
-
-  const templateDescription = {
-    title: title,
-    subtitle: subtitle,
-    overview: overview,
-    content: documentContent
-  };
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
@@ -522,7 +447,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
             <EditableText
               value={overview}
               onChange={setOverview}
-              multiline
+              
               className="text-amber-700"
             />
           </section>
@@ -571,7 +496,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
                           m.id === module.id ? {...m, content: newContent} : m
                         ))
                       }}
-                      multiline
+                      
                       className="text-amber-700"
                     />
                   </div>
@@ -657,8 +582,14 @@ const CustomerServiceSkillsTraining: React.FC = () => {
 
           {/* Upload modal */}
           {showUpload && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <Dialog open={showUpload} onOpenChange={setShowUpload}>
+              <DialogContent className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <DialogHeader>
+                  <DialogTitle>上传文档</DialogTitle>
+                  <DialogDescription>
+                    请选择要上传的文档，系统将自动生成培训内容。
+                  </DialogDescription>
+                </DialogHeader>
                 <DocumentUpload 
                   endpoint="/api/documents/upload"
                   isUploading={isUploading}
@@ -667,8 +598,8 @@ const CustomerServiceSkillsTraining: React.FC = () => {
                   onCancel={() => setShowUpload(false)}
                   isLoading={isGenerating}
                 />
-              </div>
-            </div>
+              </DialogContent>
+            </Dialog>
           )}
 
           {/* Document Content Section */}

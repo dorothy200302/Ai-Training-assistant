@@ -1,22 +1,40 @@
-from fastapi import APIRouter, File, Form, UploadFile, HTTPException, Depends, Body, Response, Request
-from sqlalchemy.orm import Session
-from typing import List, Optional
 import os
-import asyncio
-import tempfile
+import io
 import uuid
 import json
 import logging
+import asyncio
+import tempfile
 import re
 import shutil
-import boto3
-from botocore.exceptions import ClientError
 from datetime import datetime
-from docx import Document
-from docx.shared import Inches
+from typing import List, Optional
+from fastapi import (
+    APIRouter, 
+    HTTPException, 
+    Depends, 
+    Request, 
+    Body, 
+    UploadFile, 
+    File, 
+    Form, 
+    Response
+)
+from fastapi.responses import JSONResponse, FileResponse
+from sqlalchemy.orm import Session
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-import traceback
+
+from dev.models.models import Users as User
+from dev.database import get_db
+from dev.core.security import get_current_user
+from dev.crud.crud_generated_document import generated_document_crud
+from dev.CloudStorage.aws import upload_file_to_s3_by_key
+from dev.Generate.AsyncTrainingDocGenerator import AsyncTrainingDocGenerator
+from fastapi.templating import Jinja2Templates
+from .aws import download_file_by_url
+import mimetypes
+from pathlib import Path
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -32,19 +50,6 @@ console_handler.setFormatter(formatter)
 
 # Add the handlers to the logger
 logger.addHandler(console_handler)
-
-# Import from project root
-from dev.models.models import Users as User
-from dev.database import get_db
-from dev.core.security import get_current_user
-from dev.crud.crud_generated_document import generated_document_crud
-from dev.CloudStorage.aws import upload_file_to_s3_by_key
-from dev.Generate.AsyncTrainingDocGenerator import AsyncTrainingDocGenerator
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse, Response
-from .aws import download_file_by_url
-import mimetypes
-from pathlib import Path
 
 # Create router with explicit responses
 router = APIRouter(
@@ -93,106 +98,47 @@ async def generate_outline_and_upload(
         if not files:
             logger.error("No files provided")
             raise HTTPException(status_code=400, detail="No files provided")
-            
+
+        # Save uploaded files to temporary directory
+        temp_dir = tempfile.mkdtemp()
         temp_paths = []
-        urls_map = {}
-
+        
         try:
-            temp_dir = tempfile.mkdtemp()  # Use system temp directory
-            logger.debug(f"Created temporary directory: {temp_dir}")
-            
-            # Save uploaded files to temp directory
             for file in files:
-                try:
-                    file_ext = os.path.splitext(file.filename)[1]
-                    if not file_ext:
-                        logger.error(f"File {file.filename} has no extension")
-                        raise HTTPException(status_code=400, detail=f"File {file.filename} has no extension")
-                        
-                    safe_filename = f"{str(uuid.uuid4())}{file_ext}"
-                    temp_path = os.path.join(temp_dir, safe_filename)
-                    logger.debug(f"Processing file: {file.filename} -> {temp_path}")
-                    
-                    content = await file.read()
-                    if not content:
-                        logger.error(f"File {file.filename} is empty")
-                        raise HTTPException(status_code=400, detail=f"File {file.filename} is empty")
-                        
-                    with open(temp_path, 'wb') as out_file:
-                        out_file.write(content)
-                    temp_paths.append(temp_path)
-                    logger.info(f"Successfully saved file: {file.filename}")
-                    
-                except Exception as e:
-                    logger.error(f"Error processing file {file.filename}: {str(e)}")
-                    raise HTTPException(status_code=500, detail=f"Error processing file {file.filename}: {str(e)}")
-
-            try:
-                doc_generator = AsyncTrainingDocGenerator(
-                    file_paths=temp_paths,
-                    model_name=ai_model,
-                    background_informations=description,
-                    user_email=user_email
-                )
-                logger.info("Successfully initialized AsyncTrainingDocGenerator")
-                
-            except Exception as e:
-                logger.error(f"Error initializing doc generator: {str(e)}")
-                raise HTTPException(status_code=500, detail=f"Error initializing document generator: {str(e)}")
-
-            try:
-                outline = await doc_generator.generate_training_outline(requirements)
-                if not outline:
-                    logger.error("Generated outline is empty")
-                    raise HTTPException(status_code=500, detail="Generated outline is empty")
-                logger.info("Successfully generated outline")
-                
-            except Exception as e:
-                logger.error(f"Error generating outline: {str(e)}")
-                raise HTTPException(status_code=500, detail=f"Error generating outline: {str(e)}")
-
-            # Upload files to S3 and get URLs
-            for temp_path in temp_paths:
-                try:
-                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                    original_filename = os.path.basename(temp_path)
-                    s3_key = f"{timestamp}_{original_filename}"
-                    url = upload_file_to_s3_by_key(s3_key, temp_path)
-                    urls_map[os.path.basename(temp_path)] = url
-                    logger.info(f"Successfully uploaded file to S3: {temp_path}")
-                    
-                except Exception as e:
-                    logger.error(f"Error uploading to S3: {str(e)}")
-                    raise HTTPException(status_code=500, detail=f"Error uploading to S3: {str(e)}")
-
-            return {
-                "outline": outline,
-                "urls": urls_map
-            }
-
-        except Exception as e:
-            logger.error(f"Unexpected error in generate_outline_and_upload: {str(e)}")
-            raise HTTPException(status_code=500, detail=str(e))
+                temp_path = os.path.join(temp_dir, file.filename)
+                with open(temp_path, "wb") as buffer:
+                    shutil.copyfileobj(file.file, buffer)
+                temp_paths.append(temp_path)
+                logger.info(f"Saved file to {temp_path}")
+            
+            # Initialize document generator
+            doc_generator = AsyncTrainingDocGenerator(
+                file_paths=temp_paths,
+                background_informations={"description": description},
+                model_name=ai_model,
+                user_email=user_email
+            )
+            
+            # Initialize vector store
+            await doc_generator.initialize_vector_store()
+            
+            if not doc_generator.vector_store:
+                raise HTTPException(status_code=500, detail="Failed to initialize vector store")
+            
+            # Generate outline
+            outline = await doc_generator.generate_training_outline(requirements)
+            
+            if not outline:
+                raise HTTPException(status_code=500, detail="Failed to generate outline")
+            
+            return JSONResponse(content={"outline": outline})
             
         finally:
-            # Clean up temp files
-            for temp_path in temp_paths:
-                try:
-                    if os.path.exists(temp_path):
-                        os.remove(temp_path)
-                        logger.debug(f"Removed temp file: {temp_path}")
-                except Exception as e:
-                    logger.error(f"Error removing temp file {temp_path}: {str(e)}")
-                
-            try:
-                if os.path.exists(temp_dir):
-                    os.rmdir(temp_dir)
-                    logger.debug(f"Removed temp directory: {temp_dir}")
-            except Exception as e:
-                logger.error(f"Error removing temp directory {temp_dir}: {str(e)}")
-
+            # Clean up temporary files
+            shutil.rmtree(temp_dir)
+            
     except Exception as e:
-        logger.error(f"Error in generate_outline_and_upload: {str(e)}", exc_info=True)
+        logger.error(f"Error in generate_outline_and_upload: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/generate_full_doc_with_doc/")
@@ -457,7 +403,7 @@ def parse_template_content(template_content: str) -> dict:
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error parsing template content: {str(e)}")
 
-@router.post("/generate_full_doc_with_template/")
+@router.post("/generate_full_doc_with_template/", response_model=None)
 async def generate_full_doc_with_template(
     template: str = Form(...),
     description: str = Form(...),
@@ -466,56 +412,19 @@ async def generate_full_doc_with_template(
     ai_model: str = Form("gpt-4o-mini", description="AI model to use"),
     db: Session = Depends(get_db)
 ):
-    """Generate a full document based on a template"""
-    logger.info("Starting document generation with template")
-    logger.info(f"Template: {template}")
-    logger.info(f"Description: {description}")
-    logger.info(f"Number of files: {len(files)}")
-    logger.info(f"Current user data: {current_user}")  # Log the entire user data
-    
-    # Validate current_user
-    if not isinstance(current_user, dict):
-        logger.error(f"current_user is not a dict: {type(current_user)}")
-        raise HTTPException(status_code=500, detail="Invalid user data format")
-        
-    user_email = current_user.get('email')
-    if not user_email:
-        logger.error(f"No email found in current_user data: {current_user}")
-        raise HTTPException(status_code=500, detail="User email not found in authentication token")
-    
-    logger.info(f"User email: {user_email}")
+    """
+    Generate a full document based on a template
+    """
+    temp_paths = []  # 存储临时文件路径
+    urls_map = {}    # 存储文件名到URL的映射
+    temp_dir = None  # 临时目录
+    user_email = current_user.get("email")  # 获取用户邮箱
     
     try:
-        # 创建临时文件并保存上传的文件
-        if not files or len(files) == 0:
-            raise HTTPException(status_code=400, detail="No files uploaded")
-            
-        temp_paths = []
-        urls_map = {}
-        
-        # 保存上传的文件到临时目录
+        # 创建临时目录
         temp_dir = tempfile.mkdtemp()
         logger.info(f"Created temp directory: {temp_dir}")
         
-        for file in files:
-            try:
-                file_ext = os.path.splitext(file.filename)[1]
-                safe_filename = f"{str(uuid.uuid4())}{file_ext}"
-                temp_path = os.path.join(temp_dir, safe_filename)
-                logger.info(f"Processing file {file.filename} -> {temp_path}")
-                
-                content = await file.read()
-                with open(temp_path, 'wb') as out_file:
-                    out_file.write(content)
-                
-                temp_paths.append(temp_path)
-                urls_map[file.filename] = temp_path
-                logger.info(f"Successfully saved file: {file.filename}")
-                
-            except Exception as e:
-                logger.error(f"Error processing file {file.filename}: {str(e)}")
-                raise HTTPException(status_code=500, detail=f"Error processing file {file.filename}: {str(e)}")
-
         # 解析 description
         try:
             description_dict = json.loads(description)
@@ -531,7 +440,26 @@ async def generate_full_doc_with_template(
         if not isinstance(user_email, str):
             logger.error(f"Invalid email type: {type(user_email)}")
             raise HTTPException(status_code=500, detail=f"Invalid email type: {type(user_email)}")
-            
+       
+        # 保存上传的文件到临时目录
+        for file in files:
+            try:
+                file_ext = os.path.splitext(file.filename)[1]
+                safe_filename = f"{str(uuid.uuid4())}{file_ext}"
+                temp_path = os.path.join(temp_dir, safe_filename)
+                
+                content = await file.read()
+                with open(temp_path, 'wb') as out_file:
+                    out_file.write(content)
+                
+                temp_paths.append(temp_path)
+                urls_map[file.filename] = temp_path
+                logger.info(f"Successfully saved file: {file.filename}")
+                
+            except Exception as e:
+                logger.error(f"Error processing file {file.filename}: {str(e)}")
+                raise HTTPException(status_code=500, detail=f"Error processing file {file.filename}: {str(e)}")
+             
         generator = AsyncTrainingDocGenerator(
             file_paths=temp_paths,
             model_name=ai_model,
@@ -542,6 +470,7 @@ async def generate_full_doc_with_template(
         
         # 生成完整文档
         logger.info("Starting full document generation")
+        generator.file_paths = temp_paths
         full_doc = await generator.generate_fulldoc_with_template(template=template)
         logger.info("Document generation completed")
         
@@ -549,10 +478,10 @@ async def generate_full_doc_with_template(
         for filename, temp_path in urls_map.items():
             try:
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                s3_key = f"{timestamp}_{filename}"
-                logger.info(f"Uploading file to S3: {filename} -> {s3_key}")
+                file_key = f"{timestamp}_{filename}"
+                logger.info(f"Uploading file to S3: {filename} -> {file_key}")
                 
-                s3_url = upload_file_to_s3_by_key(s3_key, temp_path)
+                s3_url = upload_file_to_s3_by_key(file_key, temp_path)
                 if not s3_url:
                     raise HTTPException(status_code=500, detail=f"Failed to upload file {filename} to S3")
                 
@@ -634,6 +563,71 @@ async def upload_document(
     except Exception as e:
         logger.error(f"Failed to upload document: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to upload document: {str(e)}")
+
+@router.get("/pdf/generate/")
+async def generate_pdf_from_content(
+    url: str,
+    filename: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    从内容生成PDF文件并返回
+    """
+    logger.info(f"Generating PDF for URL: {url}, filename: {filename}")
+    try:
+        # 下载原始内容
+        logger.info("Downloading content from URL...")
+        content, content_type = download_file_by_url(url)
+        if content is None:
+            logger.error("Content not found at URL")
+            raise HTTPException(status_code=404, detail="Content not found")
+        
+        logger.info(f"Content downloaded successfully, content type: {content_type}")
+
+        # 如果content是bytes，尝试解码为字符串
+        if isinstance(content, bytes):
+            try:
+                content = content.decode('utf-8')
+                logger.info("Successfully decoded bytes content to UTF-8")
+            except UnicodeDecodeError:
+                logger.info("Content is binary, returning as is with original content type")
+                # 如果是二进制文件，直接返回原始内容
+                return FileResponse(
+                    io.BytesIO(content),
+                    filename=filename,
+                    media_type=content_type
+                )
+
+        # 创建PDF
+        logger.info("Creating PDF from content...")
+        buffer = io.BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        
+        # 写入内容
+        text_object = c.beginText(40, 750)  # 起始位置
+        text_object.setFont("Helvetica", 12)
+        
+        # 分行处理文本
+        for line in content.split('\n'):
+            text_object.textLine(line)
+        
+        c.drawText(text_object)
+        c.save()
+        
+        # 获取PDF内容
+        buffer.seek(0)
+        logger.info("PDF created successfully")
+        
+        # 直接返回PDF内容
+        return FileResponse(
+            buffer,
+            filename=filename if filename.endswith('.pdf') else f"{filename}.pdf",
+            media_type='application/pdf'
+        )
+            
+    except Exception as e:
+        logger.error(f"Error generating PDF: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error generating PDF: {str(e)}")
 
 @router.post("/download_document", response_model=None)
 async def download_document(

@@ -17,7 +17,10 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
-    }
+    },
+    host: true,
+    port: 5173,
+    strictPort: true
   }
 })
 

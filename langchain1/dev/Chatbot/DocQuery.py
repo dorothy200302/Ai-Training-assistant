@@ -82,10 +82,14 @@ class DocumentChat:
                 # 根据文件类型选择加载器
                 if file_ext == '.pdf':
                     try:
+                        print("Initializing PyPDFLoader")
                         loader = PyPDFLoader(file_path)
-                        print("Using PyPDFLoader")
+                        print("Successfully initialized PyPDFLoader")
                     except Exception as e:
-                        print(f"PyPDFLoader failed: {str(e)}")
+                        print(f"PyPDFLoader initialization failed: {str(e)}")
+                        if hasattr(e, '__traceback__'):
+                            import traceback
+                            traceback.print_exc()
                         continue
                 else:
                     # 对于其他文件类型，使用TextLoader
@@ -93,16 +97,21 @@ class DocumentChat:
                     loader = None
                     for encoding in encodings:
                         try:
+                            print(f"Attempting to load with {encoding} encoding")
                             loader = TextLoader(file_path, encoding=encoding)
-                            print(f"Using TextLoader with {encoding} encoding")
                             # 尝试读取一小部分内容来验证编码
                             with open(file_path, 'r', encoding=encoding) as f:
                                 f.read(1024)
+                            print(f"Successfully loaded with {encoding} encoding")
                             break
                         except UnicodeDecodeError:
+                            print(f"Failed to decode with {encoding} encoding")
                             continue
                         except Exception as e:
                             print(f"TextLoader failed with {encoding}: {str(e)}")
+                            if hasattr(e, '__traceback__'):
+                                import traceback
+                                traceback.print_exc()
                             continue
                     
                     if loader is None:
@@ -110,7 +119,7 @@ class DocumentChat:
                         continue
 
                 # 加载文档
-                print(f"Loading document with {loader.__class__.__name__}")
+                print(f"Loading document content with {loader.__class__.__name__}")
                 try:
                     documents = loader.load()
                     if not documents:
@@ -120,6 +129,9 @@ class DocumentChat:
                     all_documents.extend(documents)
                 except Exception as e:
                     print(f"Error loading content from {file_path}: {str(e)}")
+                    if hasattr(e, '__traceback__'):
+                        import traceback
+                        traceback.print_exc()
                     continue
                 
             except Exception as e:
@@ -130,28 +142,33 @@ class DocumentChat:
                 continue
 
         if not all_documents:
-            raise Exception("无法加载任何文档。请确保文件为PDF或文本格式（如.txt）且未损坏。")
+            error_msg = "无法加载任何文档。请确保文件为PDF或文本格式（如.txt）且未损坏。"
+            print(error_msg)
+            raise Exception(error_msg)
 
         try:
+            print("Starting document splitting process")
             # 分割所有文档
             text_splitter = CharacterTextSplitter(
                 chunk_size=1000,
                 chunk_overlap=200
             )
             texts = text_splitter.split_documents(all_documents)
-            print(f"Split documents into {len(texts)} chunks")
+            print(f"Successfully split documents into {len(texts)} chunks")
 
+            print("Creating vector store")
             # 创建向量存储
             self.vector_store = FAISS.from_documents(texts, self.embeddings)
             print("Successfully created vector store")
 
             return f"成功加载 {len(file_paths)} 篇文档"
         except Exception as e:
-            print(f"Error processing documents: {str(e)}")
+            error_msg = f"Error processing documents: {str(e)}"
+            print(error_msg)
             if hasattr(e, '__traceback__'):
                 import traceback
                 traceback.print_exc()
-            raise
+            raise Exception(error_msg)
 
     def chat(self, query):
         """与文档进行对话"""

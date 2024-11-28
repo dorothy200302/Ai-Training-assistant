@@ -17,7 +17,7 @@ const TemplateFileHandler: React.FC<TemplateFileHandlerProps> = ({
   templateId,
   templateDescription,
   onContentGenerated,
-  onUploadConfirm
+  
 }) => {
   const [showUpload, setShowUpload] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);

@@ -1,10 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Bot, FileText, HelpCircle, MessageSquare, Send, Upload, Loader2 } from "lucide-react"
+import { Bot, FileText, MessageSquare, Send, Upload, Loader2 } from "lucide-react"
 import DocumentUpload from "./DocumentUpload"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,8 +12,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/hooks/useAuth"
-import { API_BASE_URL } from "@/config/constants"
+import { API_BASE_URL } from '../config/constants';
+
 import { toast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
@@ -24,13 +23,6 @@ interface Message {
   content: string
 }
 
-interface ChatResponse {
-  response: string
-}
-
-interface UploadResponse {
-  urls: string[]
-}
 
 interface UploadedFile {
   id: string;
@@ -70,22 +62,6 @@ const models = [
   }
 ]
 
-const convertUploadedFilesToFiles = (uploadedFiles: UploadedFile[]): File[] => {
-  return uploadedFiles.map(uploadedFile => {
-    if (uploadedFile.originalFile) {
-      return uploadedFile.originalFile;
-    }
-    // Fallback in case originalFile is not available
-    return new File(
-      [new ArrayBuffer(0)],
-      uploadedFile.name,
-      {
-        type: uploadedFile.type || 'application/octet-stream',
-        lastModified: Date.now(),
-      }
-    );
-  });
-};
 
 export default function Component() {
   const [messages, setMessages] = React.useState<Message[]>([])
@@ -97,10 +73,8 @@ export default function Component() {
   const [showUploadDialog, setShowUploadDialog] = React.useState(false)
   const [uploadedUrls, setUploadedUrls] = React.useState<string[]>([])
   const [selectedFiles, setSelectedFiles] = React.useState<FileList | null>(null)
-  const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([])
-  const [documentUrls, setDocumentUrls] = React.useState<string[]>([])
   const [showUpload, setShowUpload] = React.useState(false)
-  const [hasCompletedConversation, setHasCompletedConversation] = React.useState(false)
+  const [hasCompletedConversation] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +101,7 @@ export default function Component() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8001/api/chatbot/upload`, {
+      const response = await fetch(`${API_BASE_URL}/api/chatbot/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -177,7 +151,7 @@ export default function Component() {
     setLoading(true);
 
     try {
-      const { response } = await fetch(`http://localhost:8001/api/chatbot/chat`, {
+      const { response } = await fetch(`${API_BASE_URL}/api/chatbot/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ query: input, model_name: selectedModel, document_urls: uploadedUrls }),
@@ -200,7 +174,7 @@ export default function Component() {
         formData.append('files', file);
       });
 
-      const response = await fetch(`http://localhost:8001/api/chatbot/upload`, {
+      const response = await fetch(`${API_BASE_URL}/api/chatbot/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -287,7 +261,7 @@ export default function Component() {
             </div>
             <div className="p-4">
               <Label className="mb-2 block text-lg font-semibold">模式选择</Label>
-              <RadioGroup defaultValue="chat" onValueChange={setMode}>
+              <RadioGroup value={mode} onValueChange={setMode}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="chat" id="chat" />
                   <Label htmlFor="chat">问答模式</Label>

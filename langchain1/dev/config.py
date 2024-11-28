@@ -13,3 +13,4 @@ class Config:
        # 文件上传配置
        UPLOAD_FOLDER = 'uploads'
        ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx', 'ppt', 'pptx'}
+       

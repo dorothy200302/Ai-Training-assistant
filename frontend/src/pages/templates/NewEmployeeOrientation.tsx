@@ -2,15 +2,14 @@ import React, { useState } from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import { toast } from "@/hooks/use-toast"
-import { CheckCircle2, UserPlus, Briefcase, Mail, Users, Coffee, FileText, Layers, Copy, Pencil, Save, FileUp, Loader2, Download, FileDown } from 'lucide-react'
+import { CheckCircle2, UserPlus, Briefcase, Mail, Users, Coffee, FileUp, Loader2, FileDown } from 'lucide-react'
 import DocumentUpload from '../DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import jsPDF from 'jspdf';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
-
+import { API_BASE_URL } from "../../config/constants";
+import {EditableText} from '@/components/EditableText';
 interface ChecklistItem {
   id: string;
   content: string;
@@ -18,39 +17,10 @@ interface ChecklistItem {
   checked?: boolean;
 }
 
-interface OutlineItem {
-  id: string;
+interface EditableContent {
   title: string;
-  isEditing?: boolean;
-  subItems: {
-    id: string;
-    text: string;
-    isEditing?: boolean;
-  }[]
-}
-
-interface Section {
-  id: string;
-  title: string;
-  blocks: ContentBlock[];
-}
-
-interface ContentBlock {
-  id: string;
-  content: string;
-}
-
-interface DocumentContent {
-  title: string;
+  subtitle: string;
   overview: string;
-  sections: Array<{
-    title: string;
-    content: string;
-    subsections?: Array<{
-      title: string;
-      content: string;
-    }>;
-  }>;
 }
 
 const NewEmployeeOrientation: React.FC = () => {
@@ -63,11 +33,15 @@ const NewEmployeeOrientation: React.FC = () => {
   ])
 
   const [documentContent, setDocumentContent] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-
+  const [editableContent, setEditableContent] = useState<EditableContent>({
+    title: '新员工入职培训手册',
+    subtitle: '欢迎加入我们的团队！',
+    overview: '本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。',
+  });
+  const Base_URL = API_BASE_URL
   const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
     if (!uploadSuccess || !files || files.length === 0) {
       setShowUpload(false);
@@ -85,9 +59,9 @@ const NewEmployeeOrientation: React.FC = () => {
 
       formData.append('template', 'new_employee_orientation');
       formData.append('description', JSON.stringify({
-        title: '新员工入职培训手册',
-        subtitle: '欢迎加入我们的团队！',
-        overview: '本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。',
+        title: editableContent.title,
+        subtitle: editableContent.subtitle,
+        overview: editableContent.overview,
         checklist: checklist.map(item => ({
           id: item.id,
           content: item.content,
@@ -102,7 +76,7 @@ const NewEmployeeOrientation: React.FC = () => {
         token: token ? 'present' : 'missing'
       });
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+      const response = await fetch(`${Base_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -183,7 +157,7 @@ const NewEmployeeOrientation: React.FC = () => {
       });
 
       // 使用现有的download_document接口
-      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -212,7 +186,6 @@ const NewEmployeeOrientation: React.FC = () => {
         throw new Error(errorData?.detail || '保存到后端失败');
       }
 
-      const data = await response.json();
       
       // 创建文档记录
       const formData = new URLSearchParams();
@@ -230,68 +203,7 @@ const NewEmployeeOrientation: React.FC = () => {
     }
   };
 
-  const handleDownloadPdfFrontend = async () => {
-    try {
-      setIsDownloading(true);
-      
-      // 创建PDF文档
-      const doc = new jsPDF({
-        unit: 'pt',
-        format: 'a4'
-      });
-      
-      // 使用内置字体
-      doc.setFont('helvetica', 'normal');
-      
-      // 添加标题
-      doc.setFontSize(20);
-      doc.text('新员工入职培训手册', 40, 40);
-      
-      // 添加内容
-      doc.setFontSize(12);
-      const contentLines = documentContent.split('\n');
-      let y = 80;
-      
-      contentLines.forEach((line) => {
-        if (y > 780) { // A4纸张高度约为842pt
-          doc.addPage();
-          y = 40;
-        }
-        doc.text(line, 40, y);
-        y += 20; // 增加行距
-      });
-      
-      // 获取PDF blob
-      const pdfBlob = doc.output('blob');
-      
-      // 下载PDF
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '新员工入职培训手册.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      // 保存到后端
-      await saveToBackend(pdfBlob, 'pdf');
-      
-      toast({
-        title: "下载成功",
-        description: "文档已下载为PDF格式",
-      });
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      toast({
-        title: "生成PDF失败",
-        description: error instanceof Error ? error.message : "PDF生成失败，请重试",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  
 
   const handleDownloadWordFrontend = async () => {
     try {
@@ -358,8 +270,18 @@ const NewEmployeeOrientation: React.FC = () => {
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
       <div className="w-screen bg-white shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">新员工入职培训手册</h1>
-        <p className="text-amber-100">欢迎加入我们的团队！</p>
+        <h1 className="text-3xl font-bold mb-2">
+          <EditableText 
+            value={editableContent.title} 
+            onChange={(value) => setEditableContent(prev => ({ ...prev, title: value }))}
+          />
+        </h1>
+        <p className="text-amber-100">
+          <EditableText 
+            value={editableContent.subtitle} 
+            onChange={(value) => setEditableContent(prev => ({ ...prev, subtitle: value }))}
+          />
+        </p>
       </div>
       
       <div className="flex-1 p-6 overflow-auto">
@@ -417,18 +339,7 @@ const NewEmployeeOrientation: React.FC = () => {
           {documentContent && (
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="flex justify-end gap-2 mb-4">
-                <Button
-                  onClick={handleDownloadPdfFrontend}
-                  disabled={!documentContent || isDownloading}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  {isDownloading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <FileDown className="mr-2 h-4 w-4" />
-                  )}
-                  下载PDF
-                </Button>
+                
                 <Button
                   onClick={handleDownloadWordFrontend}
                   disabled={!documentContent || isDownloading}

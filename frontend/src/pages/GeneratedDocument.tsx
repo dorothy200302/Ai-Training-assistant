@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { ChevronLeft, ChevronRight, Download, Printer, Share2, Edit2, FileText, Loader2, Bot } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Download,  Edit2, FileText, Loader2 } from 'lucide-react'
+import { useLocation } from 'react-router-dom';
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from '@/hooks/use-toast'
 import {
@@ -15,6 +13,9 @@ import {
 import ReactMarkdown from 'react-markdown'
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import jsPDF from 'jspdf';
+import { API_BASE_URL } from "../config/constants";
+
+console.log('API_BASE_URL:', API_BASE_URL);
 
 interface Section {
   title: string;
@@ -31,17 +32,25 @@ interface DocumentContent {
   sections: Section[];
 }
 
+interface OutlineSection {
+  title: string;
+  content?: string;
+  subsections?: OutlineSection[];
+  items?: string[];
+  level: number;
+  time?: string;
+}
+
 const DocumentContentPage: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { outline, backgroundInfo, uploadedFiles } = location.state || {};
   const [content, setContent] = useState<DocumentContent | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentSection, setCurrentSection] = useState(0);
-  const [isEditing, setIsEditing] = useState(false);
   const [generationStep, setGenerationStep] = useState<string>('正在分析文档...');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editedContent, setEditedContent] = useState<DocumentContent | null>(null);
+  const [outlineText, setOutlineText] = useState<string>('');
+  const [currentOutline, setCurrentOutline] = useState<OutlineSection[]>([]);
 
   useEffect(() => {
     const initializeContent = async () => {
@@ -74,9 +83,11 @@ const DocumentContentPage: React.FC = () => {
             formData.append('files', file);
           });
         }
+        const API_URL = API_BASE_URL;
+
 
         setGenerationStep('正在生成文档内容...');
-        const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_doc/', {
+        const response = await fetch(`${API_URL}/api/storage/generate_full_doc_with_doc/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -87,6 +98,8 @@ const DocumentContentPage: React.FC = () => {
         if (!response.ok) {
           const errorText = await response.text();
           console.error('Error response:', errorText);
+          console.error('Response status:', response.status);
+          console.error('Response URL:', response.url);
           throw new Error(`Failed to generate content: ${errorText}`);
         }
 
@@ -124,6 +137,83 @@ const DocumentContentPage: React.FC = () => {
       setEditedContent(JSON.parse(JSON.stringify(content)));
     }
   }, [content]);
+
+  useEffect(() => {
+    if (outline) {
+      setCurrentOutline(outline);
+      setOutlineText(outlineToText(outline));
+    }
+  }, [outline]);
+
+  const outlineToText = (sections: OutlineSection[]): string => {
+    return sections.map(section => {
+      let text = '#'.repeat(section.level) + ' ' + section.title + '\n';
+      if (section.content) {
+        text += section.content + '\n';
+      }
+      if (section.items && section.items.length > 0) {
+        text += section.items.map(item => '- ' + item).join('\n') + '\n';
+      }
+      return text;
+    }).join('\n');
+  };
+
+  const parseOutlineText = (text: string): OutlineSection[] => {
+    const lines = text.split('\n').map(line => line.trim());
+    const outline: OutlineSection[] = [];
+    let currentSection: OutlineSection | null = null;
+    let currentContent: string[] = [];
+    let currentItems: string[] = [];
+  
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line && !currentSection) continue;
+  
+      if (line.startsWith('#')) {
+        if (currentSection) {
+          if (currentContent.length > 0) {
+            currentSection.content = currentContent.join('\n');
+          }
+          if (currentItems.length > 0) {
+            currentSection.items = currentItems;
+          }
+          outline.push(currentSection);
+          currentContent = [];
+          currentItems = [];
+        }
+  
+        const level = line.match(/^#+/)?.[0].length || 1;
+        currentSection = {
+          title: line.replace(/^#+\s*/, ''),
+          level,
+          content: '',
+          items: []
+        };
+      } else if (line.startsWith('-')) {
+        currentItems.push(line.replace(/^-\s*/, ''));
+      } else if (line) {
+        currentContent.push(line);
+      }
+    }
+  
+    if (currentSection) {
+      if (currentContent.length > 0) {
+        currentSection.content = currentContent.join('\n');
+      }
+      if (currentItems.length > 0) {
+        currentSection.items = currentItems;
+      }
+      outline.push(currentSection);
+    }
+  
+    return outline;
+  };
+
+  const handleOutlineTextChange = (text: string) => {
+    setOutlineText(text);
+    const newOutline = parseOutlineText(text);
+    setCurrentOutline(newOutline);
+  };
 
   const handleDownload = async (format: 'docx' | 'pdf') => {
     try {
@@ -233,7 +323,7 @@ const DocumentContentPage: React.FC = () => {
 
       // 保存到后端
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -260,7 +350,6 @@ const DocumentContentPage: React.FC = () => {
         throw new Error(errorData?.detail || 'Failed to save document');
       }
 
-      const result = await response.json();
     
       toast({
         title: "保存成功",
@@ -278,8 +367,49 @@ const DocumentContentPage: React.FC = () => {
     }
   };
 
-  const navigateToTemplates = () => {
-    navigate('/templates', { state: { content } });
+  const handleSave = async () => {
+    if (!editedContent) return;
+
+    try {
+      setLoading(true);
+
+      // Update content with current outline
+      const updatedContent = {
+        ...editedContent,
+        outline: currentOutline
+      };
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/api/storage/save_document/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedContent),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save document');
+      }
+
+      setContent(updatedContent);
+      setEditedContent(updatedContent);
+      setEditMode(false);
+      toast({
+        title: "保存成功",
+        description: "文档内容已更新",
+      });
+    } catch (error) {
+      console.error('Error saving document:', error);
+      toast({
+        title: "保存失败",
+        description: error instanceof Error ? error.message : "保存文档时发生错误",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleContentChange = (
@@ -303,13 +433,17 @@ const DocumentContentPage: React.FC = () => {
     setEditedContent(newContent);
   };
 
-  const saveChanges = () => {
-    setContent(editedContent);
-    setEditMode(false);
-    toast({
-      title: "保存成功",
-      description: "文档内容已更新",
-    });
+  const renderEditableOutline = () => {
+    return (
+      <div className="p-4 bg-amber-50 rounded-lg">
+        <textarea
+          className="w-full min-h-[300px] p-2 font-mono text-sm border rounded"
+          value={outlineText}
+          onChange={(e) => handleOutlineTextChange(e.target.value)}
+          placeholder="输入大纲内容..."
+        />
+      </div>
+    );
   };
 
   if (loading) {
@@ -334,135 +468,159 @@ const DocumentContentPage: React.FC = () => {
     );
   }
 
-  const progress = content?.sections ? ((currentSection + 1) / content.sections.length) * 100 : 0;
-
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 to-orange-100">
-      <div className="w-full bg-white shadow-lg p-6">
-        <div className="max-w-7xl mx-auto">
-          <Card className="bg-amber-50 shadow-sm">
-            <CardHeader className="border-b border-amber-200">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-2xl font-bold text-amber-900">
-                  {content.title}
-                </CardTitle>
-                <div className="flex gap-4">
-                  <Button 
-                    onClick={() => setEditMode(!editMode)} 
-                    variant={editMode ? "destructive" : "outline"} 
-                    className="flex items-center"
+    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+      <div className="w-screen bg-white shadow-lg">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-amber-900">
+                {editMode ? (
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded"
+                    value={editedContent?.title || ''}
+                    onChange={(e) => setEditedContent(prev => prev ? { ...prev, title: e.target.value } : null)}
+                  />
+                ) : (
+                  content?.title
+                )}
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              {!editMode ? (
+                <>
+                  <Button
+                    variant="outline"
+                    className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                    onClick={() => setEditMode(true)}
                   >
-                    <Edit2 className="mr-2 h-4 w-4" />
-                    {editMode ? "取消编辑" : "编辑"}
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    编辑
                   </Button>
-                  {editMode && (
-                    <Button 
-                      onClick={saveChanges} 
-                      className="flex items-center"
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      保存
-                    </Button>
-                  )}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button className="flex items-center">
-                        <Download className="mr-2 h-4 w-4" />
-                        下载
+                      <Button variant="outline" className="border-amber-200 text-amber-600 hover:bg-amber-50">
+                        <Download className="h-4 w-4 mr-2" />
+                        导出
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem onClick={() => handleDownload('docx')}>
-                        Word文档 (.docx)
+                        <FileText className="h-4 w-4 mr-2" />
+                        Word文档
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDownload('pdf')}>
-                        PDF文档 (.pdf)
+                        <FileText className="h-4 w-4 mr-2" />
+                        PDF文档
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Button onClick={() => window.print()} variant="outline" className="flex items-center">
-                    <Printer className="mr-2 h-4 w-4" />
-                    打印
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                    onClick={handleSave}
+                  >
+                    保存
                   </Button>
-                  <Button variant="outline" className="flex items-center">
-                    <Share2 className="mr-2 h-4 w-4" />
-                    分享
+                  <Button
+                    variant="outline"
+                    className="border-amber-200 text-amber-600 hover:bg-amber-50"
+                    onClick={() => {
+                      setEditMode(false);
+                      setEditedContent(content);
+                    }}
+                  >
+                    取消
                   </Button>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-amber-900 mb-4">文档大纲</h2>
+            {editMode ? (
+              renderEditableOutline()
+            ) : (
+              <div className="p-4 bg-amber-50 rounded-lg">
+                <ReactMarkdown>
+                  {outlineText}
+                </ReactMarkdown>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-8">
+            {/* Overview Section */}
+            {(editedContent?.overview || content?.overview) && (
+              <div className="mb-8">
+                <div className="prose max-w-none text-amber-900">
+                  {editMode ? (
+                    <Textarea
+                      value={editedContent?.overview}
+                      onChange={(e) => handleContentChange('overview', e.target.value)}
+                      className="min-h-[200px] w-full p-4"
+                    />
+                  ) : (
+                    <ReactMarkdown>{content?.overview || ''}</ReactMarkdown>
+                  )}
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="p-8">
-              <div className="space-y-8">
-                {/* Overview Section */}
-                {(editedContent?.overview || content?.overview) && (
-                  <div className="mb-8">
+            )}
+
+            {/* Main Content */}
+            <div className="space-y-8">
+              {(editedContent?.sections || content?.sections || []).map((section, index) => (
+                <div key={index} className="space-y-4">
+                  <h2 className="text-xl font-bold text-amber-900">
+                    {section.title}
+                  </h2>
+                  {section.content && (
                     <div className="prose max-w-none text-amber-900">
                       {editMode ? (
                         <Textarea
-                          value={editedContent?.overview}
-                          onChange={(e) => handleContentChange('overview', e.target.value)}
+                          value={editedContent?.sections?.[index]?.content || section.content}
+                          onChange={(e) => handleContentChange('section', e.target.value, index)}
                           className="min-h-[200px] w-full p-4"
                         />
                       ) : (
-                        <ReactMarkdown>{content?.overview || ''}</ReactMarkdown>
+                        <ReactMarkdown>{section.content}</ReactMarkdown>
                       )}
                     </div>
-                  </div>
-                )}
-
-                {/* Main Content */}
-                <div className="space-y-8">
-                  {(editedContent?.sections || content?.sections || []).map((section, index) => (
-                    <div key={index} className="space-y-4">
-                      <h2 className="text-xl font-semibold text-amber-900">
-                        {section.title}
-                      </h2>
-                      {section.content && (
-                        <div className="prose max-w-none text-amber-900">
-                          {editMode ? (
-                            <Textarea
-                              value={editedContent?.sections?.[index]?.content || section.content}
-                              onChange={(e) => handleContentChange('section', e.target.value, index)}
-                              className="min-h-[200px] w-full p-4"
-                            />
-                          ) : (
-                            <ReactMarkdown>{section.content}</ReactMarkdown>
-                          )}
-                        </div>
-                      )}
-                      {section.subsections && section.subsections.length > 0 && (
-                        <div className="space-y-4 ml-4">
-                          {section.subsections.map((subsection, subIndex) => (
-                            <div key={subIndex}>
-                              <h3 className="text-lg font-medium text-amber-800">
-                                {subsection.title}
-                              </h3>
-                              {subsection.content && (
-                                <div className="prose max-w-none text-amber-900">
-                                  {editMode ? (
-                                    <Textarea
-                                      value={editedContent?.sections?.[index].subsections?.[subIndex].content || subsection.content}
-                                      onChange={(e) => handleContentChange('subsection', e.target.value, index, subIndex)}
-                                      className="min-h-[200px] w-full p-4"
-                                    />
-                                  ) : (
-                                    <ReactMarkdown>{subsection.content}</ReactMarkdown>
-                                  )}
-                                </div>
+                  )}
+                  {section.subsections && section.subsections.length > 0 && (
+                    <div className="space-y-4 ml-4">
+                      {section.subsections.map((subsection, subIndex) => (
+                        <div key={subIndex}>
+                          <h3 className="text-lg font-medium text-amber-800">
+                            {subsection.title}
+                          </h3>
+                          {subsection.content && (
+                            <div className="prose max-w-none text-amber-900">
+                              {editMode ? (
+                                <Textarea
+                                  value={editedContent?.sections?.[index].subsections?.[subIndex].content || subsection.content}
+                                  onChange={(e) => handleContentChange('subsection', e.target.value, index, subIndex)}
+                                  className="min-h-[200px] w-full p-4"
+                                />
+                              ) : (
+                                <ReactMarkdown>{subsection.content}</ReactMarkdown>
                               )}
                             </div>
-                          ))}
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

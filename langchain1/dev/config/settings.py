@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
 import secrets
+
 class Settings(BaseSettings):
     # 数据库配置
     DB_DRIVER: str = "mysql+pymysql"
@@ -45,5 +46,6 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        extra = "allow"  # This allows extra fields from environment variables
 
 settings = Settings()

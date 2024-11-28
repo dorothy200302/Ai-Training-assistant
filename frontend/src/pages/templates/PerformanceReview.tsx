@@ -7,11 +7,194 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Slider } from "@/components/ui/slider"
-import { CheckCircle2, User, BarChart, Target, ThumbsUp, MessageSquare } from 'lucide-react'
+import { CheckCircle2, User, FileDown } from 'lucide-react'
+import { EditableText } from '@/components/EditableText'
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
+import { toast } from "@/hooks/use-toast"
+import { API_BASE_URL } from "../../config/constants"
+
+const saveToBackend = async (fileBlob: Blob, fileType: 'docx', filename: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      toast({
+        title: "认证错误",
+        description: "请先登录",
+        variant: "destructive",
+      });
+      throw new Error('未登录');
+    }
+
+    const content = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        const base64Content = base64String.split(',')[1] || base64String;
+        resolve(base64Content);
+      };
+      reader.readAsDataURL(fileBlob);
+    });
+
+    const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        content: content,
+        format: fileType,
+        filename: filename,
+        isBase64: true
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      if (errorData?.detail === 'Token not found or expired') {
+        localStorage.removeItem('token');
+        toast({
+          title: "认证过期",
+          description: "请重新登录",
+          variant: "destructive",
+        });
+        throw new Error('认证过期');
+      }
+      throw new Error(errorData?.detail || '保存到后端失败');
+    }
+  } catch (error) {
+    console.error('Save to backend error:', error);
+    toast({
+      title: "保存失败",
+      description: error instanceof Error ? error.message : "文档保存失败，请重试",
+      variant: "destructive",
+    });
+  }
+};
+
+const handleDownloadWord = async (pageTexts: PageTexts, overallRating: number) => {
+  try {
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            text: pageTexts.title,
+            heading: HeadingLevel.HEADING_1,
+            spacing: { after: 200 }
+          }),
+          new Paragraph({
+            text: "员工信息",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { after: 200 }
+          }),
+          new Paragraph({
+            children: [new TextRun(`姓名：${pageTexts.employeeName}`)]
+          }),
+          new Paragraph({
+            children: [new TextRun(`职位：${pageTexts.position}`)]
+          }),
+          new Paragraph({
+            children: [new TextRun(`部门：${pageTexts.department}`)]
+          }),
+          new Paragraph({
+            children: [new TextRun(`入职日期：${pageTexts.joinDate}`)],
+            spacing: { after: 200 }
+          }),
+          new Paragraph({
+            text: "目标完成情况",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { after: 200 }
+          }),
+          ...pageTexts.goals.flatMap(goal => [
+            new Paragraph({
+              children: [new TextRun(goal.title)]
+            }),
+            new Paragraph({
+              children: [new TextRun(`完成度：${goal.progress}%`)],
+              spacing: { after: 200 }
+            })
+          ]),
+          new Paragraph({
+            text: "总体评分",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { after: 200 }
+          }),
+          new Paragraph({
+            children: [new TextRun(`${overallRating}/5`)]
+          })
+        ]
+      }]
+    });
+
+    const blob = await Packer.toBlob(doc);
+    
+    // 下载文档
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '员工绩效评估.docx';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    // 保存到后端
+    await saveToBackend(blob, 'docx', '员工绩效评估');
+    
+    toast({
+      title: "下载成功",
+      description: "文档已下载为Word格式",
+    });
+  } catch (error) {
+    console.error('Word generation error:', error);
+    toast({
+      title: "生成Word文档失败",
+      description: error instanceof Error ? error.message : "Word文档生成失败，请重试",
+      variant: "destructive",
+    });
+  }
+};
+
+interface PageTexts {
+  title: string;
+  subtitle: string;
+  employeeName: string;
+  position: string;
+  department: string;
+  joinDate: string;
+  goals: {
+    title: string;
+    progress: number;
+  }[];
+}
 
 const PerformanceReview: React.FC = () => {
-  const [completedSections, setCompletedSections] = useState<string[]>([])
+  const [completedSections] = useState<string[]>([])
   const [overallRating, setOverallRating] = useState<number>(3)
+  const [pageTexts, setPageTexts] = useState<PageTexts>({
+    title: '员工绩效评估',
+    subtitle: '年度绩效回顾与发展规划',
+    employeeName: '张三',
+    position: '高级软件工程师',
+    department: '研发部',
+    joinDate: '2023-01-01',
+    goals: [
+      {
+        title: '目标1：提高代码质量',
+        progress: 80
+      },
+      {
+        title: '目标2：参与新产品开发',
+        progress: 100
+      },
+      {
+        title: '目标3：提升团队协作能力',
+        progress: 90
+      }
+    ]
+  })
 
   const sections = [
     { id: 'goals', title: '目标完成情况' },
@@ -20,24 +203,32 @@ const PerformanceReview: React.FC = () => {
     { id: 'development', title: '发展计划' },
   ]
 
-  const toggleSectionCompletion = (sectionId: string) => {
-    setCompletedSections(prev => 
-      prev.includes(sectionId) 
-        ? prev.filter(id => id !== sectionId)
-        : [...prev, sectionId]
-    )
-  }
-
   const calculateProgress = () => {
     return (completedSections.length / sections.length) * 100
   }
 
+  const updateText = (key: keyof PageTexts, value: string) => {
+    setPageTexts(prev => ({ ...prev, [key]: value }))
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+      <div className="w-screen bg-white shadow-lg">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">员工绩效评估</h1>
-          <p className="text-amber-100">年度绩效回顾与发展规划</p>
+          <h1 className="text-3xl font-bold mb-2">
+            <EditableText
+              value={pageTexts.title}
+              onChange={(value) => updateText('title', value)}
+              className="text-white"
+            />
+          </h1>
+          <p className="text-amber-100">
+            <EditableText
+              value={pageTexts.subtitle}
+              onChange={(value) => updateText('subtitle', value)}
+              className="text-amber-100"
+            />
+          </p>
         </div>
         
         <div className="p-6">
@@ -49,10 +240,30 @@ const PerformanceReview: React.FC = () => {
                   <User className="w-12 h-12 text-amber-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-amber-800">张三</h3>
-                  <p className="text-amber-600">职位：高级软件工程师</p>
-                  <p className="text-amber-600">部门：研发部</p>
-                  <p className="text-amber-600">入职时间：2020年1月1日</p>
+                  <h3 className="text-lg font-semibold text-amber-800">
+                    <EditableText
+                      value={pageTexts.employeeName}
+                      onChange={(value) => updateText('employeeName', value)}
+                    />
+                  </h3>
+                  <p className="text-amber-600">职位：
+                    <EditableText
+                      value={pageTexts.position}
+                      onChange={(value) => updateText('position', value)}
+                    />
+                  </p>
+                  <p className="text-amber-600">部门：
+                    <EditableText
+                      value={pageTexts.department}
+                      onChange={(value) => updateText('department', value)}
+                    />
+                  </p>
+                  <p className="text-amber-600">入职时间：
+                    <EditableText
+                      value={pageTexts.joinDate}
+                      onChange={(value) => updateText('joinDate', value)}
+                    />
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -75,21 +286,36 @@ const PerformanceReview: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      <div>
-                        <Label className="text-amber-700">目标1：提高代码质量</Label>
-                        <Progress value={80} className="w-full bg-amber-200 mt-2" indicatorClassName="bg-amber-500" />
-                        <p className="text-sm text-amber-600 mt-1">完成度：80%</p>
-                      </div>
-                      <div>
-                        <Label className="text-amber-700">目标2：参与新产品开发</Label>
-                        <Progress value={100} className="w-full bg-amber-200 mt-2" indicatorClassName="bg-amber-500" />
-                        <p className="text-sm text-amber-600 mt-1">完成度：100%</p>
-                      </div>
-                      <div>
-                        <Label className="text-amber-700">目标3：提升团队协作能力</Label>
-                        <Progress value={90} className="w-full bg-amber-200 mt-2" indicatorClassName="bg-amber-500" />
-                        <p className="text-sm text-amber-600 mt-1">完成度：90%</p>
-                      </div>
+                      {pageTexts.goals.map((goal, index) => (
+                        <div key={index}>
+                          <Label className="text-amber-700">
+                            <EditableText
+                              value={goal.title}
+                              onChange={(value) => {
+                                const newGoals = [...pageTexts.goals];
+                                newGoals[index] = { ...goal, title: value };
+                                setPageTexts(prev => ({ ...prev, goals: newGoals }));
+                              }}
+                            />
+                          </Label>
+                          <Progress value={goal.progress} className="w-full bg-amber-200 mt-2" indicatorClassName="bg-amber-500" />
+                          <div className="flex items-center mt-1">
+                            <p className="text-sm text-amber-600 mr-2">完成度：{goal.progress}%</p>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={goal.progress}
+                              onChange={(e) => {
+                                const newGoals = [...pageTexts.goals];
+                                newGoals[index] = { ...goal, progress: Number(e.target.value) };
+                                setPageTexts(prev => ({ ...prev, goals: newGoals }));
+                              }}
+                              className="w-16 px-2 py-1 text-sm border rounded border-amber-300 bg-white"
+                            />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
@@ -164,7 +390,7 @@ const PerformanceReview: React.FC = () => {
                         <Label htmlFor="strengths" className="text-amber-700">优点</Label>
                         <Textarea
                           id="strengths"
-                          placeholder="请输入员工的���点..."
+                          placeholder="请输入员工的点..."
                           className="mt-1"
                         />
                       </div>
@@ -310,23 +536,13 @@ const PerformanceReview: React.FC = () => {
             </Card>
           </section>
 
-          <div className="flex justify-end space-x-4">
-            <Button
-              variant="outline"
-              className="border-amber-500 text-amber-600 hover:bg-amber-100"
-              onClick={() => {
-                // Handle save as draft logic
-              }}
-            >
-              保存草稿
-            </Button>
+          <div className="flex justify-end space-x-4 mt-8">
             <Button
               className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
-              onClick={() => {
-                // Handle submit review logic
-              }}
+              onClick={() => handleDownloadWord(pageTexts, overallRating)}
             >
-              提交评估
+              <FileDown className="mr-2 h-4 w-4" />
+              导出Word
             </Button>
           </div>
         </div>

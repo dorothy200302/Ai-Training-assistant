@@ -12,6 +12,7 @@ import { FileUp, Loader2, FileDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import DocumentUpload from '../DocumentUpload';
 import jsPDF from 'jspdf';
+import { API_BASE_URL } from "../../config/constants";
 import { Document, Paragraph, TextRun, HeadingLevel, Packer } from 'docx';
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
@@ -22,13 +23,13 @@ const QuarterlySalesStrategyTraining = () => {
         { id: 'module2', title: '高级谈判技巧', content: '掌握复杂销售情境下的谈判策略，提高成单率。' },
         { id: 'module3', title: '数字化销售工具应用', content: '熟练使用CRM系统和销售分析工具，提升工作效率。' }
     ]);
-    const [quarters, setQuarters] = useState([
+    const [quarters] = useState([
         { id: 1, name: "第一季度", focus: "开年计划与目标设定", isEditing: false },
         { id: 2, name: "第二季度", focus: "客户关系深化与跨部门协作", isEditing: false },
         { id: 3, name: "第三季度", focus: "创新销售技巧与新市场开拓", isEditing: false },
         { id: 4, name: "第四季度", focus: "年终冲刺与来年规划", isEditing: false }
     ]);
-    const [actionSteps, setActionSteps] = useState([
+    const [actionSteps] = useState([
         { id: 'step1', week: '第1-2周', title: '培训准备与启动', description: '制定详细培训计划准备培训材料' },
         { id: 'step2', week: '第3-6周', title: '核心培训模块实施', description: '开展集中培训，包括理论学习和实践演练' },
         // ... add other steps
@@ -38,16 +39,12 @@ const QuarterlySalesStrategyTraining = () => {
         { id: 'obj2', icon: 'Users', content: '提高客户满意度至 95%' },
         { id: 'obj3', icon: 'Zap', content: '推出 2 个新的销售策略' }
     ]);
-    const [inputFields, setInputFields] = useState([
-        { id: 1, value: "现有输入内容1" },
-        { id: 2, value: "现有输入内容2" }
-    ]);
-    const [pageTexts, setPageTexts] = useState([
+   
+    const [pageTexts] = useState([
         { id: 'overview-title', content: '季度销售策略培训模板', isEditing: false },
         { id: 'overview-subtitle', content: '提升您的团队销售能力，实现卓越业绩', isEditing: false }
     ]);
     const [documentContent, setDocumentContent] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const [showUpload, setShowUpload] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
@@ -55,52 +52,11 @@ const QuarterlySalesStrategyTraining = () => {
     const handleModuleEdit = (moduleId, field, value) => {
         setModules(prev => prev.map(module => module.id === moduleId ? { ...module, [field]: value } : module));
     };
-    const handleActionStepEdit = (stepId, field, value) => {
-        setActionSteps(prev => prev.map(step => step.id === stepId ? { ...step, [field]: value } : step));
-    };
+    const base_url=API_BASE_URL
     const handleObjectiveEdit = (objId, value) => {
         setObjectives(prev => prev.map(obj => obj.id === objId ? { ...obj, content: value } : obj));
     };
-    const addNewModule = () => {
-        const newId = `module${modules.length + 1}`;
-        setModules(prev => [...prev, {
-                id: newId,
-                title: '新培训模块',
-                content: '请输入培训内容',
-                isEditing: true
-            }]);
-    };
-    const addNewObjective = () => {
-        const newId = `obj${objectives.length + 1}`;
-        setObjectives(prev => [...prev, {
-                id: newId,
-                icon: 'Target',
-                content: '新目标',
-                isEditing: true
-            }]);
-    };
-    const handleQuarterEdit = (quarterId, field, value) => {
-        setQuarters(prev => prev.map(quarter => quarter.id === quarterId ? { ...quarter, [field]: value } : quarter));
-    };
-    const handleInputChange = (id, newValue) => {
-        setInputFields(prev => prev.map(field => field.id === id ? { ...field, value: newValue } : field));
-    };
-    const addNewInputField = () => {
-        const newId = inputFields.length + 1;
-        setInputFields(prev => [...prev, { id: newId, value: "" }]);
-    };
-    const duplicateModule = (moduleId) => {
-        const moduleToCopy = modules.find(m => m.id === moduleId);
-        if (moduleToCopy) {
-            const newId = `module${modules.length + 1}`;
-            setModules(prev => [...prev, {
-                    ...moduleToCopy,
-                    id: newId,
-                    title: `${moduleToCopy.title} (副本)`,
-                    isEditing: false
-                }]);
-        }
-    };
+   
     const handleUploadConfirm = async (uploadSuccess, files) => {
         if (!uploadSuccess || !files || files.length === 0) {
             setShowUpload(false);
@@ -129,7 +85,7 @@ const QuarterlySalesStrategyTraining = () => {
                 template: 'quarterly_sales_strategy',
                 token: token ? 'present' : 'missing'
             });
-            const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+            const response = await fetch(`${base_url}/api/storage/generate_full_doc_with_template/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -183,7 +139,7 @@ const QuarterlySalesStrategyTraining = () => {
                 };
                 reader.readAsDataURL(fileBlob);
             });
-            const response = await fetch('http://localhost:8001/api/storage/download_document', {
+            const response = await fetch(`${base_url}/api/storage/download_document`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

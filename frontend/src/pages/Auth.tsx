@@ -4,6 +4,7 @@ import { User, Lock, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 import { toast } from "@/hooks/use-toast"
+import { API_BASE_URL } from '../config/constants';
 
 interface AuthFormData {
   username?: string;
@@ -59,7 +60,7 @@ export default function Auth(): JSX.Element {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8001/api/user/email/verify-code', {
+      const response = await fetch('${API_BASE_URL}/api/user/email/verify-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +119,7 @@ export default function Auth(): JSX.Element {
     setIsLoading(true);
     try {
       if (isLogin) {
-        const endpoint = 'http://localhost:8001/api/user/login';
+        const endpoint = `${API_BASE_URL}/api/user/login`;
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
@@ -179,7 +180,7 @@ export default function Auth(): JSX.Element {
           return;
         }
 
-        const response = await fetch('http://localhost:8001/api/user/register', {
+        const response = await fetch(`${API_BASE_URL}/api/user/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

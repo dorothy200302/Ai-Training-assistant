@@ -1,78 +1,37 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { User, UserPlus, Edit, Trash2, Search, Mail, Building, UserCheck } from 'lucide-react';
+import { User, UserPlus, Edit, Search, Mail, Building, UserCheck } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "@/hooks/use-toast"
 import { useUser } from "@/contexts/UserContext";
+import { API_BASE_URL } from '../config/constants';
+
 interface Employee {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  role: RoleType | null;
-  department: DepartmentType | null;
-  status: string;
-  department_id: number;
-  role_id: number;
-  leader_id: number | null;
-}
-
-interface FormData {
-  name: string;
-  email: string;
-  role: string;
   department: string;
-  password: string;
-}
-
-interface EmployeeCreate {
-  name: string;
-  email: string;
-  password: string;
-  leader_id: number | undefined;
-  department_id: number;
-  role_id: number;
+  position: string;
   status: string;
 }
 
-interface EmployeeResponse {
-  id: number;
-  name: string;
-  email: string;
-  leader_id: number | null;
-  department_id: number;
-  role_id: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
 
-interface DepartmentType {
-  id: number;
-  name: string;
-}
+const API_URL = API_BASE_URL;
 
-interface RoleType {
-  id: number;
-  name: string;
-}
-
-const API_BASE_URL = 'http://localhost:8001/api';
-
-export default function EmployeeManagement() {
+const EmployeeManagement = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [departments, setDepartments] = useState<DepartmentType[]>([]);
-  const [roles, setRoles] = useState<RoleType[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
+  const [roles, setRoles] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<any>({
     name: '',
     email: '',
     role: '',
@@ -80,7 +39,6 @@ export default function EmployeeManagement() {
     password: '',
   });
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const token = localStorage.getItem('token');
   const { user } = useUser();
@@ -88,7 +46,7 @@ export default function EmployeeManagement() {
   // 获取部门列表
   const fetchDepartments = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/employee/departments`, {
+      const response = await fetch(`${API_URL}/api/employee/departments`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -109,7 +67,7 @@ export default function EmployeeManagement() {
   // 获取角色列表
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/employee/roles`, {
+      const response = await fetch(`${API_URL}/api/employee/roles`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -135,7 +93,7 @@ export default function EmployeeManagement() {
   // 获取员工列表
   const fetchEmployees = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/employee/employees/${user?.id}/subordinates`, {
+      const response = await fetch(`${API_URL}/api/employee/employees/${user?.id}/subordinates`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -154,7 +112,7 @@ export default function EmployeeManagement() {
         throw new Error('服务器返回数据格式错误');
       }
 
-      const formattedEmployees = data.map((emp: EmployeeResponse): Employee => {
+      const formattedEmployees = data.map((emp: any): Employee => {
         console.log(`正在处理员工 ${emp.name}:`, {
           department_id: emp.department_id,
           role_id: emp.role_id,
@@ -182,12 +140,9 @@ export default function EmployeeManagement() {
           id: emp.id,
           name: emp.name,
           email: emp.email,
-          department: department || { id: emp.department_id, name: '未知部门' },
-          role: role || { id: emp.role_id, name: '未知角色' },
+          department: department?.name || '未知部门',
+          position: role?.name || '未知角色',
           status: emp.status === 'active' ? '已授权' : '未授权',
-          department_id: emp.department_id,
-          role_id: emp.role_id,
-          leader_id: emp.leader_id
         };
       });
       
@@ -209,7 +164,6 @@ export default function EmployeeManagement() {
       // 先获取部门和角色数据，再获取员工列表
       const initializeData = async () => {
         try {
-          setLoading(true);
           // 先获取部门和角色
           await Promise.all([
             fetchDepartments(),
@@ -219,8 +173,6 @@ export default function EmployeeManagement() {
           await fetchEmployees();
         } catch (error) {
           console.error('初始化数据失败:', error);
-        } finally {
-          setLoading(false);
         }
       };
       
@@ -263,13 +215,13 @@ export default function EmployeeManagement() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!id) {
       throw new Error('无效的员工ID');
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/employee/employees/${id}`, {
+      const response = await fetch(`${API_URL}/api/employee/employees/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -299,7 +251,7 @@ export default function EmployeeManagement() {
     }
   };
 
-  const handleToggleStatus = async (id: number | undefined, currentStatus: string) => {
+  const handleToggleStatus = async (id: string | undefined, currentStatus: string) => {
     if (!id) {
       toast({
         title: "错误",
@@ -314,7 +266,7 @@ export default function EmployeeManagement() {
       const backendStatus = currentStatus === '已授权' ? 'active' : 'inactive';
       const newStatus = backendStatus === 'active' ? 'inactive' : 'active';
       
-      const response = await fetch(`${API_BASE_URL}/employee/employees/${id}`, {
+      const response = await fetch(`${API_URL}/api/employee/employees/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -357,7 +309,7 @@ export default function EmployeeManagement() {
 
       const employeeName = employee.name || '';
       const employeeEmail = employee.email || '';
-      const employeeDepartment = employee.department?.name || '';
+      const employeeDepartment = employee.department || '';
       const searchTermLower = searchTerm.toLowerCase();
       
       const matchesSearch = searchTerm === '' || 
@@ -387,8 +339,8 @@ export default function EmployeeManagement() {
     setFormData({
       name: employee.name,
       email: employee.email,
-      role: employee.role?.name || '',
-      department: employee.department?.name || '',
+      role: employee.position,
+      department: employee.department,
       password: '',
     });
     setIsEditDialogOpen(true);
@@ -426,8 +378,8 @@ export default function EmployeeManagement() {
       };
 
       const url = editingEmployee
-        ? `${API_BASE_URL}/employee/employees/${editingEmployee.id}`
-        : `${API_BASE_URL}/employee/employees`;
+        ? `${API_URL}/api/employee/employees/${editingEmployee.id}`
+        : `${API_URL}/api/employee/employees`;
 
       const response = await fetch(url, {
         method: editingEmployee ? 'PUT' : 'POST',
@@ -444,7 +396,6 @@ export default function EmployeeManagement() {
       }
 
       // Get the updated data from response
-      const updatedEmployee = await response.json();
 
       setIsEditDialogOpen(false);
       setFormData({
@@ -465,10 +416,8 @@ export default function EmployeeManagement() {
                   ...emp,
                   name: employeeData.name,
                   email: employeeData.email,
-                  department: departments.find(d => d.id === employeeData.department_id) || emp.department,
-                  role: roles.find(r => r.id === employeeData.role_id) || emp.role,
-                  department_id: employeeData.department_id,
-                  role_id: employeeData.role_id
+                  department: departments.find(d => d.id === employeeData.department_id)?.name || emp.department,
+                  position: roles.find(r => r.id === employeeData.role_id)?.name || emp.position,
                 }
               : emp
           )
@@ -562,11 +511,8 @@ export default function EmployeeManagement() {
                   </thead>
                   <tbody className="bg-white divide-y divide-amber-200">
                     {filterEmployees().map((employee) => (
-                      <motion.tr
+                      <tr
                         key={employee.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
                         className="hover:bg-amber-50"
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -576,7 +522,7 @@ export default function EmployeeManagement() {
                             </div>
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">{employee.name}</div>
-                              <div className="text-sm text-gray-500">{employee.department?.name}</div>
+                              <div className="text-sm text-gray-500">{employee.department}</div>
                             </div>
                           </div>
                         </td>
@@ -584,7 +530,7 @@ export default function EmployeeManagement() {
                           <div className="text-sm text-gray-900">{employee.email}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{employee.role?.name}</div>
+                          <div className="text-sm text-gray-900">{employee.position}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <button
@@ -620,7 +566,7 @@ export default function EmployeeManagement() {
                             删除
                           </Button>
                         </td>
-                      </motion.tr>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
@@ -653,7 +599,12 @@ export default function EmployeeManagement() {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{editingEmployee ? '编辑员工信息' : '添加新员工'}</DialogTitle>
+            <DialogTitle>{editingEmployee ? '编辑员工' : '添加员工'}</DialogTitle>
+            <DialogDescription>
+              {editingEmployee 
+                ? '修改员工信息。请确保所有必填字段都已填写。' 
+                : '添加新员工。请填写所有必填字段。'}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 py-4">
@@ -695,7 +646,7 @@ export default function EmployeeManagement() {
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map(dept => (
-                        <SelectItem key={dept.id} value={dept.name}>{dept.name}</SelectItem>
+                        <SelectItem key={dept.name} value={dept.name}>{dept.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -714,7 +665,7 @@ export default function EmployeeManagement() {
                     </SelectTrigger>
                     <SelectContent>
                       {roles.map(role => (
-                        <SelectItem key={role.id} value={role.name}>{role.name}</SelectItem>
+                        <SelectItem key={role.name} value={role.name}>{role.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -747,3 +698,5 @@ export default function EmployeeManagement() {
     </div>
   );
 }
+
+export default EmployeeManagement;

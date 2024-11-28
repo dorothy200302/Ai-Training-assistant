@@ -1,17 +1,34 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { ClipboardList, Users, BarChart, Calendar, CheckCircle2, FileText, Layers, Target, FileUp, Loader2, FileDown } from 'lucide-react'
+import { ClipboardList, BarChart, CheckCircle2, FileText, Target, FileUp, Loader2, FileDown } from 'lucide-react'
 import { toast } from "@/hooks/use-toast"
 import jsPDF from 'jspdf'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { EditableText } from '@/components/EditableText'
+import { API_BASE_URL } from '../../config/constants'
+
+interface PageContent {
+  title: string;
+  subtitle: string;
+  overview: string;
+  sections: Array<{
+    id: string;
+    title: string;
+    content: string[];
+  }>;
+  exercises: Array<{
+    id: string;
+    title: string;
+    goal: string;
+    steps: string[];
+  }>;
+}
 
 const ManagementSkillsTraining: React.FC = () => {
   const [completedSections, setCompletedSections] = useState<string[]>([])
@@ -21,13 +38,144 @@ const ManagementSkillsTraining: React.FC = () => {
   const [showUpload, setShowUpload] = useState(false)
   const [isUploading, setIsUploading] = useState(false);
 
-  const sections = [
-    { id: 'intro', title: '项目管理简介' },
-    { id: 'planning', title: '项目规划' },
-    { id: 'execution', title: '项目执行' },
-    { id: 'monitoring', title: '监控与控制' },
-    { id: 'closing', title: '项目收尾' },
-  ]
+  const [pageContent, setPageContent] = useState<PageContent>({
+    title: '项目管理培训文档',
+    subtitle: '掌握项目管理技能，提升团队效率',
+    overview: '本培训旨在帮助学员掌握项目管理的核心概念、方法论和最佳实践。通过理论学习和实践练习，学员将能够有效地规划、执行和控制项目，确保项目按时、按预算完成，并达到预期的质量标准。',
+    sections: [
+      {
+        id: 'intro',
+        title: '项目管理简介',
+        content: [
+          '项目管理的定义和重要性',
+          '项目生命周期',
+          '项目管理知识领域',
+          '项目经理的角色和职责'
+        ]
+      },
+      {
+        id: 'planning',
+        title: '项目规划',
+        content: [
+          '制定项目章程',
+          '识别干系人',
+          '创建工作分解结构（WBS）',
+          '进度规划和资源配置'
+        ]
+      },
+      {
+        id: 'execution',
+        title: '项目执行',
+        content: [
+          '团队管理和领导力',
+          '沟通管理',
+          '质量保证',
+          '采购管理'
+        ]
+      },
+      {
+        id: 'monitoring',
+        title: '监控与控制',
+        content: [
+          '进度和成本控制',
+          '挣值管理',
+          '变更控制',
+          '风险监控'
+        ]
+      },
+      {
+        id: 'closing',
+        title: '项目收尾',
+        content: [
+          '验收和移交',
+          '经验教训总结',
+          '项目文档归档',
+          '团队解散和资源释放'
+        ]
+      }
+    ],
+    exercises: [
+      {
+        id: 'exercise1',
+        title: '项目章程编写',
+        goal: '练习目标：编写一个完整的项目章程',
+        steps: [
+          '定义项目目标和范围',
+          '识别关键干系人',
+          '列出主要里程碑',
+          '估算预算和时间表'
+        ]
+      },
+      {
+        id: 'exercise2',
+        title: '风险管理计划',
+        goal: '练习目标：为一个拟项目创建风险管理计划',
+        steps: [
+          '识别潜在风险',
+          '评估风险概率和影响',
+          '制定风险应对策略',
+          '创建风险跟踪矩阵'
+        ]
+      },
+      {
+        id: 'exercise3',
+        title: '项目进度规划',
+        goal: '练习目标：使用甘特图创建项目进度计划',
+        steps: [
+          '定义项目任务和工作包',
+          '估算任务持续时间',
+          '确定任务依赖关系',
+          '分配资源并平衡工作负载'
+        ]
+      }
+    ]
+  })
+
+  const [sections] = useState([
+    { id: 'intro', title: '项目管理简介', isEditing: false },
+    { id: 'planning', title: '项目规划', isEditing: false },
+    { id: 'execution', title: '项目执行', isEditing: false },
+    { id: 'monitoring', title: '监控与控制', isEditing: false },
+    { id: 'closing', title: '项目收尾', isEditing: false },
+  ]);
+
+  const updateContent = (
+    section: keyof PageContent | { section: string; index: number; field: string },
+    value: string
+  ) => {
+    setPageContent(prev => {
+      if (typeof section === 'string') {
+        return { ...prev, [section]: value }
+      }
+      
+      const { section: sectionName, index, field } = section
+      const newContent = { ...prev }
+      
+      if (sectionName === 'sections' || sectionName === 'exercises') {
+        if (field === 'title') {
+          newContent.sections[index].title = value;
+        } else if (field === 'content') {
+          newContent.sections[index].content = [...prev.sections[index].content];
+          newContent.sections[index].content[index] = value;
+        } else if (field === 'goal') {
+          newContent.exercises[index] = {
+            ...newContent.exercises[index],
+            goal: value
+          }
+        } else if (field === 'steps') {
+          const stepIndex = parseInt(field.split('-')[1])
+          const newSteps = [...newContent.exercises[index].steps]
+          newSteps[stepIndex] = value
+          newContent.exercises[index] = {
+            ...newContent.exercises[index],
+            steps: newSteps
+          }
+        }
+      }
+      
+      return newContent
+    })
+  }
 
   const toggleSectionCompletion = (sectionId: string) => {
     setCompletedSections(prev => 
@@ -62,6 +210,7 @@ const ManagementSkillsTraining: React.FC = () => {
         subtitle: '提升您的管理能力',
         overview: '本手册旨在帮助您掌握核心管理技能，提高团队效率。',
         content: documentContent,
+        description: description || '',
         training_sections: sections.map(section => ({
           id: section.id,
           title: section.title,
@@ -75,8 +224,9 @@ const ManagementSkillsTraining: React.FC = () => {
         template: 'management_skills',
         token: token ? 'present' : 'missing'
       });
+      const URL=API_BASE_URL
 
-      const response = await fetch('http://localhost:8001/api/storage/generate_full_doc_with_template/', {
+      const response = await fetch(`${URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -150,7 +300,7 @@ const ManagementSkillsTraining: React.FC = () => {
       });
 
       // 使用现有的download_document接口
-      const response = await fetch('http://localhost:8001/api/storage/download_document', {
+      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -277,20 +427,32 @@ const ManagementSkillsTraining: React.FC = () => {
     }
   };
 
+
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
       <div className="w-screen bg-white shadow-lg">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">项目管理培训文档</h1>
-          <p className="text-amber-100">掌握项目管理技能，提升团队效率</p>
+          <EditableText
+            value={pageContent.title}
+            onChange={(value) => updateContent('title', value)}
+            className="text-3xl font-bold mb-2"
+          />
+          <EditableText
+            value={pageContent.subtitle}
+            onChange={(value) => updateContent('subtitle', value)}
+            className="text-amber-100"
+          />
         </div>
         
         <div className="p-6">
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-amber-800 mb-4">培训概述</h2>
-            <p className="text-amber-700 mb-4">
-              本培训旨在帮助学员掌握项目管理的核心概念、方法论和最佳实践。通过理论学习和实践练习，学员将能够有效地规划、执行和控制项目，确保项目按时、按预算完成，并达到预期的质量标准。
-            </p>
+            <EditableText
+              value={pageContent.overview}
+              onChange={(value) => updateContent('overview', value)}
+              className="text-amber-700 mb-4"
+              
+            />
           </section>
 
           <section className="mb-8">
@@ -342,14 +504,27 @@ const ManagementSkillsTraining: React.FC = () => {
               <TabsContent value="intro">
                 <Card className="bg-amber-50 border-amber-200">
                   <CardHeader>
-                    <CardTitle className="text-amber-800">项目管理简介</CardTitle>
+                    <CardTitle className="text-amber-800">
+                      <EditableText
+                        value={pageContent.sections[0].title}
+                        onChange={(value) => updateContent({ section: 'sections', index: 0, field: 'title' }, value)}
+                      />
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-amber-700">
-                      <li>项目管理的定义和重要性</li>
-                      <li>项目生命周期</li>
-                      <li>项目管理知识领域</li>
-                      <li>项目经理的角色和职责</li>
+                      {pageContent.sections[0].content.map((item, idx) => (
+                        <li key={idx}>
+                          <EditableText
+                            value={item}
+                            onChange={(value) => {
+                              const newSections = [...pageContent.sections];
+                              newSections[0].content[idx] = value;
+                              setPageContent(prev => ({ ...prev, sections: newSections }));
+                            }}
+                          />
+                        </li>
+                      ))}
                     </ul>
                   </CardContent>
                 </Card>
@@ -357,15 +532,27 @@ const ManagementSkillsTraining: React.FC = () => {
               <TabsContent value="planning">
                 <Card className="bg-amber-50 border-amber-200">
                   <CardHeader>
-                    <CardTitle className="text-amber-800">项目规划</CardTitle>
+                    <CardTitle className="text-amber-800">
+                      <EditableText
+                        value={pageContent.sections[1].title}
+                        onChange={(value) => updateContent({ section: 'sections', index: 1, field: 'title' }, value)}
+                      />
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-amber-700">
-                      <li>制定项目章程</li>
-                      <li>识别干系人</li>
-                      <li>创建工作分解结构（WBS）</li>
-                      <li>进度规划和资源分配</li>
-                      <li>风险识别和管理</li>
+                      {pageContent.sections[1].content.map((item, idx) => (
+                        <li key={idx}>
+                          <EditableText
+                            value={item}
+                            onChange={(value) => {
+                              const newSections = [...pageContent.sections];
+                              newSections[1].content[idx] = value;
+                              setPageContent(prev => ({ ...prev, sections: newSections }));
+                            }}
+                          />
+                        </li>
+                      ))}
                     </ul>
                   </CardContent>
                 </Card>
@@ -373,14 +560,31 @@ const ManagementSkillsTraining: React.FC = () => {
               <TabsContent value="execution">
                 <Card className="bg-amber-50 border-amber-200">
                   <CardHeader>
-                    <CardTitle className="text-amber-800">项目执行</CardTitle>
+                    <CardTitle className="text-amber-800">
+                      <EditableText
+                        value={pageContent.sections[2].title}
+                        onChange={(value) => {
+                          const newSections = [...pageContent.sections];
+                          newSections[2].title = value;
+                          setPageContent(prev => ({ ...prev, sections: newSections }));
+                        }}
+                      />
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-amber-700">
-                      <li>团队管理和领导力</li>
-                      <li>沟通管理</li>
-                      <li>质量保证</li>
-                      <li>采购管理</li>
+                      {pageContent.sections[2].content.map((item, idx) => (
+                        <li key={idx}>
+                          <EditableText
+                            value={item}
+                            onChange={(value) => {
+                              const newSections = [...pageContent.sections];
+                              newSections[2].content[idx] = value;
+                              setPageContent(prev => ({ ...prev, sections: newSections }));
+                            }}
+                          />
+                        </li>
+                      ))}
                     </ul>
                   </CardContent>
                 </Card>
@@ -388,14 +592,31 @@ const ManagementSkillsTraining: React.FC = () => {
               <TabsContent value="monitoring">
                 <Card className="bg-amber-50 border-amber-200">
                   <CardHeader>
-                    <CardTitle className="text-amber-800">监控与控制</CardTitle>
+                    <CardTitle className="text-amber-800">
+                      <EditableText
+                        value={pageContent.sections[3].title}
+                        onChange={(value) => {
+                          const newSections = [...pageContent.sections];
+                          newSections[3].title = value;
+                          setPageContent(prev => ({ ...prev, sections: newSections }));
+                        }}
+                      />
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-amber-700">
-                      <li>进度和成本控制</li>
-                      <li>挣值管理</li>
-                      <li>变更控制</li>
-                      <li>风险监控</li>
+                      {pageContent.sections[3].content.map((item, idx) => (
+                        <li key={idx}>
+                          <EditableText
+                            value={item}
+                            onChange={(value) => {
+                              const newSections = [...pageContent.sections];
+                              newSections[3].content[idx] = value;
+                              setPageContent(prev => ({ ...prev, sections: newSections }));
+                            }}
+                          />
+                        </li>
+                      ))}
                     </ul>
                   </CardContent>
                 </Card>
@@ -415,53 +636,81 @@ const ManagementSkillsTraining: React.FC = () => {
                   </CardContent>
                 </Card>
               </TabsContent>
+              <TabsContent value="exercises" className="space-y-4">
+                {pageContent.exercises.map((exercise, exerciseIndex) => (
+                  <Card key={exercise.id}>
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold">{exercise.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <EditableText
+                            value={exercise.goal}
+                            onChange={(value) => updateContent({ section: 'exercises', index: exerciseIndex, field: 'goal' }, value)}
+                            className="text-lg font-semibold mb-2"
+                          />
+                          <div className="space-y-2">
+                            {exercise.steps.map((step, stepIndex) => (
+                              <EditableText
+                                key={stepIndex}
+                                value={step}
+                                onChange={(value) => updateContent({ section: 'exercises', index: exerciseIndex, field: `steps-${stepIndex}` }, value)}
+                                className="flex items-center gap-2"
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </TabsContent>
             </Tabs>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-amber-800 mb-4">实践练习</h2>
-            <Card className="bg-amber-50 border-amber-200">
-              <CardContent className="pt-6">
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="exercise1">
-                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">项目章程编写</AccordionTrigger>
-                    <AccordionContent className="text-amber-600">
-                      <p>练习目标：编写一个完整的项目章程</p>
-                      <ul className="list-disc list-inside mt-2">
-                        <li>定义项目目标和范围</li>
-                        <li>识别关键干系人</li>
-                        <li>列出主要里程碑</li>
-                        <li>估算预算和时间表</li>
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="exercise2">
-                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">风险管理计划</AccordionTrigger>
-                    <AccordionContent className="text-amber-600">
-                      <p>练习目标：为一个虚拟项目创建风险管理计划</p>
-                      <ul className="list-disc list-inside mt-2">
-                        <li>识别潜在风险</li>
-                        <li>评估风险概率和影响</li>
-                        <li>制定风险应对策略</li>
-                        <li>创建风险跟踪矩阵</li>
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                  <AccordionItem value="exercise3">
-                    <AccordionTrigger className="text-amber-700 hover:text-amber-800">项目进度规划</AccordionTrigger>
-                    <AccordionContent className="text-amber-600">
-                      <p>练习目标：使用甘特图创建项目进度计划</p>
-                      <ul className="list-disc list-inside mt-2">
-                        <li>定义项目任务和工作包</li>
-                        <li>估算任务持续时间</li>
-                        <li>确定任务依赖关系</li>
-                        <li>分配资源并平衡工作负载</li>
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              {pageContent.exercises.map((exercise, exerciseIndex) => (
+                <Card key={exercise.id} className="border-l-4 border-l-amber-500">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold">
+                      <EditableText
+                        value={exercise.title}
+                        onChange={(value) => updateContent({ section: 'exercises', index: exerciseIndex, field: 'title' }, value)}
+                        className="text-xl font-bold"
+                      />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <EditableText
+                        value={exercise.goal}
+                        onChange={(value) => updateContent({ section: 'exercises', index: exerciseIndex, field: 'goal' }, value)}
+                        className="text-lg font-semibold mb-4 text-amber-700"
+                      />
+                    </div>
+                    <div className="space-y-2 pl-4">
+                      {exercise.steps.map((step, stepIndex) => (
+                        <div key={stepIndex} className="flex items-start gap-2">
+                          <div className="mt-1.5 h-2 w-2 rounded-full bg-amber-500 flex-shrink-0" />
+                          <EditableText
+                            value={step}
+                            onChange={(value) => updateContent({ 
+                              section: 'exercises', 
+                              index: exerciseIndex, 
+                              field: `steps-${stepIndex}` 
+                            }, value)}
+                            className="flex-1 text-gray-700"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </section>
 
           <section className="mb-8">
@@ -516,24 +765,7 @@ const ManagementSkillsTraining: React.FC = () => {
             </Button>
             {documentContent && (
               <>
-                <Button
-                  variant="outline"
-                  onClick={handleDownloadPdf}
-                  disabled={isDownloading}
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
-                >
-                  {isDownloading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      下载中...
-                    </>
-                  ) : (
-                    <>
-                      <FileDown className="mr-2 h-4 w-4" />
-                      下载PDF
-                    </>
-                  )}
-                </Button>
+                
                 <Button
                   variant="outline"
                   onClick={handleDownloadWord}

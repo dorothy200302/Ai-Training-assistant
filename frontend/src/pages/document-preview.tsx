@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { API_BASE_URL } from '../config/constants';
 
 export default function DocumentPreview() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function DocumentPreview() {
     const fetchContent = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8001/api/storage/document-content/?url=${encodeURIComponent(url)}`, {
+        const response = await fetch(`${API_BASE_URL}/api/storage/document-content/?url=${encodeURIComponent(url)}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

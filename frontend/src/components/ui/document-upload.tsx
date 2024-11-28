@@ -5,8 +5,11 @@ import { Upload, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DocumentUploadProps {
-  onUploadComplete: (files: File[]) => void
-  onConfirm: (files: File[]) => void
+  onUploadComplete?: (files: File[]) => void
+  onConfirm?: (files: File[]) => void
+  onUpload?: (uploadSuccess: boolean, files?: File[]) => Promise<void>
+  onCancel?: () => void
+  disabled?: boolean
   maxFileSize?: number
   acceptedFileTypes?: string[]
   hasCompletedConversation?: boolean
@@ -15,9 +18,11 @@ interface DocumentUploadProps {
 export function DocumentUpload({
   onUploadComplete,
   onConfirm,
+  onUpload,
+  onCancel,
+  disabled,
   maxFileSize = 20 * 1024 * 1024, // 20MB default
   acceptedFileTypes = ['.doc', '.docx', '.pdf', '.txt', '.md'],
-  hasCompletedConversation = false,
 }: DocumentUploadProps) {
   const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
   const [dragActive, setDragActive] = React.useState(false)
@@ -61,7 +66,7 @@ export function DocumentUpload({
     })
 
     setSelectedFiles(prevFiles => [...prevFiles, ...validFiles])
-    onUploadComplete(validFiles)
+    onUploadComplete?.(validFiles)
   }
 
   const removeFile = (index: number) => {
@@ -134,10 +139,25 @@ export function DocumentUpload({
           )}
 
           <div className="flex justify-end gap-2">
+            {onCancel && (
+              <Button
+                variant="ghost"
+                onClick={onCancel}
+                disabled={disabled}
+              >
+                取消
+              </Button>
+            )}
             <Button
               variant="outline"
-              onClick={() => onConfirm(selectedFiles)}
-              disabled={selectedFiles.length === 0}
+              onClick={async () => {
+                if (onUpload) {
+                  await onUpload(true, selectedFiles);
+                } else if (onConfirm) {
+                  onConfirm(selectedFiles);
+                }
+              }}
+              disabled={selectedFiles.length === 0 || disabled}
             >
               确认上传
             </Button>

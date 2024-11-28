@@ -6,6 +6,18 @@ from dev.models import *
 from dev.config.database import SessionLocal
 from dev.crud import document_crud
 from typing import Tuple
+import urllib3
+import socket
+
+# 禁用代理设置
+os.environ['NO_PROXY'] = '*'
+if 'http_proxy' in os.environ:
+    del os.environ['http_proxy']
+if 'https_proxy' in os.environ:
+    del os.environ['https_proxy']
+
+# 禁用SSL验证警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_file_type(file_key):
     image_extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp')
@@ -30,17 +42,33 @@ def get_presigned_url(file_key):
     }
     
     file_type = get_file_type(file_key)
-    print("file_type",file_type)
-    params = {
-        'sub_path': file_type,  # 使用文件类型作为 sub_path
-        'file_key': file_key
-    }
-    url=url+'sub_path='+file_type+'&file_key='+file_key
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        print("get_presigned_url",response.json()['data']['presign_url'])
-        return response.json()['data']['presign_url']
-    return None
+    print("file_type", file_type)
+    url = url + 'sub_path=' + file_type + '&file_key=' + file_key
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=30, verify=False, proxies={'http': None, 'https': None})
+        
+        if response.status_code == 200:
+            presign_url = response.json()['data']['presign_url']
+            print("get_presigned_url", presign_url)
+            return presign_url
+        else:
+            print(f"Error getting presigned URL. Status code: {response.status_code}")
+            print(f"Response content: {response.text}")
+            return None
+            
+    except requests.exceptions.ConnectionError as e:
+        print(f"Connection error: {str(e)}")
+        raise Exception(f"Failed to connect to the server. Please check your network connection: {str(e)}")
+    except requests.exceptions.Timeout as e:
+        print(f"Timeout error: {str(e)}")
+        raise Exception(f"Request timed out. Please try again: {str(e)}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {str(e)}")
+        raise Exception(f"An error occurred while getting presigned URL: {str(e)}")
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        raise Exception(f"An unexpected error occurred: {str(e)}")
 
 def upload_file_to_s3(presigned_url: str, file_path: str) -> str:
     """上传文件到S3"""
@@ -50,29 +78,25 @@ def upload_file_to_s3(presigned_url: str, file_path: str) -> str:
         query_params = parse_qs(parsed_url.query)
         content_type = query_params.get('content-type', ['application/pdf'])[0]
         
-        headers = {
-            'Content-Type': content_type  # 使用从预签名URL中获取的content-type
-        }
-        
-        print(f"使用的headers: {headers}")
-        
         with open(file_path, 'rb') as file:
-            response = requests.put(presigned_url, headers=headers, data=file)
+            headers = {
+                'Content-Type': content_type
+            }
+            response = requests.put(presigned_url, data=file, headers=headers, timeout=30, verify=False, proxies={'http': None, 'https': None})
             
-        print(f"上传响应状态: {response.status_code}")
-        print(f"上传响应内容: {response.text}")
-            
-        if response.status_code == 200:
-            base_url = presigned_url.split('?')[0]
-            print(f"上传成功，URL: {base_url}")
-            return base_url
-        else:
-            print(f"上传失败: {response.status_code}")
-            print(f"错误信息: {response.text}")
-            return None
+            if response.status_code in [200, 201]:
+                # 从预签名URL中提取基本URL
+                parsed_url = urlparse(presigned_url)
+                base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+                return base_url
+            else:
+                print(f"Upload failed with status code: {response.status_code}")
+                print(f"Response content: {response.text}")
+                return None
+                
     except Exception as e:
-        print(f"上传出错: {str(e)}")
-        return None
+        print(f"Error uploading file to S3: {str(e)}")
+        raise Exception(f"Failed to upload file to S3: {str(e)}")
 
 def record_file_metadata(s3_url, description=""):
     url = 'https://data.dev.agione.ai/api/v1/object/common/record'
@@ -89,31 +113,31 @@ def record_file_metadata(s3_url, description=""):
     response = requests.post(url, headers=headers, data=json.dumps(data))
     return response.json()
 
-# if __name__ == "__main__":
-#     file_key = "121321.pdf"
-#     local_file_path = r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\AI技术发现超16万种RNA病毒 阿里云联合研究成果发表于国际期刊《Cell》-阿里巴巴集团.pdf"
+if __name__ == "__main__":
+    file_key = "121321.pdf"
+    local_file_path = r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\AI技术发现超16万种RNA病毒 阿里云联合研究成果发表于国际期刊《Cell》-阿里巴巴集团.pdf"
     
-#     # 1. Get presigned URL
-#     presigned_url = get_presigned_url(file_key)
-#     print("presigned_url",presigned_url)
-#     if presigned_url:
-#         # 2. Upload file
-#         s3_url = upload_file_to_s3(presigned_url, local_file_path)
-#         print("s3_url",s3_url)
-#         if s3_url:
-#             # 3. Record metadata
-#             result = record_file_metadata(s3_url, "Test file description")
-#             print("result",result)
+    # 1. Get presigned URL
+    presigned_url = get_presigned_url(file_key)
+    print("presigned_url", presigned_url)
+    if presigned_url:
+        # 2. Upload file
+        s3_url = upload_file_to_s3(presigned_url, local_file_path)
+        print("s3_url", s3_url)
+        if s3_url:
+            # 3. Record metadata
+            result = record_file_metadata(s3_url, "Test file description")
+            print("result", result)
 
 def upload_file_to_s3_by_key(file_key, local_file_path):
     presigned_url = get_presigned_url(file_key)
-    print("presigned_url",presigned_url)
+    print("presigned_url", presigned_url)
     if presigned_url:
         s3_url = upload_file_to_s3(presigned_url, local_file_path)
-        print("s3_url",s3_url)
+        print("s3_url", s3_url)
         if s3_url:
             result = record_file_metadata(s3_url, "Test file description")
-            print("result",result)
+            print("result", result)
             return s3_url##给到数据库保存
     return "error"
 

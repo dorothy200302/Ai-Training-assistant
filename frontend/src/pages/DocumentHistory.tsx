@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Download, Trash2, Search, Calendar, Grid, List, Edit, Eye } from 'lucide-react';
+import { FileText, Download, Search, Calendar, Grid, List, Eye } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/constants';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface GeneratedDocument {
   id: number;
@@ -22,7 +25,6 @@ export default function DocumentHistory() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
   const [documents, setDocuments] = useState<GeneratedDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,7 @@ export default function DocumentHistory() {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8001/api/storage/generated-documents/', {
+      const response = await fetch(`${API_BASE_URL}/api/storage/generated-documents/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -70,9 +72,68 @@ export default function DocumentHistory() {
     }
   };
 
-  const handleDownload = async (url: string) => {
+  const generateAndDownloadPDF = async (content: string, filename: string) => {
     try {
-      window.open(url, '_blank');
+      // 创建新的PDF文档
+      const doc = new jsPDF();
+      
+      // 设置中文字体
+      doc.setFont('helvetica');
+      doc.setFontSize(12);
+
+      // 分页处理文本
+      const pageHeight = doc.internal.pageSize.height;
+      const lineHeight = 7;  // 行高
+      const margin = 20;     // 页边距
+      let cursorY = margin;  // 当前Y坐标
+      
+      // 分行处理文本
+      const lines = doc.splitTextToSize(content, doc.internal.pageSize.width - 2 * margin);
+      
+      // 逐行写入文本
+      lines.forEach((line: string) => {
+        // 如果当前行将超出页面底部，则添加新页
+        if (cursorY + lineHeight > pageHeight - margin) {
+          doc.addPage();
+          cursorY = margin;
+        }
+        
+        // 写入当前行
+        doc.text(line, margin, cursorY);
+        cursorY += lineHeight;
+      });
+
+      // 生成PDF文件名
+      const pdfFilename = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+      
+      // 下载PDF
+      doc.save(pdfFilename);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
+
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      // 获取内容
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        console.error('Download failed:', response.status);
+        return;
+      }
+
+      // 获取内容
+      const content = await response.text();
+      
+      // 生成并下载PDF
+      await generateAndDownloadPDF(content, filename);
     } catch (error) {
       console.error('Error downloading document:', error);
     }
@@ -174,7 +235,7 @@ export default function DocumentHistory() {
                               size="sm" 
                               variant="ghost" 
                               className="h-8 w-8 p-0"
-                              onClick={() => handleDownload(doc.url)}
+                              onClick={() => handleDownload(doc.url, doc.document_name)}
                             >
                               <Download className="h-4 w-4" />
                             </Button>
@@ -215,7 +276,7 @@ export default function DocumentHistory() {
                         <Button 
                           size="sm" 
                           variant="ghost"
-                          onClick={() => handleDownload(doc.url)}
+                          onClick={() => handleDownload(doc.url, doc.document_name)}
                         >
                           <Download className="h-4 w-4 mr-2" />
                           下载

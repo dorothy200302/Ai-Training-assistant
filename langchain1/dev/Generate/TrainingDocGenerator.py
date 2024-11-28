@@ -91,43 +91,44 @@ class TrainingDocGenerator:
         print(f"初始化 TrainingDocGenerator，文件路径: {file_paths}")
         self.model_name = model_name
         self.background_informations = background_informations
-        # 确保 file_paths 是列表
+       # 确保 file_paths 是列表
         if isinstance(file_paths, str):
             file_paths = [file_paths]
-        documents = self.merge_documents(file_paths)
-        # 这里是LLM的选择和配置
-        self.llm = ChatOpenAI(
-            model_name='gpt-4o-mini',
-            temperature=0.7,
-            base_url='https://gateway.agione.ai/openai/api/v2',
-            api_key='as-D73mmid1JVABYjxT4_ncuw',
-            request_timeout=120
-        )
+        # documents = self.merge_documents(file_paths)
+        # # 这里是LLM的选择和配置
+        # self.llm = ChatOpenAI(
+        #     model_name='gpt-4o-mini',
+        #     temperature=0.7,
+        #     base_url='https://gateway.agione.ai/openai/api/v2',
+        #     api_key='as-D73mmid1JVABYjxT4_ncuw',
+        #     request_timeout=120
+        # )
         
         
-        # 初始化 embeddings 模型
-        self.embeddings_model = SentenceTransformer("aspire/acge_text_embedding")
+        # # 初始化 embeddings 模型
+        # self.embeddings = OpenAIEmbeddings(
+        #     base_url='https://gateway.agione.ai/openai/api/v2',
+        #     api_key='as-D73mmid1JVABYjxT4_ncuw',
+        #     model="text-embedding-3-small",
+        #     request_timeout=60,  # 增加超时时间
+        #     max_retries=5,  # 增加重试次数
+        #     retry_min_seconds=1,  # 最小重试间隔
+        #     retry_max_seconds=60  # 最大重试间隔
+        # )
         
-       
-        
-        self.embeddings = OpenAIEmbeddings(base_url='https://gateway.agione.ai/openai/api/v2',
-                                            api_key='as-D73mmid1JVABYjxT4_ncuw',
-                                            model="text-embedding-3-small")
-        
-        # 文本分割器
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len
-        )
+        # self.text_splitter = RecursiveCharacterTextSplitter(
+        #     chunk_size=1000,
+        #     chunk_overlap=200,
+        #     length_function=len
+        # )
         # 创建一个WikipediaRetriever实例
         self.retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
 
-        # 将文档分割并存储到向量数据库
-        split_docs = self.text_splitter.split_documents(documents)
-        self.vector_store = FAISS.from_documents(split_docs, self.embeddings)
+        # # 将文档分割并存储到向量数据库
+        # split_docs = self.text_splitter.split_documents(documents)
+        # self.vector_store = FAISS.from_documents(split_docs, self.embeddings)
 
-        
+
 
      def generate_training_outline(self, requirements=None):
         """使用模型生成培训大纲"""
@@ -365,7 +366,7 @@ class TrainingDocGenerator:
      def review_content(self, content):
         """使用模型审查内容质量"""
         review_prompt = PromptTemplate(
-            template="""
+            template="""\
             请审查以下培训内容的质量，检查：
             1. 内容的准确性和完整性
             2. 结构的合理性
@@ -437,48 +438,5 @@ class TrainingDocGenerator:
     
         return filename
 
-# background_informations={
-#     "company_name":"123",
-#     "company_culture":"客户第一，团队合作，拥抱变化，诚信，激情，敬业",
-#     "company_industry":"互联网",
-#     "company_competition":"行业领先",
-#     "user_role":"市场营销经理",
-#     "industry_info":"互联网",
-#     "project_title":"市场营销经理",
-#     "project_dutys":"负责公司市场营销策略的制定和执行",
-#     "project_goals":"了解公司市场营销策略的制定和执行",
-#     "project_theme":"了解公司市场营销策略的制定和执行",
-#     "project_aim":"了解公司市场营销策略的制定和执行",
-#     "content_needs":"市场营销策略的制定和执行",
-#     "format_style":" ",
-#     "audience_info":
-#         "主要受:abc集团新入职员工,受众特点:年轻化，学历高，学习能力强"
-    
 
-# }
-
-# g=TrainingDocGenerator(file_paths=[
-#     r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we approach marketing · Resend.pdf",
-#     r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we evolve our knowledge base · Resend.pdf",
-#     r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we help users · Resend.pdf",
-#     r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we think about design · Resend.pdf",
-#     r"C:\Users\dorot\PycharmProjects\langchain1\.venv\share\How we approach CI_CD · Resend.html",
-
-# ], model_name="chatgpt-4o-mini",background_informations=background_informations)
-# outline=g.generate_training_outline()
-# full_doc=g.generate_full_training_doc(outline)
-# print(full_doc)
-
-# import time
-# import datetime
-
-
-
-# saved_file = g.save_full_doc(full_doc)
-# print(f"Document saved to: {saved_file}")
-
-
-
-
-
-
+ 

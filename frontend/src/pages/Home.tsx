@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 import {
-  FileText,
   Database,
   UserCheck,
   MessageSquare,
@@ -12,7 +11,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Testimonial {
   avatar: string;

@@ -18,11 +18,19 @@ import logging
 
 # LangChain imports
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain, RetrievalQA
-from langchain.schema import Document, SystemMessage, HumanMessage
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import BaseOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.documents import Document
+from langchain.chains import LLMChain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+from langchain_community.document_loaders import (
+    PyPDFLoader,
+    Docx2txtLoader,
+    TextLoader,
+    BSHTMLLoader
+)
 from langchain_community.retrievers import WikipediaRetriever
 
 # Transformer imports
@@ -63,7 +71,7 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
     """异步版本的培训文档生成器"""
     def __init__(self, file_paths, background_informations, model_name, user_email):
         # 调用父类的初始化方法，注意参数顺序
-        super().__init__(background_informations=background_informations, file_paths=file_paths, model_name=model_name)
+        super().__init__(file_paths=file_paths, model_name=model_name, background_informations=background_informations)
         
         if not file_paths:
             raise ValueError("file_paths must not be empty")
@@ -81,17 +89,27 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
         
         self.user_email = user_email  # Store user_email as instance variable
         self.cache = set()  # 用于缓存搜索结果
-        self.vector_store_key = self._generate_cache_key(file_paths)
+        self.vector_store_key = self._generate_cache_key(self.file_paths)  # Use self.file_paths here
+        self.vector_store = None  # Initialize vector_store as None
         
         # Initialize reranker
-        self.reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+        # self.reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
         
-        # Initialize text splitter with smaller chunk size
+        # Initialize text splitter with optimized chunk size
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,  # Reduced from 1000
-            chunk_overlap=100,  # Reduced from 200
+            chunk_size=2000,  # Increased chunk size for fewer chunks
+            chunk_overlap=100,  # Moderate overlap
             length_function=len,
             is_separator_regex=False,
+        )
+        
+        # Initialize embeddings with batching
+        self.embeddings = OpenAIEmbeddings(
+            base_url='https://gateway.agione.ai/openai/api/v2',  # 使用base_url而不是api_base
+            api_key='as-D73mmid1JVABYjxT4_ncuw',
+            request_timeout=30,  # 使用request_timeout而不是timeout
+            max_retries=3,
+            chunk_size=50
         )
         
         # Configure LLM with timeout and retries
@@ -122,7 +140,7 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             total_size = 0
             max_total_size = 10 * 1024 * 1024  # 10MB limit
             
-            for path in file_paths:
+            for path in self.file_paths:
                 try:
                     # Check file size
                     file_size = os.path.getsize(path)
@@ -140,19 +158,15 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
                     
                     # Choose appropriate loader based on file type
                     if file_ext == '.pdf':
-                        from langchain.document_loaders import PyPDFLoader
                         loader = PyPDFLoader(path)
                         docs = loader.load()
                     elif file_ext in ['.docx', '.doc']:
-                        from langchain.document_loaders import Docx2txtLoader
                         loader = Docx2txtLoader(path)
                         docs = loader.load()
                     elif file_ext == '.txt':
-                        from langchain.document_loaders import TextLoader
                         loader = TextLoader(path, encoding='utf-8')
                         docs = loader.load()
                     elif file_ext == '.html':
-                        from langchain.document_loaders import BSHTMLLoader
                         loader = BSHTMLLoader(path)
                         docs = loader.load()
                     else:
@@ -174,28 +188,48 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             
             # Create vector store if we have documents
             if documents:
-                self.vector_store = FAISS.from_documents(
-                    documents,
-                    OpenAIEmbeddings(
-                        base_url='https://gateway.agione.ai/openai/api/v2',
-                        api_key='as-D73mmid1JVABYjxT4_ncuw',
-                        request_timeout=30,  # 30 second timeout
-                        max_retries=2
-                    )
-                )
+                # Try to load from cache first
+                cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+                os.makedirs(cache_dir, exist_ok=True)
+                cache_path = os.path.join(cache_dir, self.vector_store_key)
                 
-                # Save vector store
-                vector_store_path = os.path.join(tempfile.gettempdir(), f"vectors_{self.vector_store_key}.faiss")
-                self.vector_store.save_local(vector_store_path)
-                self.logger.info(f"Vector store saved to: {vector_store_path}")
+                if os.path.exists(cache_path):
+                    try:
+                        self.logger.info(f"Loading vector store from cache: {cache_path}")
+                        self.vector_store = FAISS.load_local(cache_path, self.embeddings)
+                        self.logger.info("Vector store loaded from cache successfully")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to load vector store from cache: {str(e)}")
+                        self.vector_store = None
+                
+                if not self.vector_store:
+                    self.logger.info("Creating new vector store")
+                    # Process documents in batches to reduce API calls
+                    batch_size = 50
+                    for i in range(0, len(documents), batch_size):
+                        batch = documents[i:i + batch_size]
+                        if i == 0:
+                            self.vector_store = FAISS.from_documents(batch, self.embeddings)
+                        else:
+                            batch_store = FAISS.from_documents(batch, self.embeddings)
+                            self.vector_store.merge_from(batch_store)
+                    
+                    # Save to cache
+                    try:
+                        self.logger.info(f"Saving vector store to cache: {cache_path}")
+                        self.vector_store.save_local(cache_path)
+                        self.logger.info("Vector store saved to cache successfully")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to save vector store to cache: {str(e)}")
+                
+                self.logger.info("Vector store initialized successfully")
             else:
-                self.logger.warning("No documents were processed successfully")
-                self.vector_store = None
+                self.logger.warning("No valid documents to process")
                 
         except Exception as e:
             self.logger.error(f"Error initializing vector store: {str(e)}")
-            self.vector_store = None
-    
+            raise
+
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     async def generate_training_outline(self, requirements=True):
         """使用模型生成培训大纲，包含搜索查询和引用"""
@@ -252,10 +286,9 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             search_results = []
             try:
                 self.logger.info("Performing similarity search")
-                # Add timeout to similarity search
-                async def search_with_timeout():
-                    return self.vector_store.similarity_search("")
-                docs = await asyncio.wait_for(search_with_timeout(), timeout=30.0)
+                # Use a meaningful query instead of empty string
+                query = f"培训大纲 {json.dumps(self.background_informations)}"
+                docs = self.vector_store.similarity_search(query, k=5)  # Limit to top 5 results
                 
                 if docs:
                     local_context = "\n\n".join([doc.page_content for doc in docs])
@@ -263,9 +296,6 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
                     self.logger.info(f"Found {len(docs)} relevant documents")
                 else:
                     self.logger.warning("No relevant documents found in similarity search")
-            except asyncio.TimeoutError:
-                self.logger.error("Similarity search timed out")
-                search_results.append("搜索超时，继续使用部分结果")
             except Exception as e:
                 self.logger.error(f"Error in similarity search: {str(e)}", exc_info=True)
                 search_results.append("没有其他上下文")
@@ -317,36 +347,36 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             self.logger.error(f"Error in generate_training_outline: {str(e)}", exc_info=True)
             raise
 
-    async def _rerank_documents(self, query: str, docs: List[Document], top_k: int = 5) -> List[Document]:
-        """
-        Rerank documents using Cross-Encoder model.
-        
-        Args:
-            query: The search query
-            docs: List of retrieved documents
-            top_k: Number of top documents to return after reranking
-        
-        Returns:
-            List of reranked documents
-        """
-        logging.info("Reranking documents")
-        if not docs:
-            logging.info("No documents to rerank")
-            return []
-        
-        # Prepare pairs of (query, document) for reranking
-        pairs = [(query, doc.page_content) for doc in docs]
-        
-        # Get scores from Cross-Encoder
-        scores = self.reranker.predict(pairs)
-        
-        # Create list of (score, doc) tuples and sort by score
-        scored_docs = list(zip(scores, docs))
-        scored_docs.sort(key=lambda x: x[0], reverse=True)
-        
-        # Return top_k documents
-        logging.info(f"Returning top {top_k} documents")
-        return [doc for _, doc in scored_docs[:top_k]]
+    # async def _rerank_documents(self, query: str, docs: List[Document], top_k: int = 5) -> List[Document]:
+    #     """
+    #     Rerank documents using Cross-Encoder model.
+    #     
+    #     Args:
+    #         query: The search query
+    #         docs: List of retrieved documents
+    #         top_k: Number of top documents to return after reranking
+    #     
+    #     Returns:
+    #         List of reranked documents
+    #     """
+    #     logging.info("Reranking documents")
+    #     if not docs:
+    #         logging.info("No documents to rerank")
+    #         return []
+    #     
+    #     # Prepare pairs of (query, document) for reranking
+    #     pairs = [(query, doc.page_content) for doc in docs]
+    #     
+    #     # Get scores from Cross-Encoder
+    #     scores = self.reranker.predict(pairs)
+    #     
+    #     # Create list of (score, doc) tuples and sort by score
+    #     scored_docs = list(zip(scores, docs))
+    #     scored_docs.sort(key=lambda x: x[0], reverse=True)
+    #     
+    #     # Return top_k documents
+    #     logging.info(f"Returning top {top_k} documents")
+    #     return [doc for _, doc in scored_docs[:top_k]]
 
     def _generate_cache_key(self, file_paths: List[str]) -> str:
         """生成缓存键，基于文件内容的哈希"""
@@ -422,8 +452,6 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
         """从云存储加载向量数据"""
         logging.info("Loading vectors from cloud")
         try:
-           
-                
                 # 从云存储下载文件
                 local_paths = download_file_from_s3(
                     self.vector_store_key,
@@ -550,84 +578,78 @@ Content: {doc.page_content}
             logging.info(f"Parsed sections: {sections}")
             full_doc = [outline]
             
-            async def process_section(section: str) -> List[str]:
-                """并行处理单个章节的所有内容"""
-                # Generate main content first
-                main_content = await self.generate_section_content_async(section, "main")
-                
-                # Generate additional content in parallel
-                tasks = [
-                    self.generate_section_content_async(section, "practice"),
-                    self.generate_section_content_async(section, "case_study"),
-                    self.generate_quiz_async(section),
-                ]
-                
-                results = await asyncio.gather(*tasks)
-                
-                # Structure the section content according to template
-                section_parts = [
-                    f"\n\n## {section}\n{main_content}",
-                    f"\n\n### 实践内容\n{results[0]}",
-                    f"\n\n### 案例分析\n{results[1]}",
-                    f"\n\n### 测试题\n{results[2]}"
-                ]
-                
-                # # Add optimization suggestions for the summary section
-                # if section.lower().strip() == "总结":
-                #     optimization_task = await self.generate_section_content_async(section, "optimization")
-                #     self.optimization_suggestions = optimization_task
-                #     section_parts.append(f"\n\n### 优化建议\n{optimization_task}")
-                
-                return section_parts
-            
             # Process all sections in parallel
             all_section_contents = await asyncio.gather(
-                *[process_section(section) for section in sections]
+                *[self.process_section(section) for section in sections]
             )
             
             # Flatten results and add to document
-            for section_contents in all_section_contents:
-                full_doc.extend(section_contents)
+            for section_content in all_section_contents:
+                full_doc.extend([
+                    f"\n\n## {section_content['title']}",
+                    section_content['main_content'],
+                    "\n\n### 实践内容",
+                    section_content['practice'],
+                    "\n\n### 案例分析",
+                    section_content['case_study'],
+                    "\n\n### 测试题",
+                    section_content['quiz']
+                ])
+                if 'optimization' in section_content:
+                    full_doc.extend([
+                        "\n\n### 优化建议",
+                        section_content['optimization']
+                    ])
             
-            final_doc = "\n\n".join(full_doc)
-            logging.info("Full document generated successfully")
-            logging.info(f"Document length: {len(final_doc)}")
+            final_doc = '\n'.join(full_doc)
+            
             return final_doc
             
         except Exception as e:
             logging.error(f"Error in generate_fulldoc_with_template: {str(e)}")
             raise
 
-    async def process_section(self, section: str) -> List[str]:
+    async def process_section(self, section: str) -> dict:
         """并行处理单个章节的所有内容"""
-        # Generate main content first
-        main_content = await self.generate_section_content_async(section, "main")
-        
-        # Generate additional content
-        tasks = [
-            self.generate_section_content_async(section, "practice"),
-            self.generate_section_content_async(section, "case_study"),
-            self.generate_quiz_async(section),
-        ]
-        
-        results = await asyncio.gather(*tasks)
-        
-        # Structure the section content
-        section_parts = [
-            f"\n\n## {section}\n{main_content}",  # Main content
-            f"\n\n### 实践内容\n{results[0]}",    # Practice content
-            f"\n\n### 案例分析\n{results[1]}",    # Case study
-            f"\n\n### 测试题\n{results[2]}"       # Quiz
-        ]
-        
-        # If this is the final section, generate optimization suggestions for internal use
-        if section.lower().strip() == "总结":
-            optimization_task = await self.generate_section_content_async(section, "optimization")
-            # Store optimization suggestions in a class variable or log them
-            self.optimization_suggestions = optimization_task
-            logging.info(f"Generated optimization suggestions: {optimization_task}")
-        
-        return section_parts
+        try:
+            # Generate main content first
+            main_content = await self.generate_section_content_async(section, "main")
+            
+            # Generate additional content
+            tasks = [
+                self.generate_section_content_async(section, "practice"),
+                self.generate_section_content_async(section, "case_study"),
+                self.generate_quiz_async(section),
+            ]
+            
+            results = await asyncio.gather(*tasks)
+            
+            # Structure the section content as dictionary
+            section_content = {
+                'title': section,
+                'main_content': main_content,
+                'practice': results[0],
+                'case_study': results[1],
+                'quiz': results[2]
+            }
+            
+            # Only add optimization suggestions at the end of the document
+            if section.lower().strip() == "总结":
+                optimization_task = await self.generate_section_content_async(section, "optimization")
+                section_content['optimization'] = optimization_task
+                self.optimization_suggestions = optimization_task
+                logging.info(f"Generated optimization suggestions: {optimization_task}")
+            
+            return section_content
+        except Exception as e:
+            logging.error(f"Error processing section {section}: {str(e)}")
+            return {
+                'title': section,
+                'main_content': f"Error generating content: {str(e)}",
+                'practice': '',
+                'case_study': '',
+                'quiz': ''
+            }
 
     async def generate_section_content_async(self, section_title: str, section_type: str) -> str:
         """异步生成章节内容，包含搜索和引用"""
@@ -637,15 +659,16 @@ Content: {doc.page_content}
         # 1. 生成搜索查询
         search_queries = await self._generate_search_queries(section_title)
         
-        all_docs = []
+        all_retrieved_docs = []
         # 对每个查询进行搜索
-        for query in search_queries.get('queries', []):
+        for query in search_queries:  
             # 使用向量存储进行检索
             docs = self.vector_store.similarity_search(query)
             if docs:
-                # Rerank the retrieved documents
-                reranked_docs = await self._rerank_documents(query, docs)
-                all_docs.extend(reranked_docs)
+                all_retrieved_docs.extend(docs)
+        
+        # 只在最后进行一次rerank
+        all_docs = all_retrieved_docs[:10] if all_retrieved_docs else []
         
         # 3. 从本地文档获取内容
         local_context = "\n\n".join([doc.page_content for doc in all_docs])
@@ -662,18 +685,18 @@ Content: {doc.page_content}
         if section_type == "theory":
             template = prompt_of_informations + """
             特长：制定专业，系统，易懂的理论教学内容。
-            现请根据培训文档中的以下章节内容生成理论教学内容：
+            现请根据培训文档中的以下章节内容生成理论教学内容:
             
             章节标题: {section_title}
             
-            要求：
+            要求:
             1. 概念解释要清晰准确
             2. 包含具体的示例
             3. 突出重点难点
             4. 添加相关知识链接
             5. 适当引用参考资料，使用[数字]格式
             
-            相关文档内容：
+            相关文档内容:
             {context}
             
             参考资料：
@@ -910,52 +933,39 @@ Content: {doc.page_content}
         logging.info("Generating full training document")
         sections = self._parse_outline(outline)
         print("解析到的章节:", sections)
-        full_doc = [outline]
-        
-        async def process_section(section: str) -> List[str]:
-            """并行处理单个章节的所有内容"""
-            # Generate main content first
-            main_content = await self.generate_section_content_async(section, "main")
-            
-            # Generate additional content
-            tasks = [
-                self.generate_section_content_async(section, "practice"),
-                self.generate_section_content_async(section, "case_study"),
-                self.generate_quiz_async(section),
-            ]
-            
-            results = await asyncio.gather(*tasks)
-            
-            # Structure the section content
-            section_parts = [
-                f"\n\n## {section}\n{main_content}",  # Main content
-                f"\n\n### 实践内容\n{results[0]}",    # Practice content
-                f"\n\n### 案例分析\n{results[1]}",    # Case study
-                f"\n\n### 测试题\n{results[2]}"       # Quiz
-            ]
-            
-            # Only add optimization suggestions at the end of the document
-            if section.lower().strip() == "总结":
-                optimization_task = await self.generate_section_content_async(section, "optimization")
-                # Store optimization suggestions in a class variable or log them
-                self.optimization_suggestions = optimization_task
-                logging.info(f"Generated optimization suggestions: {optimization_task}")
-            
-            return section_parts
         
         # 并行处理所有章节
         all_section_contents = await asyncio.gather(
-            *[process_section(section) for section in sections]
+            *[self.process_section(section) for section in sections]
         )
         
-        # 展平结果列表并添加到文档中
-        for section_contents in all_section_contents:
-            full_doc.extend(section_contents)
+        # 构建完整文档
+        full_doc = []
+        for section_content in all_section_contents:
+            try:
+                full_doc.extend([
+                    f"\n\n## {section_content['title']}",
+                    section_content['main_content'],
+                    "\n\n### 实践内容",
+                    section_content['practice'],
+                    "\n\n### 案例分析",
+                    section_content['case_study'],
+                    "\n\n### 测试题",
+                    section_content['quiz']
+                ])
+                if 'optimization' in section_content:
+                    full_doc.extend([
+                        "\n\n### 优化建议",
+                        section_content['optimization']
+                    ])
+            except Exception as e:
+                logging.error(f"Error processing section content: {str(e)}")
+                continue
         
-        logging.info("Full document generated successfully")
-        logging.info(f"Full document length: {len(full_doc)}")
-        logging.info(f"Full document preview: {full_doc[:200]}...")  
-        return "\n\n".join(full_doc)
+        # 合并所有内容
+        complete_doc = '\n'.join(full_doc)
+        
+        return complete_doc
 
     async def save_full_doc(self, full_doc: str) -> str:
         """异步保存完整的培训文档"""
@@ -1033,40 +1043,147 @@ Content: {doc.page_content}
             print(f"Error evaluating document: {str(e)}")
             return {}
 
-    async def _generate_search_queries(self, section_title: str) -> dict:
+    async def _generate_search_queries(self, section_title: str) -> List[str]:
         """为章节生成搜索查询"""
-        search_prompt = PromptTemplate(
-            template=self.generate_prompt() + """
-            请为培训文档章节"{section_title}"生成3-5个搜索查询，用于获取相关的专业知识和最新信息。
-            查询应该：
-            1. 针对性强，与章节主题直接相关
-            2. 含专业术语
-            3. 覆盖不同的知识点
-            4. 适合网络搜索
-            
-            请以JSON格式输出，格式如下：
-            {{"queries": ["查询1", "查询2", "查询3"]}}
-            """,
-            input_variables=["section_title"]
-        )
+        # Cache key for search queries
+        cache_key = hashlib.md5(section_title.encode()).hexdigest()
+        cache_dir = os.path.join(os.path.dirname(__file__), 'cache', 'queries')
+        os.makedirs(cache_dir, exist_ok=True)
+        cache_path = os.path.join(cache_dir, f"{cache_key}.json")
         
-        chain = LLMChain(llm=self.llm, prompt=search_prompt)
-        try:
-            result = await chain.arun(section_title=section_title)
-            # 清理 JSON 字符串
-            result = result.replace('```json', '').replace('```', '').strip()
-            
+        # Try to load from cache
+        if os.path.exists(cache_path):
             try:
-                queries_dict = json.loads(result)
-                return queries_dict
-            except json.JSONDecodeError:
-                print(f"JSON parsing failed for result: {result}")
-                return {"queries": [f"最佳实践 {section_title}"]}
+                with open(cache_path, 'r', encoding='utf-8') as f:
+                    cached_data = json.load(f)
+                    if cached_data.get('title') == section_title:
+                        self.logger.info(f"Loading search queries from cache for: {section_title}")
+                        return cached_data.get('queries', [])
+            except Exception as e:
+                self.logger.warning(f"Failed to load search queries from cache: {str(e)}")
+        
+        # Generate new queries if not in cache
+        try:
+            search_prompt = PromptTemplate(
+                input_variables=["title"],
+                template="基于以下章节标题，生成3-5个相关的搜索查询，用于检索相关内容：{title}\n\n生成的查询应该覆盖不同角度，每行一个查询。"
+            )
+            
+            chain = LLMChain(llm=self.llm, prompt=search_prompt)
+            result = await chain.arun(title=section_title)
+            
+            # Parse queries from result
+            queries = [q.strip() for q in result.split('\n') if q.strip()]
+            
+            # Save to cache
+            try:
+                with open(cache_path, 'w', encoding='utf-8') as f:
+                    json.dump({
+                        'title': section_title,
+                        'queries': queries,
+                        'timestamp': datetime.now().isoformat()
+                    }, f, ensure_ascii=False, indent=2)
+            except Exception as e:
+                self.logger.warning(f"Failed to save search queries to cache: {str(e)}")
+            
+            return queries
+            
+        except Exception as e:
+            self.logger.error(f"Error generating search queries: {str(e)}")
+            return []
+
+    async def initialize_vector_store(self):
+        """Initialize or reload the vector store"""
+        try:
+            # Try to load from cache first
+            cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+            os.makedirs(cache_dir, exist_ok=True)
+            cache_path = os.path.join(cache_dir, self.vector_store_key)
+            
+            if os.path.exists(cache_path):
+                try:
+                    self.logger.info(f"Loading vector store from cache: {cache_path}")
+                    self.vector_store = FAISS.load_local(cache_path, self.embeddings)
+                    self.logger.info("Vector store loaded from cache successfully")
+                    return
+                except Exception as e:
+                    self.logger.warning(f"Failed to load vector store from cache: {str(e)}")
+                    self.vector_store = None
+            
+            # If cache loading failed or doesn't exist, create new vector store
+            documents = []
+            for path in self.file_paths:
+                try:
+                    # Get file extension
+                    file_ext = os.path.splitext(path)[1].lower()
+                    
+                    # Choose appropriate loader
+                    if file_ext == '.pdf':
+                        loader = PyPDFLoader(path)
+                    elif file_ext in ['.docx', '.doc']:
+                        loader = Docx2txtLoader(path)
+                    elif file_ext == '.txt':
+                        loader = TextLoader(path, encoding='utf-8')
+                    elif file_ext == '.html':
+                        loader = BSHTMLLoader(path)
+                    else:
+                        self.logger.warning(f"Unsupported file type for {path}")
+                        continue
+                    
+                    docs = loader.load()
+                    for doc in docs:
+                        chunks = self.text_splitter.split_text(doc.page_content)
+                        for chunk in chunks:
+                            documents.append(Document(
+                                page_content=chunk,
+                                metadata={'source': path}
+                            ))
+                            
+                except Exception as e:
+                    self.logger.error(f"Error processing file {path}: {str(e)}")
+                    continue
+            
+            if documents:
+                # Improved batching process
+                batch_size = 100  # Increased batch size
+                total_batches = (len(documents) + batch_size - 1) // batch_size
+                
+                self.logger.info(f"Processing {len(documents)} documents in {total_batches} batches")
+                
+                # Initialize empty FAISS index for the first batch
+                if len(documents) > 0:
+                    first_batch = documents[0:min(batch_size, len(documents))]
+                    self.vector_store = FAISS.from_documents(first_batch, self.embeddings)
+                    
+                    # Process remaining batches with progress tracking
+                    if len(documents) > batch_size:
+                        for batch_num in range(1, total_batches):
+                            start_idx = batch_num * batch_size
+                            end_idx = min((batch_num + 1) * batch_size, len(documents))
+                            batch = documents[start_idx:end_idx]
+                            
+                            self.logger.info(f"Processing batch {batch_num + 1}/{total_batches}")
+                            batch_store = FAISS.from_documents(batch, self.embeddings)
+                            self.vector_store.merge_from(batch_store)
+                            
+                            # Log progress
+                            progress = (batch_num + 1) / total_batches * 100
+                            self.logger.info(f"Embedding progress: {progress:.1f}%")
+                
+                # Save to cache
+                try:
+                    self.logger.info(f"Saving vector store to cache: {cache_path}")
+                    self.vector_store.save_local(cache_path)
+                    self.logger.info("Vector store saved to cache successfully")
+                except Exception as e:
+                    self.logger.warning(f"Failed to save vector store to cache: {str(e)}")
+            else:
+                self.logger.warning("No valid documents to process")
                 
         except Exception as e:
-            print(f"Error generating queries: {str(e)}")
-            return {"queries": [f"best practices {section_title}"]}
-        
+            self.logger.error(f"Error initializing vector store: {str(e)}")
+            raise
+    
 def insert_references(content: str) -> str:
     """
     Insert reference numbers from square brackets into the content.

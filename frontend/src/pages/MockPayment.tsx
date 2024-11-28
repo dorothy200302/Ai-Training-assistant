@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export default function MockPayment() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const orderId = searchParams.get('order_id');

@@ -34,18 +34,15 @@ interface DocumentUploadProps {
 const DocumentUpload: React.FC<DocumentUploadProps> = ({
   onUploadComplete,
   maxFileSize = 20 * 1024 * 1024, // 20MB default
-  acceptedFileTypes = ['.doc', '.docx', '.pdf', '.txt', '.md'],
   onConfirm,
   onCancel,
   isLoading,
-  hasConversation = false,
-  onGenerateOutline,
-  hasCompletedConversation = false,
+ 
 }) => {
   const [files, setFiles] = useState<UploadedFile[]>([])
-  const [isUploading, setIsUploading] = useState(false)
+  const [, setIsUploading] = useState(false)
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File)  => {
     const formData = new FormData();
     formData.append('files', file);
 
@@ -54,31 +51,24 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
       throw new Error('未登录，请先登录');
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatbot/upload`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
-    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`上传失败: ${errorText}`);
-    }
+    // if (!response.ok) {
+    //   const errorText = await response.text();
+    //   throw new Error(`上传失败: ${errorText}`);
+    // }
 
-    const data = await response.json();
-    if (onUploadComplete) {
-      onUploadComplete([{
-        id: Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        progress: 100,
-        status: 'success',
-        originalFile: file
-      }]);
-    }
+    // const data = await response.json();
+    // if (onUploadComplete) {
+    //   onUploadComplete([{
+    //     id: Math.random().toString(36).substr(2, 9),
+    //     name: file.name,
+    //     size: file.size,
+    //     type: file.type,
+    //     progress: 100,
+    //     status: 'success',
+    //     originalFile: file
+    //   }]);
+    // }
 
     setFiles(prev => prev.map(f => 
       f.name === file.name ? { 
@@ -88,7 +78,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
       } : f
     ));
 
-    return data.urls[0];
+    // return data.urls[0];
   }
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {

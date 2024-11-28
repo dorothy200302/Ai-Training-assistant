@@ -3,7 +3,7 @@ import Home from "./pages/Home"
 import AiChat from "./pages/AiChat"
 import DocumentHistory from "./pages/DocumentHistory"
 import Auth from "./pages/Auth"
-import OutlineGenerator from "./pages/OutlineGenerator"
+import OutlineGenerator from "./pages/OutlineGenerator.tsx"
 import Templates from "./pages/Templates"
 import EmployeeManagement from "./pages/EmployeeManagement"
 import Pricing from "./pages/Pricing"
@@ -16,18 +16,12 @@ import CustomerServiceSkillsTraining from "./pages/templates/CustomerServiceSkil
 import MockPayment from "./pages/MockPayment"
 import { UserProvider } from "./contexts/UserContext"
 import { Header } from "./components/Header"
-import GeneratedDocument from "./pages/GeneratedDocument"
+import GeneratedDocument from "./pages/GeneratedDocument.tsx"
 import PerformanceManagement from "./pages/templates/PerformanceReview"
 import DocumentPreview from "./pages/document-preview"
+import CustomTemplate from "./pages/templates/CustomTemplate"
+import HelpPage from "./pages/HelpPage"
 export default function App() {
-  // 这里的用户信息可能来自登录过程或其他来源
-  // const userInfo = {
-  //   id: 'user123',
-  //   name: 'John Doe',
-  //   email: 'john@example.com',
-  //   avatar: 'https://github.com/shadcn.png'
-  // };
-
   return (
     <UserProvider>
       <BrowserRouter>
@@ -48,21 +42,23 @@ export default function App() {
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/mock-payment" element={<MockPayment />} />
               <Route path="/document-preview" element={<DocumentPreview />} />
+
               {/* 模板页面路由 */}
               <Route path="/templates/management" element={<Management />} />
               <Route path="/templates/new-employee" element={<NewEmployee />} />
               <Route path="/templates/sales-training" element={<SalesTraining />} />
               <Route path="/templates/career-planning" element={<CareerPlanning />} />
               <Route path="/templates/quarterly-sales" element={<QuarterlySalesStrategyTraining />} />
-              <Route path="/templates/performance-management" element={<PerformanceManagement />} />
               <Route path="/templates/customer-service" element={<CustomerServiceSkillsTraining />} />
-
+              <Route path="/templates/performance-management" element={<PerformanceManagement />} />
+              <Route path="/templates/custom" element={<CustomTemplate />} />
+              {/* 生成的文档路由 */}
               <Route path="/generated-document" element={<GeneratedDocument />} />
-
+              <Route path="/help" element={<HelpPage />} />
             </Routes>
           </main>
         </div>
       </BrowserRouter>
     </UserProvider>
-  )
+  );
 }

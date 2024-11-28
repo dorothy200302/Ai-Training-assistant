@@ -32,7 +32,6 @@ const DEFAULT_ACCEPTED_TYPES = [
 const DocumentUpload: React.FC<DocumentUploadProps> = ({
   onUpload,
   endpoint,
-  isUploading,
   setIsUploading,
   onConfirm,
   onCancel,

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileUp, Loader2 } from 'lucide-react';
 import DocumentUpload from '@/components/DocumentUpload';
 import { toast } from '@/hooks/use-toast';
+import { API_BASE_URL } from '../../config/constants';
 
 interface FileUploadComponentProps {
   onUploadSuccess?: (content: string) => void;
@@ -12,7 +13,8 @@ interface FileUploadComponentProps {
 export default function FileUploadComponent({ onUploadSuccess }: FileUploadComponentProps) {
   const [showUpload, setShowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
+  const BASE_URL = API_BASE_URL
 
   const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
@@ -33,7 +35,7 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
         formData.append('description', description);
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/storage/upload/`, {
+      const response = await fetch(`${BASE_URL}/api/storage/upload/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
