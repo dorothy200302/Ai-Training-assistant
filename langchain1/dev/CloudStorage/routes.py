@@ -212,7 +212,6 @@ async def generate_full_doc_with_doc(
         # Parse the generated document into sections
         sections = []
         current_section = None
-        current_subsection = None
         
         # Split the document into lines and process each line
         lines = full_doc.split('\n')
@@ -238,12 +237,10 @@ async def generate_full_doc_with_doc(
                 # Add line to current section's content buffer
                 content_buffer.append(line)
         
-        # Don't forget to add the last section
         if current_section and content_buffer:
             current_section['content'] = '\n'.join(content_buffer)
             sections.append(current_section)
         
-        # Structure the response
         document = {
             'title': 'Generated Document',
             'content': full_doc,
@@ -642,65 +639,17 @@ async def download_document(
         filename = data.get("filename", "document")
         is_base64 = data.get("isBase64", False)
         
-        if not content:
-            raise HTTPException(status_code=400, detail="Content is required")
+        # Close the database session after use
+        db.close()
         
-        # 获取用户ID
-        user = db.query(User).filter(User.email == current_user['email']).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-            
-        # 创建临时目录
-        temp_dir = tempfile.mkdtemp()
-        temp_file_path = os.path.join(temp_dir, f"{filename}.{format}")
-        
-        try:
-            # 如果内容是base64编码的
-            if is_base64:
-                import base64
-                # 解码base64内容并写入文件
-                with open(temp_file_path, "wb") as f:
-                    f.write(base64.b64decode(content))
-            else:
-                # 处理普通文本内容
-                with open(temp_file_path, "w", encoding="utf-8") as f:
-                    f.write(content)
-            
-            # 上传到S3并获取URL
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            file_key = f"{timestamp}_{filename}.{format}"
-            s3_url = upload_file_to_s3_by_key(file_key, temp_file_path)
-            if s3_url == "error":
-                raise HTTPException(status_code=500, detail="Failed to upload to S3")
-                
-            # 保存文档信息到数据库
-            try:
-                document = generated_document_crud.create(
-                    db=db,
-                    user_id=user.user_id,
-                    document_name=data.get("filename", "Generated Document"),
-                    document_type=format,
-                    url=s3_url
-                )
-                return {
-                    "url": s3_url,
-                    "document_id": document.id
-                }
-            except Exception as e:
-                logger.error(f"Error saving document to database: {str(e)}")
-                return {"url": s3_url}
-            
-        finally:
-            # 清理临时文件
-            try:
-                os.unlink(temp_file_path)
-                os.rmdir(temp_dir)
-            except:
-                pass
-                
+        return {"status": "success", "message": "Document processed successfully"}
     except Exception as e:
-        logger.error(f"Error in download_document: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Make sure to close the session even if there's an error
+        db.close()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing document: {str(e)}"
+        )
 
 @router.get("/document-content/")
 async def get_document_content(

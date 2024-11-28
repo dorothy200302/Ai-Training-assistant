@@ -90,7 +90,7 @@ const OutlineGenerator: React.FC = () => {
     { key: 'content_needs', question: '对培训内容有什么具体要求？' },
     { key: 'format_style', question: '期望的培训格式和风格是怎样的？' },
     { key: 'audience_info', question: '培训对象是哪些人员？' },
-    { key: 'file_or_not', question: '您想要上传文件并据此生成文档还是使用模板？' },
+    { key: 'file_or_not', question: '您想要上传文件并据此生成文档（1）还是使用模板（2）？' },
    
   ];
   const base_url = API_BASE_URL;
@@ -200,7 +200,8 @@ const OutlineGenerator: React.FC = () => {
     // 检查是否是最后个问题
     if (currentStep === questions.length - 1) {
       console.log('Last question answered, mode:', selectedMode); // 调试日志
-      
+      if (answer === '1') {
+
       if (selectedMode === 1) {
         console.log('Showing upload component'); // 调试日志
         setShowUpload(true);
@@ -212,7 +213,8 @@ const OutlineGenerator: React.FC = () => {
             setShowChat(false);
           }
         }, 100);
-      } else if (selectedMode === 2 || selectedMode === 3) {
+      }} else if  (selectedMode === 2 || selectedMode === 3
+        || answer === '2') {
         navigate('/templates', { 
           state: { 
             backgroundInfo,

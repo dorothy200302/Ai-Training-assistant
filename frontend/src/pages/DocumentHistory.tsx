@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/constants';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 interface GeneratedDocument {

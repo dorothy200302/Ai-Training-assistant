@@ -91,9 +91,10 @@ class TrainingDocGenerator:
         print(f"初始化 TrainingDocGenerator，文件路径: {file_paths}")
         self.model_name = model_name
         self.background_informations = background_informations
-       # 确保 file_paths 是列表
+        # 确保 file_paths 是列表
         if isinstance(file_paths, str):
             file_paths = [file_paths]
+        self.file_paths = file_paths  # Store file_paths as instance variable
         # documents = self.merge_documents(file_paths)
         # # 这里是LLM的选择和配置
         # self.llm = ChatOpenAI(
