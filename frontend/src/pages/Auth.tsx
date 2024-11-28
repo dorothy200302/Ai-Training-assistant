@@ -25,6 +25,7 @@ export default function Auth(): JSX.Element {
     remember: false,
     verificationCode: ''
   });
+  const api=API_BASE_URL
   const { setUser } = useUser();
   const [countdown, setCountdown] = useState<number>(0);
 
@@ -60,7 +61,7 @@ export default function Auth(): JSX.Element {
 
     setIsLoading(true);
     try {
-      const response = await fetch('${API_BASE_URL}/api/user/email/verify-code', {
+      const response = await fetch(`${api}/api/user/email/verify-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ export default function Auth(): JSX.Element {
     setIsLoading(true);
     try {
       if (isLogin) {
-        const endpoint = `${API_BASE_URL}/api/user/login`;
+        const endpoint = `${api}/api/user/login`;
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
@@ -180,7 +181,7 @@ export default function Auth(): JSX.Element {
           return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/user/register`, {
+        const response = await fetch(`${api}/api/user/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
