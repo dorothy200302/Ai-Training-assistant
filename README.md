@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # trainingdoc
 
 
@@ -91,3 +92,7 @@ For open source projects, say how it is licensed.
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+=======
+# Ai-Training-assistant
+使用大模型根据企业频繁变动的业务文件/知识库制作对应岗位培训文档以较低部分流动性较强岗位的培训成本并规范化培训过程。
+>>>>>>> 66596ab8c17cce33215a32eabaa41c320b3ac37e
