@@ -11,6 +11,7 @@ from utils.redis import RedisClient
 import random
 import string
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 # 配置日志
 logging.basicConfig(
@@ -55,19 +56,32 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
-# 添加请求模型
-class EmailVerifyRequest(BaseModel):
+# 验证码请求模型
+class VerifyCodeRequest(BaseModel):
     email: str
+    type: str = 'register'  # 默认为注册类型
+
+# 注册请求模型
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+    username: str
+    verification_code: str
+
+# 登录请求模型
+class LoginRequest(BaseModel):
+    email: str
+    password: str
 
 security = Security()
 
 @router.post("/login")
-async def login(user_data: UserLogin, db: Session = Depends(get_db)):
+async def login(request: LoginRequest, db: Session = Depends(get_db)):
     try:
         logger.info("=== 登录请求开始 ===")
-        logger.info(f"尝试登录邮箱: {user_data.email}")
+        logger.info(f"尝试登录邮箱: {request.email}")
         
-        user = user_crud.authenticate_user(db, user_data.email, user_data.password)
+        user = user_crud.authenticate_user(db, request.email, request.password)
         if not user:
             logger.info("登录失败：邮箱或密码错误")
             raise HTTPException(
@@ -93,36 +107,36 @@ async def login(user_data: UserLogin, db: Session = Depends(get_db)):
             detail=str(e)
         )
 
-@router.post("/register", response_model=UserResponse)
-async def register(user_data: UserRegisterRequest, db: Session = Depends(get_db)):
+@router.post("/register")
+async def register_user(request: RegisterRequest):
     try:
         # 验证码检查
-        redis_key = f"verify_code:{user_data.email}"
+        redis_key = f"verify_code:{request.email}"
         stored_code = redis_client.get(redis_key)
         
-        logger.info(f"Registration attempt - Email: {user_data.email}, Username: {user_data.username}")
-        logger.info(f"Verification code from request: {user_data.verification_code}")
+        logger.info(f"Registration attempt - Email: {request.email}, Username: {request.username}")
+        logger.info(f"Verification code from request: {request.verification_code}")
         logger.info(f"Stored code from Redis: {stored_code}")
         
         if not stored_code:
-            logger.warning(f"No verification code found for email: {user_data.email}")
+            logger.warning(f"No verification code found for email: {request.email}")
             raise HTTPException(
                 status_code=400,
                 detail="验证码已过期或不存在"
             )
         
-        if stored_code != user_data.verification_code:
-            logger.warning(f"Invalid verification code for email: {user_data.email}")
+        if stored_code != request.verification_code:
+            logger.warning(f"Invalid verification code for email: {request.email}")
             raise HTTPException(
                 status_code=400,
                 detail="验证码错误"
             )
         
         # 检查邮箱是否已存在
-        logger.info(f"Checking if email exists: {user_data.email}")
-        existing_user = user_crud.get_by_email(db, user_data.email)
+        logger.info(f"Checking if email exists: {request.email}")
+        existing_user = user_crud.get_by_email(db, request.email)
         if existing_user:
-            logger.warning(f"Email already exists: {user_data.email}")
+            logger.warning(f"Email already exists: {request.email}")
             raise HTTPException(
                 status_code=400,
                 detail="该邮箱已被注册"
@@ -133,9 +147,9 @@ async def register(user_data: UserRegisterRequest, db: Session = Depends(get_db)
             logger.info("Attempting to create user in database")
             # 创建 UserCreate 对象
             user_create = UserCreate(
-                email=user_data.email,
-                password=user_data.password,
-                username=user_data.username
+                email=request.email,
+                password=request.password,
+                username=request.username
             )
             logger.info(f"User create data prepared: {user_create}")
             
@@ -175,21 +189,13 @@ async def register(user_data: UserRegisterRequest, db: Session = Depends(get_db)
         )
 
 @router.post("/email/verify-code")
-async def send_verify_code(request: EmailVerifyRequest, db: Session = Depends(get_db)):
+async def send_verification_code(request: VerifyCodeRequest):
     try:
-        code = ''.join(random.choices(string.digits, k=6))
-        logger.info("code:", code)
-        
-        email_service.send_verification_code(request.email, code)
-        
-        redis_key = f"verify_code:{request.email}"
-        if not redis_client.set(redis_key, code, ex=300):  
-            raise Exception("Failed to store verification code in Redis")
-        
+        # 发送验证码逻辑
+        code = await security.send_verification_code(request.email)
         return {"message": "Verification code sent successfully"}
     except Exception as e:
-        logger.error(f"Error sending verification code: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 def generate_verification_code(length: int = 6) -> str:
     return ''.join(random.choices(string.digits, k=length))

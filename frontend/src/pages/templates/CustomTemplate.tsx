@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
-
 interface Tag {
   id: string;
   text: string;
@@ -76,10 +75,9 @@ export default function CustomTemplate() {
     }));
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality
-    window.alert('保存成功！');
-  };
+ 
+  const handleSave = async (_e: React.MouseEvent<HTMLButtonElement>) => {
+  }
 
   const handleTitleClick = () => {
     setIsEditingTitle(true);

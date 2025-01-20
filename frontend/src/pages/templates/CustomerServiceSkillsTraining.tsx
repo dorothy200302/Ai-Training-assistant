@@ -4,7 +4,7 @@ import DocumentUpload from '@/components/DocumentUpload'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {  Loader2, CheckCircle2, FileDown } from 'lucide-react'
-
+import { createApiRequest } from '@/utils/errorHandler'
 import { EditableCard } from '@/components/EditableCard'
 import { EditableText } from '@/components/EditableText'
 import { Input } from "@/components/ui/input"
@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import { Document, Paragraph, TextRun, HeadingLevel, Packer } from 'docx';
 import { API_BASE_URL } from '@/config/constants'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 interface Module {
   id: string
@@ -42,7 +43,6 @@ interface ProgressSection {
 
 
 const CustomerServiceSkillsTraining: React.FC = () => {
-  const API_URL = API_BASE_URL
 
 
   const [title, setTitle] = useState("客户服务技巧培训")
@@ -207,12 +207,9 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         reader.readAsDataURL(fileBlob);
       });
 
-      const response = await fetch(`${API_URL}/api/storage/download_document`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+
         body: JSON.stringify({
           content: content,
           format: fileType,
@@ -276,11 +273,9 @@ const CustomerServiceSkillsTraining: React.FC = () => {
         token: token ? 'present' : 'missing'
       });
 
-      const response = await fetch(`${API_URL}/api/storage/generate_full_doc_with_template/`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        
         body: formData
       });
 
@@ -426,7 +421,13 @@ const CustomerServiceSkillsTraining: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+    <div className="container mx-auto p-4 relative min-h-screen">
+      {isGenerating && (
+        <LoadingOverlay 
+          isLoading={isGenerating}
+          message="正在生成客户服务技能培训文档..."
+        />
+      )}
       <div className="w-screen bg-white shadow-lg">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-6 text-white">
           <EditableText
@@ -574,6 +575,7 @@ const CustomerServiceSkillsTraining: React.FC = () => {
           {/* Floating upload button */}
           <button
             onClick={() => setShowUpload(true)}
+            disabled={isGenerating}
             className="fixed bottom-8 right-8 p-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 flex items-center gap-2 z-50"
           >
             <FileUpIcon className="h-5 w-5" />

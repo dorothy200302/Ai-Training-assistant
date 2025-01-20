@@ -16,6 +16,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from fastapi import HTTPException
 import logging
 
+
 # LangChain imports
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import PromptTemplate
@@ -44,6 +45,7 @@ from dev.prompts.outlinePrompt import OUTLINE_PROMPT
 from dev.prompts.reviewPrompt import *
 from dev.models import *
 from dev.Generate.search import search_query_ideas
+from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
 
 class Citation(BaseModel):
     """引用来源的结构定义"""
@@ -104,36 +106,17 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
         )
         
         # Initialize embeddings with batching
-        self.embeddings = OpenAIEmbeddings(
-            base_url='https://gateway.agione.ai/openai/api/v2',  # 使用base_url而不是api_base
-            api_key='as-D73mmid1JVABYjxT4_ncuw',
-            request_timeout=30,  # 使用request_timeout而不是timeout
-            max_retries=3,
-            chunk_size=50
+        self.llm = ChatOpenAI(
+            model_name="deepseek-chat",
+            openai_api_key="sk-3767598f60e9415e852ff4c43ccc0852",
+            openai_api_base="https://api.deepseek.com/v1",
+            temperature=0.7,
+            max_tokens=2000
         )
         
-        # Configure LLM with timeout and retries
-        if model_name=="grok-beta":
-            self.llm=ChatOpenAI(
-                model_name="grok-beta",
-                base_url='https://api.x.ai/v1',
-                api_key='xai-hToMyvvyeZieK687T3MFsqY2s8VibWRgvg1727PKWILihXQ4yqB3VPuJKC5klm2oMk1sjl26xCR886P2',
-                temperature=0.7,
-                max_tokens=4000,
-                request_timeout=60,  # 60 second timeout
-                max_retries=3
-            )
-        elif model_name=="gpt-4o-mini":
-            self.llm=ChatOpenAI(
-                model_name="gpt-4o-mini",
-                base_url='https://gateway.agione.ai/openai/api/v2',
-                api_key='as-D73mmid1JVABYjxT4_ncuw',
-                temperature=0.6,
-                max_tokens=2000,
-                request_timeout=60,  # 60 second timeout
-                max_retries=3
-            )
-            
+        self.embeddings = SiliconFlowEmbeddings(
+            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+        )
         # Initialize document loader based on file type
         try:
             documents = []

@@ -37,12 +37,19 @@ http_client = httpx.Client(
 )
 
 # 更新OpenAI配置
-embed_model = OpenAIEmbedding(
-    model="text-embedding-3-small",
-    api_key="as-D73mmid1JVABYjxT4_ncuw",
-    base_url="https://gateway.agione.ai/openai/api/v2",
-    http_client=http_client,
-    max_retries=5
+client = OpenAI(
+    api_key="sk-3767598f60e9415e852ff4c43ccc0852",
+    base_url="https://api.deepseek.com",
+    http_client=httpx.Client()
+)
+
+# 更新模型调用
+completion = client.chat.completions.create(
+    model="deepseek-chat",
+    messages=[...],
+    temperature=0.7,
+    max_tokens=2000,
+    stream=False
 )
 
 llm = OpenAI(

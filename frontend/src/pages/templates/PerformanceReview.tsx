@@ -12,18 +12,15 @@ import { EditableText } from '@/components/EditableText'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import { toast } from "@/hooks/use-toast"
 import { API_BASE_URL } from "../../config/constants"
+import { createApiRequest } from "@/utils/errorHandler";
 
 const saveToBackend = async (fileBlob: Blob, fileType: 'docx', filename: string) => {
   try {
     const token = localStorage.getItem('token');
     
     if (!token) {
-      toast({
-        title: "认证错误",
-        description: "请先登录",
-        variant: "destructive",
-      });
-      throw new Error('未登录');
+      window.alert("未登录，请先登录");
+      return;
     }
 
     const content = await new Promise<string>((resolve) => {
@@ -36,7 +33,7 @@ const saveToBackend = async (fileBlob: Blob, fileType: 'docx', filename: string)
       reader.readAsDataURL(fileBlob);
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+    const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

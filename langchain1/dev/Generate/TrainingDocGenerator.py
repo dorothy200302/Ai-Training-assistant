@@ -1,137 +1,161 @@
 import sys
 import os
-
+from dev.core.logger import setup_logger
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.prompts import PromptTemplate
-from langchain.chains import RetrievalQA, LLMChain
-from langchain.vectorstores import FAISS
+from langchain.chains import RetrievalQA
+from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import Docx2txtLoader
-from langchain.document_loaders import PyPDFLoader, UnstructuredHTMLLoader, TextLoader
+from langchain_community.document_loaders import PyPDFLoader, UnstructuredHTMLLoader, TextLoader, BSHTMLLoader
 from sentence_transformers import SentenceTransformer
 import pdfplumber
 from langchain.schema import Document
 import traceback
 import datetime
-from langchain.document_loaders import BSHTMLLoader
 from dev.prompts.outlinePrompt import OUTLINE_PROMPT
-from langchain_community.retrievers import WikipediaRetriever
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.document_loaders import (
+    PyPDFLoader, 
+    TextLoader,
+    Docx2txtLoader,
+    UnstructuredPowerPointLoader
+)
+import logging
+from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
 
-
+# 设置日志记录器
+logger = setup_logger("training_generator")
 
 class TrainingDocGenerator:
-     def generate_prompt(self):
+    def __init__(self, file_paths, model_name, background_informations):
+        # 配置日志
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger("training_generator")
+        
+        self.file_paths = file_paths
+        self.background_informations = background_informations
+        
+        # 初始化嵌入模型
+        self.embeddings = SiliconFlowEmbeddings(
+            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+        )
+        
         try:
-            # 确保 background_informations 是字典类型
-            if not isinstance(self.background_informations, dict):
-                raise ValueError("background_informations must be a dictionary")
-
-            prompt = (
-                f"你是一个在{self.background_informations.get('industry_info', '')}行业经验丰富,信息完备的培训专家，"
-                f"特长：制定全面，专业，贴合度高的培训文档。\n"
-                f"现请针对{self.background_informations.get('audience_info', '')}的职工培训文档，\n"
-                f"背景信息为：公司名称：{self.background_informations.get('company_name', '')}\n"
-                f"公司文化和价值观：{self.background_informations.get('company_culture', '')}\n"
-                f"行业位置：{self.background_informations.get('company_industry', '')}\n"
-                f"竞争优势：{self.background_informations.get('company_competition', '')}\n"
-                f"用户角色：{self.background_informations.get('user_role', '')}\n"
-                f"行业背景：{self.background_informations.get('industry_info', '')}\n"
-                f"职位名称：{self.background_informations.get('project_title', '')}\n"
-                f"职位职责：{self.background_informations.get('project_dutys', '')}\n"
-                f"培训主要目标：{self.background_informations.get('project_goals', '')}\n"
-                f"需要覆盖的主题：{self.background_informations.get('project_theme', '')}\n"
-                f"主要目的：{self.background_informations.get('project_aim', '')}\n"
-                f"内容需求：{self.background_informations.get('content_needs', '')}\n"
-                f"格式与风格：{self.background_informations.get('format_style', '')}"
+            # 加载所有文档
+            documents = []
+            for file_path in file_paths:
+                try:
+                    self.logger.info(f"Processing file: {file_path}")
+                    
+                    # 检查文件是否存在且不为空
+                    if not os.path.exists(file_path):
+                        self.logger.error(f"File not found: {file_path}")
+                        continue
+                        
+                    if os.path.getsize(file_path) == 0:
+                        self.logger.error(f"File is empty: {file_path}")
+                        continue
+                    
+                    # 根据文件类型选择加载器
+                    if file_path.endswith('.pdf'):
+                        loader = PyPDFLoader(file_path)
+                    elif file_path.endswith('.docx'):
+                        # 使用更可靠的 docx 加载器
+                        from langchain_community.document_loaders import UnstructuredWordDocumentLoader
+                        loader = UnstructuredWordDocumentLoader(file_path, mode="elements")
+                    elif file_path.endswith('.txt'):
+                        loader = TextLoader(file_path, encoding='utf-8')
+                    else:
+                        self.logger.warning(f"Unsupported file type: {file_path}")
+                        continue
+                    
+                    # 加载文档
+                    docs = loader.load()
+                    self.logger.info(f"Loaded {len(docs)} documents from {file_path}")
+                    
+                    # 检查和清理文档内容
+                    for doc in docs:
+                        content = doc.page_content.strip() if doc.page_content else ""
+                        if content:  # 只添加非空文档
+                            doc.page_content = content  # 更新清理后的内容
+                            documents.append(doc)
+                            self.logger.info(f"Added document with {len(content)} characters")
+                        else:
+                            self.logger.warning(f"Skipped empty document from {file_path}")
+                
+                except Exception as e:
+                    self.logger.error(f"Error loading file {file_path}: {str(e)}")
+                    continue
+            
+            if not documents:
+                raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+            
+            # 分割文档
+            text_splitter = CharacterTextSplitter(
+                chunk_size=500,
+                chunk_overlap=50,
+                length_function=len,
+                separator="\n"
             )
-            return prompt
+            
+            # 分割每个文档并检查结果
+            split_docs = []
+            for doc in documents:
+                try:
+                    # 先分割文本
+                    splits = text_splitter.split_text(doc.page_content)
+                    self.logger.info(f"Split document into {len(splits)} chunks")
+                    
+                    # 为每个分割创建新的 Document 对象
+                    for split in splits:
+                        if split and len(split.strip()) > 0:
+                            split_docs.append(Document(
+                                page_content=split,
+                                metadata=doc.metadata
+                            ))
+                            self.logger.info(f"Added chunk with {len(split)} characters")
+                
+                except Exception as e:
+                    self.logger.error(f"Error splitting document: {str(e)}")
+                    continue
+            
+            if not split_docs:
+                raise ValueError("No valid document chunks were created after splitting. Please check the document content.")
+            
+            self.logger.info(f"Created {len(split_docs)} total chunks")
+            
+            # 创建向量存储
+            try:
+                self.vector_store = FAISS.from_documents(split_docs, self.embeddings)
+                self.logger.info("Successfully created vector store")
+            except Exception as e:
+                self.logger.error(f"Error creating vector store: {str(e)}")
+                raise
+                
         except Exception as e:
-            print(f"生成提示时出错: {str(e)}")
-            print(f"background_informations: {self.background_informations}")
+            self.logger.error(f"Error during initialization: {str(e)}")
+            self.logger.error("Traceback:", exc_info=True)
             raise
 
+    def generate_prompt(self):
+        """生成提示词"""
+        prompt = f"""
+        背景信息：
+        - 目标受众：{self.background_informations.get('audience_info', '')}
+        - 公司名称：{self.background_informations.get('company_name', '')}
+        - 公司文化：{self.background_informations.get('company_culture', '')}
+        - 行业：{self.background_informations.get('company_industry', '')}
+        - 目标岗位：{self.background_informations.get('user_role', '')}
+        - 培训目标：{self.background_informations.get('project_goals', '')}
+        - 内容需求：{self.background_informations.get('content_needs', '')}
+        """
+        return prompt
 
-
-
-
-     def merge_documents(self, file_paths):
-        """合并多个文档"""
-        all_documents = []
-        print(f"开始处理文件列表: {file_paths}")
-        
-        for file_path in file_paths:
-            try:
-                print(f"正在处理文件: {file_path}")
-                if file_path.endswith('.pdf'):
-                    loader = PyPDFLoader(file_path)
-                    documents = loader.load()
-                    all_documents.extend(documents)
-                elif file_path.endswith('.docx'):
-                    loader = Docx2txtLoader(file_path)
-                    documents = loader.load()
-                    all_documents.extend(documents)
-                elif file_path.endswith('.html'):
-                    loader = BSHTMLLoader(file_path)
-                    documents = loader.load()
-                    all_documents.extend(documents)
-                else:
-                    print(f"不支持的文件类型: {file_path}")
-                    
-            except Exception as e:
-                print(f"处理文件 {file_path} 时出错: {str(e)}")
-                traceback.print_exc()
-                continue
-        
-        print(f"成功处理的文档数量: {len(all_documents)}")
-        return all_documents
-     def __init__(self, file_paths, model_name, background_informations):
-        print(f"初始化 TrainingDocGenerator，文件路径: {file_paths}")
-        self.model_name = model_name
-        self.background_informations = background_informations
-        # 确保 file_paths 是列表
-        if isinstance(file_paths, str):
-            file_paths = [file_paths]
-        self.file_paths = file_paths  # Store file_paths as instance variable
-        # documents = self.merge_documents(file_paths)
-        # # 这里是LLM的选择和配置
-        # self.llm = ChatOpenAI(
-        #     model_name='gpt-4o-mini',
-        #     temperature=0.7,
-        #     base_url='https://gateway.agione.ai/openai/api/v2',
-        #     api_key='as-D73mmid1JVABYjxT4_ncuw',
-        #     request_timeout=120
-        # )
-        
-        
-        # # 初始化 embeddings 模型
-        # self.embeddings = OpenAIEmbeddings(
-        #     base_url='https://gateway.agione.ai/openai/api/v2',
-        #     api_key='as-D73mmid1JVABYjxT4_ncuw',
-        #     model="text-embedding-3-small",
-        #     request_timeout=60,  # 增加超时时间
-        #     max_retries=5,  # 增加重试次数
-        #     retry_min_seconds=1,  # 最小重试间隔
-        #     retry_max_seconds=60  # 最大重试间隔
-        # )
-        
-        # self.text_splitter = RecursiveCharacterTextSplitter(
-        #     chunk_size=1000,
-        #     chunk_overlap=200,
-        #     length_function=len
-        # )
-        # 创建一个WikipediaRetriever实例
-        self.retriever = WikipediaRetriever(top_k_results=6, doc_content_chars_max=2000)
-
-        # # 将文档分割并存储到向量数据库
-        # split_docs = self.text_splitter.split_documents(documents)
-        # self.vector_store = FAISS.from_documents(split_docs, self.embeddings)
-
-
-
-     def generate_training_outline(self, requirements=None):
+    def generate_training_outline(self, requirements=None):
         """使用模型生成培训大纲"""
         prompt_of_informations = self.generate_prompt()
         
@@ -181,10 +205,10 @@ class TrainingDocGenerator:
             "query": f"{self.background_informations.get('project_title')}培训课程设计"
         })
         
+        logger.info("Generated training outline")
         return outline
 
-
-     def generate_section_content(self, section_title, section_type="theory"):
+    def generate_section_content(self, section_title, section_type="theory"):
         """使用模型生成章节内容"""
         
         
@@ -223,6 +247,7 @@ class TrainingDocGenerator:
             相关文档内容：
             {context}
             """
+        logger.info(f"Generating section content for {section_title}")
         print("template",template)
         # 获取相关文档
         docs = self.vector_store.similarity_search(section_title)
@@ -246,7 +271,7 @@ class TrainingDocGenerator:
             context=context
         )
 
-     def generate_quiz(self, section_title):
+    def generate_quiz(self, section_title):
         """使用模型生成测试题"""
         quiz_prompt ="""你是一个培训专家，
             为章节 "{section_title}" 生成测试题：
@@ -279,10 +304,7 @@ class TrainingDocGenerator:
             context=context
         )
 
-        
-    
-
-     def generate_summary(self, section_title):
+    def generate_summary(self, section_title):
         """使用模型生成章节总结"""
         summary_prompt ="""
             为章节 "{section_title}" 生成总结：
@@ -316,8 +338,7 @@ class TrainingDocGenerator:
             context=context
         )
 
-
-     def _parse_outline(self, outline):
+    def _parse_outline(self, outline):
         """解析大纲文本，提取章节标题"""
         sections = []
         lines = outline.split('\n')
@@ -343,12 +364,12 @@ class TrainingDocGenerator:
         
         return sections
 
-     async def generate_full_training_doc(self, outline: str) -> str:
+    async def generate_full_training_doc(self, outline: str) -> str:
         """生成完整的培训文档"""
         try:
             # 解析大纲中的章节
             sections = self.parse_sections(outline)
-            print(f"解析到的章节: {sections}")
+            logger.info(f"Parsed sections: {sections}")
             
             # 为每个章节生成内容
             full_doc = []
@@ -361,10 +382,11 @@ class TrainingDocGenerator:
             return "\n\n".join(full_doc)
             
         except Exception as e:
-            print(f"Error generating full training doc: {str(e)}")
+            logger.error(f"Error generating full training doc: {str(e)}")
+            logger.error(traceback.format_exc())
             raise
 
-     def review_content(self, content):
+    def review_content(self, content):
         """使用模型审查内容质量"""
         review_prompt = PromptTemplate(
             template="""\
@@ -384,7 +406,7 @@ class TrainingDocGenerator:
         response = self.llm.predict(review_prompt.format(content=content))
         return response
      
-     def generate_document(self,  requirements=None):
+    def generate_document(self,  requirements=None):
         """生成完整的培训文档并进行质量审查"""
        
     
@@ -403,7 +425,8 @@ class TrainingDocGenerator:
             full_doc = self.generate_full_document()
             
         return full_doc
-     def save_full_doc(self, full_doc):
+
+    def save_full_doc(self, full_doc):
         """保存生成的培训文档"""
         # 获取当前时间戳
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -438,6 +461,3 @@ class TrainingDocGenerator:
             f.write(full_doc)
     
         return filename
-
-
- 

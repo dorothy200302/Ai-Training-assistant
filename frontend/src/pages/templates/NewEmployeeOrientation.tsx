@@ -3,13 +3,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
-import { CheckCircle2, UserPlus, Briefcase, Mail, Users, Coffee, FileUp, Loader2, FileDown } from 'lucide-react'
+import {  UserPlus, Briefcase, Mail, Users, Coffee, FileUp, Loader2, FileDown } from 'lucide-react'
 import DocumentUpload from '../DocumentUpload'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { EditableDocumentContent } from "@/components/EditableDocumentContent";
+import { EditableText } from '@/components/EditableText';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 import { API_BASE_URL } from "../../config/constants";
-import {EditableText} from '@/components/EditableText';
+import { createApiRequest } from "@/utils/errorHandler";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
+
 interface ChecklistItem {
   id: string;
   content: string;
@@ -41,58 +43,36 @@ const NewEmployeeOrientation: React.FC = () => {
     subtitle: '欢迎加入我们的团队！',
     overview: '本手册旨在帮助您快速了解公司文化、规章制度及您的工作职责。',
   });
-  const Base_URL = API_BASE_URL
   const handleUploadConfirm = async (uploadSuccess: boolean, files?: File[]) => {
     if (!uploadSuccess || !files || files.length === 0) {
       setShowUpload(false);
       return;
     }
-    
+
     try {
       setIsGenerating(true);
       const formData = new FormData();
-      const token = localStorage.getItem('token');
-      
-      files.forEach(file => {
-        formData.append('files', file);
-      });
-
       formData.append('template', 'new_employee_orientation');
       formData.append('description', JSON.stringify({
         title: editableContent.title,
         subtitle: editableContent.subtitle,
         overview: editableContent.overview,
         checklist: checklist.map(item => ({
-          id: item.id,
           content: item.content,
           checked: item.checked
         }))
       }));
 
-      console.log('Sending request to generate template...');
-      console.log('FormData contents:', {
-        files: files.map(f => f.name),
-        template: 'new_employee_orientation',
-        token: token ? 'present' : 'missing'
+      files.forEach(file => {
+        formData.append('files', file);
       });
 
-      const response = await fetch(`${Base_URL}/api/storage/generate_full_doc_with_template/`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
         body: formData
       });
 
-      console.log('Response status:', response.status);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(errorText || '文档生成失败');
-      }
-
       const data = await response.json();
-      console.log('Response data:', data);
       setDocumentContent(data.document || data.content || '');
       
       toast({
@@ -101,11 +81,6 @@ const NewEmployeeOrientation: React.FC = () => {
       });
     } catch (error) {
       console.error('Generation error:', error);
-      toast({
-        title: "生成失败",
-        description: error instanceof Error ? error.message : "文档生成失败，请重试",
-        variant: "destructive",
-      });
     } finally {
       setIsGenerating(false);
       setShowUpload(false);
@@ -124,25 +99,10 @@ const NewEmployeeOrientation: React.FC = () => {
     )
   }
 
-  const handleConfirm = (): void => {
-    toast({
-      title: "确认成功",
-      description: "您已确认阅读完成",
-    });
-  }
 
   const saveToBackend = async (fileBlob: Blob, fileType: 'pdf' | 'docx') => {
     try {
-      const token = localStorage.getItem('token');
       
-      if (!token) {
-        toast({
-          title: "认证错误",
-          description: "请先登录",
-          variant: "destructive",
-        });
-        throw new Error('未登录');
-      }
 
       // 将文件内容转换为base64字符串
       const content = await new Promise<string>((resolve) => {
@@ -157,12 +117,9 @@ const NewEmployeeOrientation: React.FC = () => {
       });
 
       // 使用现有的download_document接口
-      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+        
         body: JSON.stringify({
           content: content,
           format: fileType,
@@ -268,7 +225,13 @@ const NewEmployeeOrientation: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-amber-50 to-orange-100">
+    <div className="container mx-auto p-4 relative min-h-screen">
+      {isGenerating && (
+        <LoadingOverlay 
+          isLoading={isGenerating}
+          message="正在生成新员工入职培训文档..."
+        />
+      )}
       <div className="w-screen bg-white shadow-lg">
         <h1 className="text-3xl font-bold mb-2">
           <EditableText 
@@ -353,11 +316,11 @@ const NewEmployeeOrientation: React.FC = () => {
                   下载Word
                 </Button>
               </div>
-              <div className="prose prose-amber max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {documentContent}
-                </ReactMarkdown>
-              </div>
+              <EditableDocumentContent
+                content={documentContent}
+                onContentChange={setDocumentContent}
+                documentTitle="新员工入职培训手册"
+              />
             </div>
           )}
 
@@ -371,19 +334,6 @@ const NewEmployeeOrientation: React.FC = () => {
                   isLoading={isGenerating}
                 />
               </div>
-            </div>
-          )}
-
-          {/* Confirm Button */}
-          {documentContent && (
-            <div className="flex justify-center mt-8">
-              <Button
-                onClick={handleConfirm}
-                className="bg-green-500 hover:bg-green-600 text-white"
-              >
-                <CheckCircle2 className="mr-2 h-4 w-4" />
-                确认已阅读
-              </Button>
             </div>
           )}
         </div>

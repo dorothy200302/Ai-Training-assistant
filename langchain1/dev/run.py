@@ -9,6 +9,12 @@ sys.path.insert(0, project_root)
 # Import the FastAPI app
 from main import app
 import uvicorn
+from Chatbot.test_embeddings import SiliconFlowEmbeddings
+
+# 初始化嵌入模型
+embeddings = SiliconFlowEmbeddings(
+    api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+)
 
 if __name__ == "__main__":
     uvicorn.run(

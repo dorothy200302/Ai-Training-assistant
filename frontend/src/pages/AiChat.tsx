@@ -13,7 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { API_BASE_URL } from '../config/constants';
-
+import { createApiRequest } from "@/utils/errorHandler";
 import { toast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
@@ -22,7 +22,6 @@ interface Message {
   role: "user" | "assistant"
   content: string
 }
-
 
 interface UploadedFile {
   id: string;
@@ -62,7 +61,6 @@ const models = [
   }
 ]
 
-
 export default function Component() {
   const [messages, setMessages] = React.useState<Message[]>([])
   const [input, setInput] = React.useState("")
@@ -75,6 +73,7 @@ export default function Component() {
   const [selectedFiles, setSelectedFiles] = React.useState<FileList | null>(null)
   const [showUpload, setShowUpload] = React.useState(false)
   const [hasCompletedConversation] = React.useState(false)
+  const [uploadLoading, setUploadLoading] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,19 +92,19 @@ export default function Component() {
       return;
     }
 
+    setUploadLoading(true)
     setUploadProgress(0)
-    const formData = new FormData()
     
-    for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append('files', selectedFiles[i])
-    }
-
     try {
-      const response = await fetch(`${API_BASE_URL}/api/chatbot/upload`, {
+      const formData = new FormData()
+      
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append('files', selectedFiles[i])
+      }
+
+      const response = await createApiRequest(`${API_BASE_URL}/api/chatbot/upload`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+       
         body: formData
       })
 
@@ -134,6 +133,7 @@ export default function Component() {
         variant: "destructive",
       })
     } finally {
+      setUploadLoading(false)
       setUploadProgress(100)
       setShowUploadDialog(false)
       setSelectedFiles(null)
@@ -151,9 +151,8 @@ export default function Component() {
     setLoading(true);
 
     try {
-      const { response } = await fetch(`${API_BASE_URL}/api/chatbot/chat`, {
+      const { response } = await createApiRequest(`${API_BASE_URL}/api/chatbot/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ query: input, model_name: selectedModel, document_urls: uploadedUrls }),
       }).then(res => res.ok ? res.json() : Promise.reject(`Error: ${res.status}`));
       
@@ -174,11 +173,8 @@ export default function Component() {
         formData.append('files', file);
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/chatbot/upload`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/chatbot/upload`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
         body: formData,
       });
 
@@ -348,8 +344,21 @@ export default function Component() {
                             {uploadProgress > 0 && (
                               <Progress value={uploadProgress} className="bg-amber-100" />
                             )}
-                            <Button onClick={handleFileUpload} className="mt-4 bg-amber-500 text-white hover:bg-amber-600">
-                              确认上传
+                            <Button 
+                              onClick={handleFileUpload} 
+                              className="mt-4 bg-amber-500 text-white hover:bg-amber-600"
+                              disabled={uploadLoading}
+                            >
+                              {uploadLoading ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  上传中...
+                                </>
+                              ) : (
+                                <>
+                                  确认上传
+                                </>
+                              )}
                             </Button>
                           </div>
                         </DialogContent>

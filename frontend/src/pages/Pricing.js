@@ -63,11 +63,23 @@ export default function Pricing() {
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [selectedTier, setSelectedTier] = useState(null);
     const handleSubscription = async (tier) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.alert('请先登录');
+            window.location.href = '/auth';
+            return;
+        }
         if (tier.planId === 'enterprise') {
             navigate('/contact');
             return;
         }
         try {
+            const token = localStorage.getItem('token');
+        if (!token) {
+            window.alert('请先登录');
+            window.location.href = '/auth';
+            return;
+        }
             setLoading(tier.planId);
             setSelectedTier(tier);
             // 生成模拟支付URL

@@ -20,6 +20,8 @@ sys.path.append(os.path.abspath(os.path.join(os.getcwd(), '..')))  # Add the par
 
 from helper_functions import *
 
+from openai import OpenAI
+
 
 class QuestionGeneration(Enum):
     """
@@ -59,52 +61,44 @@ def clean_and_filter_questions(questions: List[str]) -> List[str]:
 
 
 def generate_questions(text: str) -> List[str]:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key='as-D73mmid1JVABYjxT4_ncuw', base_url='https://gateway.agione.ai/openai/api/v2')
-    prompt = PromptTemplate(
-        input_variables=["context", "num_questions"],
-        template="""Using the context data: {context}基于以下培训需求和相关文档，生成一个详细的培训大纲：
-请生成包含以下部分的大纲：
-1. 培训概述
-2. 学习目标
-3. 主要章节（包含每章节的核心内容和时长）
-4. 实践环节
-5. 考核方式
-
-要求：
-- 结构清晰，层次分明
-- 符合目标受众水平
-- 每个章节标注预计时长
-- 包含具体的学习目标\n\n."""
+    client = OpenAI(
+        api_key="sk-3767598f60e9415e852ff4c43ccc0852",
+        base_url="https://api.deepseek.com",
+        http_client=httpx.Client()
     )
-    chain = prompt | llm.with_structured_output(QuestionList)
-    input_data = {"context": text, "num_questions": QUESTIONS_PER_DOCUMENT}
-    result = chain.invoke(input_data)
-    questions = result.question_list
-    return list(set(clean_and_filter_questions(questions)))
-
-
-def generate_answer(content: str, question: str) -> str:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key='as-D73mmid1JVABYjxT4_ncuw', base_url='https://gateway.agione.ai/openai/api/v2')
-
-    prompt = PromptTemplate(
-        input_variables=["context", "question"],
-        template="""Using the context data: {context}\n\nProvide a detailed answer to the question: 基于以下培训需求和相关文档，生成一个详细的培训大纲：
-请生成包含以下部分的大纲：
-1. 培训概述
-2. 学习目标
-3. 主要章节（包含每章节的核心内容和时长）
-4. 实践环节
-5. 考核方式
-
-要求：
-- 结构清晰，层次分明
-- 符合目标受众水平
-- 每个章节标注预计时长
-- 包含具体的学习目标"""
+    
+    completion = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[...],
+        temperature=0.7,
+        max_tokens=2000,
+        stream=False
     )
-    chain = prompt | llm
-    input_data = {"context": content, "question": question}
-    return chain.invoke(input_data)
+
+
+def generate_answer(context: str, query: str) -> str:
+    client = OpenAI(
+        api_key="sk-3767598f60e9415e852ff4c43ccc0852",  # DeepSeek API Key
+        base_url="https://api.deepseek.com",  # DeepSeek API endpoint
+        timeout=30,
+        max_retries=3
+    )
+    
+    try:
+        completion = client.chat.completions.create(
+            model="deepseek-chat",  # DeepSeek 模型
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"Context: {context}\n\nQuestion: {query}"}
+            ],
+            temperature=0.7,
+            max_tokens=2000,
+            stream=False
+        )
+        return completion.choices[0].message.content
+    except Exception as e:
+        print(f"Error generating answer: {str(e)}")
+        raise
 
 
 def split_document(document: str, chunk_size: int, chunk_overlap: int) -> List[str]:

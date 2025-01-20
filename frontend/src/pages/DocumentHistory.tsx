@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/constants';
 import jsPDF from 'jspdf';
-
+import { createApiRequest } from "@/utils/errorHandler";
 interface GeneratedDocument {
   id: number;
   document_name: string;
@@ -34,18 +34,10 @@ export default function DocumentHistory() {
 
   const fetchDocuments = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/api/storage/generated-documents/`, {
+      setLoading(true);
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/generated-documents/`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
-        }
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch documents');
-      }
 
       const data = await response.json();
       console.log('Fetched documents:', data);
@@ -114,13 +106,9 @@ export default function DocumentHistory() {
 
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const token = localStorage.getItem('token');
       // 获取内容
-      const response = await fetch(url, {
+      const response = await createApiRequest(url, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
       });
 
       if (!response.ok) {

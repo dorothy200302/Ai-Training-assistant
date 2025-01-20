@@ -25,7 +25,7 @@ export default function Auth(): JSX.Element {
     remember: false,
     verificationCode: ''
   });
-  const api=API_BASE_URL
+  const api = API_BASE_URL
   const { setUser } = useUser();
   const [countdown, setCountdown] = useState<number>(0);
 
@@ -65,8 +65,13 @@ export default function Auth(): JSX.Element {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ email: formData.email }),
+        credentials: 'include',
+        body: JSON.stringify({ 
+          email: formData.email,
+          type: 'register'
+        }),
       });
 
       if (!response.ok) {
@@ -107,7 +112,7 @@ export default function Auth(): JSX.Element {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    
+
     if (!formData.email || !formData.password) {
       toast({
         title: "验证失败",
@@ -120,12 +125,13 @@ export default function Auth(): JSX.Element {
     setIsLoading(true);
     try {
       if (isLogin) {
-        const endpoint = `${api}/api/user/login`;
-        const response = await fetch(endpoint, {
+        const response = await fetch(`${api}/api/user/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({
             email: formData.email,
             password: formData.password
@@ -143,7 +149,7 @@ export default function Auth(): JSX.Element {
 
         const data = await response.json();
         const { access_token, user_id, username } = data;
-        
+
         const userInfo = {
           email: formData.email,
           avatar: "https://github.com/avatar.png",
@@ -151,18 +157,18 @@ export default function Auth(): JSX.Element {
           id: user_id,
           username: username
         };
-        
+
         setUser(userInfo);
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         localStorage.setItem('token', access_token);
-        
+
         toast({
           title: "登录成功",
           description: "欢迎回来！",
         });
-        
+
         navigate('/', { replace: true });
-      } else {  
+      } else {
         if (!formData.verificationCode) {
           toast({
             title: "验证失败",
@@ -185,7 +191,9 @@ export default function Auth(): JSX.Element {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
@@ -208,7 +216,7 @@ export default function Auth(): JSX.Element {
           title: "注册成功",
           description: "请使用新账号登录",
         });
-        
+
         setIsLogin(true);
         setFormData({
           username: '',

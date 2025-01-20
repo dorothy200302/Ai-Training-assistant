@@ -1,173 +1,101 @@
-from langchain.document_loaders import PyPDFLoader, TextLoader
+from langchain.document_loaders import (
+    PyPDFLoader, 
+    TextLoader,
+    Docx2txtLoader,
+    UnstructuredPowerPointLoader,
+    UnstructuredWordDocumentLoader,
+    UnstructuredFileLoader
+)
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 import os
+import httpx
+from .test_embeddings import SiliconFlowEmbeddings
+from typing import List
+import logging
+
+logger = logging.getLogger(__name__)
 
 class DocumentChat:
     def __init__(self, model_name):
-        self.embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key="as-D73mmid1JVABYjxT4_ncuw",
-            base_url="https://gateway.agione.ai/openai/api/v2"
+        self.llm = ChatOpenAI(
+            model_name="deepseek-chat",
+            openai_api_key="sk-3767598f60e9415e852ff4c43ccc0852",
+            openai_api_base="https://api.deepseek.com/v1",
+            temperature=0.7,
+            max_tokens=2000
         )
-        if model_name == "grok":
-            self.llm = ChatOpenAI(
-                model_name="grok-beta",
-                base_url='https://api.x.ai/v1',
-                api_key='xai-hToMyvvyeZieK687T3MFsqY2s8VibWRgvg1727PKWILihXQ4yqB3VPuJKC5klm2oMk1sjl26xCR886P2',
-                temperature=0.7
-            )
-        elif model_name == "gpt-4o-mini":
-            self.llm = ChatOpenAI(
-                model_name="gpt-4o-mini",
-                api_key="as-D73mmid1JVABYjxT4_ncuw",
-                base_url="https://gateway.agione.ai/openai/api/v2",
-                temperature=0.7
-            )
-        elif model_name=="gpt-4":
-            self.llm = ChatOpenAI(
-                model_name="gpt-4",
-                api_key="as-D73mmid1JVABYjxT4_ncuw",
-                base_url="https://gateway.agione.ai/openai/api/v2",
-                temperature=0.7
-            )
-        elif model_name=="Qwen 7B chat":
-            self.llm = ChatOpenAI(  # 使用 ChatOpenAI 替代 ChatQwen
-                model_name="Qwen/Qwen2-7B-Instruct",
-                api_key="as-D73mmid1JVABYjxT4_ncuw",
-                base_url="https://gateway.agione.ai/siliconflow/api/v2",
-                temperature=0.7
-            )
-        else:
-            # 默认使用 GPT-4
-            self.llm = ChatOpenAI(
-                model_name="gpt-4",
-                api_key="as-D73mmid1JVABYjxT4_ncuw",
-                base_url="https://gateway.agione.ai/openai/api/v2",
-                temperature=0.7
-            )
+        
+        self.embeddings = SiliconFlowEmbeddings(
+            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+        )
+        
         self.memory = ConversationBufferMemory(
             memory_key="chat_history",
             output_key="answer",
             return_messages=True
         )
         self.vector_store = None
+        self.text_splitter = CharacterTextSplitter(
+            chunk_size=500,  # 减小块大小
+            chunk_overlap=50,  # 减小重叠
+            length_function=len,
+            is_separator_regex=False
+        )
 
-    def load_document(self, file_paths):
-        """加载并处理多篇文档，支持PDF、TXT格式"""
-        all_documents = []
-        print(f"Processing {len(file_paths)} files: {file_paths}")
-        
-        # 处理每个文件路径
-        for file_path in file_paths:
-            try:
-                print(f"Loading file: {file_path}")
-                # 检查文件是否存在且有内容
-                if not os.path.exists(file_path):
-                    print(f"File does not exist: {file_path}")
-                    continue
-                    
-                if os.path.getsize(file_path) == 0:
-                    print(f"File is empty: {file_path}")
-                    continue
-
-                # 获取真实的文件扩展名（小写）
-                file_ext = os.path.splitext(file_path)[1].lower()
-                print(f"File extension: {file_ext}")
-
-                # 根据文件类型选择加载器
-                if file_ext == '.pdf':
-                    try:
-                        print("Initializing PyPDFLoader")
-                        loader = PyPDFLoader(file_path)
-                        print("Successfully initialized PyPDFLoader")
-                    except Exception as e:
-                        print(f"PyPDFLoader initialization failed: {str(e)}")
-                        if hasattr(e, '__traceback__'):
-                            import traceback
-                            traceback.print_exc()
-                        continue
-                else:
-                    # 对于其他文件类型，使用TextLoader
-                    encodings = ['utf-8', 'gbk', 'latin1']
-                    loader = None
-                    for encoding in encodings:
-                        try:
-                            print(f"Attempting to load with {encoding} encoding")
-                            loader = TextLoader(file_path, encoding=encoding)
-                            # 尝试读取一小部分内容来验证编码
-                            with open(file_path, 'r', encoding=encoding) as f:
-                                f.read(1024)
-                            print(f"Successfully loaded with {encoding} encoding")
-                            break
-                        except UnicodeDecodeError:
-                            print(f"Failed to decode with {encoding} encoding")
-                            continue
-                        except Exception as e:
-                            print(f"TextLoader failed with {encoding}: {str(e)}")
-                            if hasattr(e, '__traceback__'):
-                                import traceback
-                                traceback.print_exc()
-                            continue
-                    
-                    if loader is None:
-                        print(f"Failed to load file with any encoding: {file_path}")
-                        continue
-
-                # 加载文档
-                print(f"Loading document content with {loader.__class__.__name__}")
-                try:
-                    documents = loader.load()
-                    if not documents:
-                        print(f"No content loaded from file: {file_path}")
-                        continue
-                    print(f"Successfully loaded {len(documents)} documents from {file_path}")
-                    all_documents.extend(documents)
-                except Exception as e:
-                    print(f"Error loading content from {file_path}: {str(e)}")
-                    if hasattr(e, '__traceback__'):
-                        import traceback
-                        traceback.print_exc()
-                    continue
-                
-            except Exception as e:
-                print(f"Error processing file {file_path}: {str(e)}")
-                if hasattr(e, '__traceback__'):
-                    import traceback
-                    traceback.print_exc()
-                continue
-
-        if not all_documents:
-            error_msg = "无法加载任何文档。请确保文件为PDF或文本格式（如.txt）且未损坏。"
-            print(error_msg)
-            raise Exception(error_msg)
-
+    async def load_document(self, file_paths: List[str]) -> None:
+        """加载文档并创建向量存储"""
         try:
-            print("Starting document splitting process")
-            # 分割所有文档
-            text_splitter = CharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=200
-            )
-            texts = text_splitter.split_documents(all_documents)
-            print(f"Successfully split documents into {len(texts)} chunks")
-
-            print("Creating vector store")
+            texts = []
+            metadatas = []
+            
+            for file_path in file_paths:
+                # 检查文件是否存在
+                if not os.path.exists(file_path):
+                    continue
+                    
+                # 根据文件类型选择加载器
+                file_ext = os.path.splitext(file_path)[1].lower()
+                try:
+                    if file_ext == '.pdf':
+                        loader = PyPDFLoader(file_path)
+                    elif file_ext in ['.docx', '.doc']:
+                        loader = Docx2txtLoader(file_path)
+                    elif file_ext == '.txt':
+                        loader = TextLoader(file_path, encoding='utf-8')
+                    else:
+                        continue
+                    
+                    # 加载文档
+                    docs = loader.load()
+                    
+                    # 分割文本
+                    for doc in docs:
+                        chunks = self.text_splitter.split_text(doc.page_content)
+                        texts.extend(chunks)
+                        metadatas.extend([{'source': file_path} for _ in chunks])
+                        
+                except Exception as e:
+                    logger.error(f"Error processing file {file_path}: {str(e)}")
+                    continue
+            
+            # 确保有文本要处理
+            if not texts:
+                raise ValueError("No valid text content found in documents")
+                
             # 创建向量存储
-            self.vector_store = FAISS.from_documents(texts, self.embeddings)
-            print("Successfully created vector store")
-
-            return f"成功加载 {len(file_paths)} 篇文档"
+            self.vector_store = FAISS.from_texts(
+                texts=texts,
+                embedding=self.embeddings,
+                metadatas=metadatas
+            )
+            
         except Exception as e:
-            error_msg = f"Error processing documents: {str(e)}"
-            print(error_msg)
-            if hasattr(e, '__traceback__'):
-                import traceback
-                traceback.print_exc()
+            error_msg = f"处理文档时出错: {str(e)}"
+            logger.error(error_msg)
             raise Exception(error_msg)
 
     def chat(self, query):
@@ -210,7 +138,7 @@ class DocumentChat:
     
    
 #     # 第二步：基于大纲生成详细计划
-#     detailed_plan = chat_system.chat("""阿里的企业文化是?
+#     detailed_plan = chat_system.chat("""阿里的企业文化是？
 #     """)
     
 #     print("\n详细培训计划：", detailed_plan)

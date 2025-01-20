@@ -14,7 +14,9 @@ import ReactMarkdown from 'react-markdown'
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { createApiRequest } from "@/utils/errorHandler";
 import { API_BASE_URL } from "../config/constants";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 console.log('API_BASE_URL:', API_BASE_URL);
 
 interface Section {
@@ -54,10 +56,10 @@ const DocumentContentPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [generationStep, setGenerationStep] = useState<string>('正在分析文档...');
   const [editedContent, setEditedContent] = useState<DocumentContent | null>(null);
-  const [outlineText, setOutlineText] = useState<string>('');
+  const [outlineText, setOutlineText] = useState<string>(' ');
   const [editState, setEditState] = useState<EditState>({
     overview: false,
-    sections: {},
+    sections: {} ,
     subsections: {}
   });
   const [isSaving, setIsSaving] = useState(false);
@@ -73,7 +75,6 @@ const DocumentContentPage: React.FC = () => {
         }
 
         setLoading(true);
-        const token = localStorage.getItem('token');
         
         setGenerationStep('正在处理大纲和背景信息...');
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -96,13 +97,10 @@ const DocumentContentPage: React.FC = () => {
         }
         const API_URL = API_BASE_URL;
 
-
         setGenerationStep('正在生成文档内容...');
-        const response = await fetch(`${API_URL}/api/storage/generate_full_doc_with_doc/`, {
+        const response = await createApiRequest(`${API_URL}/api/storage/generate_full_doc_with_doc/`, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          
           body: formData,
         });
 
@@ -120,7 +118,7 @@ const DocumentContentPage: React.FC = () => {
         const data = await response.json();
         if (data.document) {
           setContent(data.document);
-          setOutlineText(data.document.overview || '');
+          setOutlineText(data.document.overview || ' ');
         } else {
           throw new Error('文档内容为空');
         }
@@ -169,56 +167,7 @@ const DocumentContentPage: React.FC = () => {
     }).join('\n');
   };
 
-  // const parseOutlineText = (text: string): OutlineSection[] => {
-  //   const lines = text.split('\n').map(line => line.trim());
-  //   const outline: OutlineSection[] = [];
-  //   let currentSection: OutlineSection | null = null;
-  //   let currentContent: string[] = [];
-  //   let currentItems: string[] = [];
   
-  //   for (let i = 0; i < lines.length; i++) {
-  //     const line = lines[i];
-  //     if (!line && !currentSection) continue;
-  
-  //     if (line.startsWith('#')) {
-  //       if (currentSection) {
-  //         if (currentContent.length > 0) {
-  //           currentSection.content = currentContent.join('\n');
-  //         }
-  //         if (currentItems.length > 0) {
-  //           currentSection.items = currentItems;
-  //         }
-  //         outline.push(currentSection);
-  //         currentContent = [];
-  //         currentItems = [];
-  //       }
-  
-  //       const level = line.match(/^#+/)?.[0].length || 1;
-  //       currentSection = {
-  //         title: line.replace(/^#+\s*/, ''),
-  //         level,
-  //         content: '',
-  //         items: []
-  //       };
-  //     } else if (line.startsWith('-')) {
-  //       currentItems.push(line.replace(/^-\s*/, ''));
-  //     } else if (line) {
-  //       currentContent.push(line);
-  //     }
-  //   }
-  
-  //   if (currentSection) {
-  //     if (currentContent.length > 0) {
-  //       currentSection.content = currentContent.join('\n');
-  //     }
-  //     if (currentItems.length > 0) {
-  //       currentSection.items = currentItems;
-  //     }
-  //     outline.push(currentSection);
-  //   }
-  
-  //   return outline;
-  // };
 
   const handleOutlineTextChange = (text: string) => {
     setOutlineText(text);
@@ -226,7 +175,6 @@ const DocumentContentPage: React.FC = () => {
 
   const saveToBackend = async (fileBlob: Blob, fileType: 'docx') => {
     try {
-      const token = localStorage.getItem('token');
       
       // Convert blob to base64
       const base64Content = await new Promise<string>((resolve) => {
@@ -239,12 +187,9 @@ const DocumentContentPage: React.FC = () => {
         reader.readAsDataURL(fileBlob);
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+       
         body: JSON.stringify({
           content: base64Content,
           format: fileType,
@@ -273,7 +218,7 @@ const DocumentContentPage: React.FC = () => {
         // Create DOCX document
         const doc = new Document({
           sections: [{
-            properties: {},
+            properties: {} ,
             children: [
               new Paragraph({
                 children: [new TextRun({ text: content.title, bold: true, size: 32 })],
@@ -318,6 +263,7 @@ const DocumentContentPage: React.FC = () => {
 
         // Save to backend
         await saveToBackend(blob, 'docx');
+
 
         
 
@@ -404,14 +350,10 @@ const DocumentContentPage: React.FC = () => {
   const handleSave = async (_e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       setIsSaving(true);
-      const token = localStorage.getItem('token');
 
-      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+       
         body: JSON.stringify({
           content: content,
           format: 'docx',
@@ -473,15 +415,15 @@ const DocumentContentPage: React.FC = () => {
                     disabled={isDownloading}
                   >
                     {isDownloading ? (
-                      <>
+                      < >
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         下载中
-                      </>
+                      </ >
                     ) : (
-                      <>
+                      < >
                         <Download className="mr-2 h-4 w-4" />
                         下载文档
-                      </>
+                      </ >
                     )}
                   </Button>
                 </DropdownMenuTrigger>
@@ -498,15 +440,15 @@ const DocumentContentPage: React.FC = () => {
                 disabled={isSaving}
               >
                 {isSaving ? (
-                  <>
+                  < >
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     保存中
-                  </>
+                  </ >
                 ) : (
-                  <>
+                  < >
                     <Save className="mr-2 h-4 w-4" />
                     保存
-                  </>
+                  </ >
                 )}
               </Button>
             </div>
@@ -514,6 +456,12 @@ const DocumentContentPage: React.FC = () => {
 
           <div className="container mx-auto py-6 px-4">
             <div className="max-w-6xl mx-auto">
+              {loading && (
+                <LoadingOverlay
+                  isLoading={loading}
+                  message={generationStep}
+                />
+              )}
               {loading ? (
                 <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
                   <Loader2 className="h-8 w-8 animate-spin text-amber-600" />

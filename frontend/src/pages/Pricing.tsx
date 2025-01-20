@@ -83,15 +83,26 @@ export default function Pricing() {
 
     try {
       setLoading(tier.planId);
-      setSelectedTier(tier);
       
-      // 生成模拟支付URL
-      const paymentUrl = `/mock-payment?order_id=${Date.now()}&amount=${tier.priceAmount}&subject=${tier.name}订阅`;
+      // 创建支付订单
+      const response = await fetch('/api/payment/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ plan_id: tier.planId })
+      });
       
-      // 在新窗口中打开支付页面
-      window.open(paymentUrl, 'payment_window', 'width=800,height=600');
+      if (!response.ok) {
+        throw new Error('Failed to create payment');
+      }
       
-      // 显示支付提示对话框
+      const { payment_url } = await response.json();
+      
+      // 在新窗口打开支付宝支付页面
+      window.open(payment_url, '_blank');
+      
+      // 显示支付提示
       setShowPaymentDialog(true);
       
     } catch (error) {

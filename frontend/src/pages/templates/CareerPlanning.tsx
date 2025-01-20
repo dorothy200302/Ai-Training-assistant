@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import DocumentUpload from '@/components/DocumentUpload';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import {createApiRequest} from "@/utils/errorHandler";
 import { API_BASE_URL } from '../../config/constants';
 import {EditableText} from '@/components/EditableText';  // Changed from { EditableText }
 const BASE_URL = API_BASE_URL
@@ -127,11 +128,9 @@ const CareerPlanning: React.FC = () => {
         token: token ? 'present' : 'missing'
       });
 
-      const response = await fetch(`${BASE_URL}/api/storage/generate_full_doc_with_template/`, {
+      const response = await createApiRequest(`${BASE_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+       
         body: formData
       });
 
@@ -195,12 +194,9 @@ const CareerPlanning: React.FC = () => {
       });
 
       // 使用现有的download_document接口
-      const response = await fetch('${BASE_URL}/api/storage/download_document', {
+      const response = await createApiRequest('${BASE_URL}/api/storage/download_document', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+       
         body: JSON.stringify({
           content: content,
           format: fileType,

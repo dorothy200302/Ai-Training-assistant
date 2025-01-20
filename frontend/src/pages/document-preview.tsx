@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { API_BASE_URL } from '../config/constants';
-
+import { createApiRequest } from '@/utils/errorHandler';
 export default function DocumentPreview() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,12 +26,9 @@ export default function DocumentPreview() {
 
     const fetchContent = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}/api/storage/document-content/?url=${encodeURIComponent(url)}`, {
+        const response = await createApiRequest(`${API_BASE_URL}/api/storage/document-content/?url=${encodeURIComponent(url)}`, {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
+          
         });
 
         if (!response.ok) {

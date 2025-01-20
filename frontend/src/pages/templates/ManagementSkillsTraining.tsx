@@ -12,7 +12,9 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { EditableText } from '@/components/EditableText'
 import { API_BASE_URL } from '../../config/constants'
-
+import { createApiRequest } from "@/utils/errorHandler"; // 新增错误处理工具
+import { EditableDocumentContent } from "@/components/EditableDocumentContent";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 interface PageContent {
   title: string;
   subtitle: string;
@@ -37,6 +39,7 @@ const ManagementSkillsTraining: React.FC = () => {
   const [isDownloading, setIsDownloading] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
   const [isUploading, setIsUploading] = useState(false);
+
 
   const [pageContent, setPageContent] = useState<PageContent>({
     title: '项目管理培训文档',
@@ -189,79 +192,45 @@ const ManagementSkillsTraining: React.FC = () => {
     return (completedSections.length / sections.length) * 100
   }
 
-  const handleUploadConfirm = async (files: File[], description?: string) => {
+  const handleUploadConfirm = async (files: File[]) => {
     if (!files || files.length === 0) {
       setShowUpload(false);
       return;
     }
-    
+
     try {
       setIsGenerating(true);
       const formData = new FormData();
-      const token = localStorage.getItem('token');
-      
+      formData.append('template', 'management_skills');
+      formData.append('description', JSON.stringify({
+        title: pageContent.title,
+        subtitle: pageContent.subtitle,
+        overview: pageContent.overview,
+        sections: pageContent.sections,
+        exercises: pageContent.exercises
+      }));
+
       files.forEach(file => {
         formData.append('files', file);
       });
 
-      formData.append('template', 'management_skills');
-      formData.append('description', JSON.stringify({
-        title: '管理技能培训手册',
-        subtitle: '提升您的管理能力',
-        overview: '本手册旨在帮助您掌握核心管理技能，提高团队效率。',
-        content: documentContent,
-        description: description || '',
-        training_sections: sections.map(section => ({
-          id: section.id,
-          title: section.title,
-          completed: completedSections.includes(section.id)
-        }))
-      }));
-
-      console.log('Sending request to generate template...');
-      console.log('FormData contents:', {
-        files: files.map(f => f.name),
-        template: 'management_skills',
-        token: token ? 'present' : 'missing'
-      });
-      const URL=API_BASE_URL
-
-      const response = await fetch(`${URL}/api/storage/generate_full_doc_with_template/`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/generate_full_doc_with_template/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
         body: formData
       });
 
-      console.log('Response status:', response.status);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(errorText || '文档生成失败');
-      }
-
       const data = await response.json();
-      console.log('Response data:', data);
-      setDocumentContent(data.document ?? data.content ?? '');
+      setDocumentContent(data.document || data.content || '');
       
       toast({
         title: "生成成功",
         description: "管理技能培训文档已生成",
       });
-
-      // Scroll to the generated content
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 100);
     } catch (error) {
       console.error('Generation error:', error);
       toast({
         title: "生成失败",
-        description: error instanceof Error ? error.message : "文档生成失败，请重试",
+        description: "生成文档时发生错误，请重试",
         variant: "destructive",
       });
     } finally {
@@ -300,12 +269,9 @@ const ManagementSkillsTraining: React.FC = () => {
       });
 
       // 使用现有的download_document接口
-      const response = await fetch(`${API_BASE_URL}/api/storage/download_document`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/download_document`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
+ 　 　
         body: JSON.stringify({
           content: content,
           format: fileType,
@@ -500,6 +466,9 @@ const ManagementSkillsTraining: React.FC = () => {
                     {section.title}
                   </TabsTrigger>
                 ))}
+                <TabsTrigger value="preview" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
+                  预览
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="intro">
                 <Card className="bg-amber-50 border-amber-200">
@@ -666,6 +635,13 @@ const ManagementSkillsTraining: React.FC = () => {
                   </Card>
                 ))}
               </TabsContent>
+              <TabsContent value="preview" className="mt-4">
+                <EditableDocumentContent
+                  content={documentContent}
+                  onContentChange={setDocumentContent}
+                  documentTitle="管理技能培训手册"
+                />
+              </TabsContent>
             </Tabs>
           </section>
 
@@ -807,17 +783,46 @@ const ManagementSkillsTraining: React.FC = () => {
         </div>
       </div>
 
-      {showUpload && (
-        <DocumentUpload
-          endpoint="/api/documents/upload"
-          isUploading={isUploading}
-          setIsUploading={setIsUploading}
-          onConfirm={handleUploadConfirm}
-          onCancel={handleUploadCancel}
-          isLoading={isGenerating}
-        />
+      {documentContent && (
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="flex justify-end gap-2 mb-4">
+            <Button
+              onClick={handleDownloadWord}
+              disabled={!documentContent || isDownloading}
+              className="bg-green-500 hover:bg-green-600 text-white"
+            >
+              {isDownloading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <FileDown className="mr-2 h-4 w-4" />
+              )}
+              下载Word
+            </Button>
+          </div>
+          <EditableDocumentContent
+            content={documentContent}
+            onContentChange={setDocumentContent}
+            documentTitle="管理技能培训手册"
+          />
+        </div>
       )}
 
+      {showUpload && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <DocumentUpload 
+              endpoint="/api/storage/download_document"
+              isUploading={isUploading}
+              setIsUploading={setIsUploading}
+              onConfirm={handleUploadConfirm}
+              onCancel={handleUploadCancel}
+              isLoading={isGenerating}
+            />
+          </div>
+        </div>
+      )}
+
+      {isGenerating && <LoadingOverlay isLoading={isGenerating} message="正在生成管理技能培训文档..." />}
       {documentContent && (
         <div className="mt-6 p-6 bg-white rounded-lg shadow">
           <div className="prose max-w-none">

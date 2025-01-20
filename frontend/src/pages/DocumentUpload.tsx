@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { toast } from "@/hooks/use-toast"
-
 interface UploadedFile {
   id: string;
   name: string;
@@ -51,24 +50,6 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
       throw new Error('未登录，请先登录');
     }
 
-
-    // if (!response.ok) {
-    //   const errorText = await response.text();
-    //   throw new Error(`上传失败: ${errorText}`);
-    // }
-
-    // const data = await response.json();
-    // if (onUploadComplete) {
-    //   onUploadComplete([{
-    //     id: Math.random().toString(36).substr(2, 9),
-    //     name: file.name,
-    //     size: file.size,
-    //     type: file.type,
-    //     progress: 100,
-    //     status: 'success',
-    //     originalFile: file
-    //   }]);
-    // }
 
     setFiles(prev => prev.map(f => 
       f.name === file.name ? { 

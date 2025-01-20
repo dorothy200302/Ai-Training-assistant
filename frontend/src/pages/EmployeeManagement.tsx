@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast"
 import { useUser } from "@/contexts/UserContext";
 import { API_BASE_URL } from '../config/constants';
+import { createApiRequest } from "@/utils/errorHandler";
 
 interface Employee {
   id: string;
@@ -46,12 +47,11 @@ const EmployeeManagement = () => {
   // 获取部门列表
   const fetchDepartments = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/employee/departments`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await createApiRequest(`${API_URL}/api/employee/departments`, {
+        method: 'GET',
+        
       });
-      if (!response.ok) throw new Error('获取部门列表失败');
+
       const data = await response.json();
       setDepartments(data);
     } catch (error) {
@@ -67,12 +67,11 @@ const EmployeeManagement = () => {
   // 获取角色列表
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/employee/roles`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await createApiRequest(`${API_URL}/api/employee/roles`, {
+        method: 'GET',
+       
       });
-      if (!response.ok) throw new Error('获取角色列表失败');
+
       const data = await response.json();
       setRoles(data);
     } catch (error) {
@@ -93,15 +92,10 @@ const EmployeeManagement = () => {
   // 获取员工列表
   const fetchEmployees = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/employee/employees/${user?.id}/subordinates`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await createApiRequest(`${API_URL}/api/employee/employees/${user?.id}/subordinates`, {
+        method: 'GET',
+        
       });
-
-      if (!response.ok) {
-        throw new Error('获取员工列表失败');
-      }
 
       const data = await response.json();
       console.log('原始数据:', data);
@@ -221,25 +215,10 @@ const EmployeeManagement = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/employee/employees/${id}`, {
+      await createApiRequest(`${API_URL}/api/employee/employees/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (response.status === 403) {
-          throw new Error(errorData.detail || '您没有权限执行此操作');
-        } else if (response.status === 400) {
-          throw new Error(errorData.detail || '无法删除有下属的员工');
-        } else if (response.status === 404) {
-          throw new Error(errorData.detail || '未找到该员工');
-        } else {
-          throw new Error(errorData.detail || '删除失败');
-        }
-      }
 
       window.alert("成功：员工已删除");
       
@@ -266,12 +245,9 @@ const EmployeeManagement = () => {
       const backendStatus = currentStatus === '已授权' ? 'active' : 'inactive';
       const newStatus = backendStatus === 'active' ? 'inactive' : 'active';
       
-      const response = await fetch(`${API_URL}/api/employee/employees/${id}`, {
+      const response = await createApiRequest(`${API_URL}/api/employee/employees/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+      
         body: JSON.stringify({ status: newStatus })
       });
 
@@ -381,12 +357,9 @@ const EmployeeManagement = () => {
         ? `${API_URL}/api/employee/employees/${editingEmployee.id}`
         : `${API_URL}/api/employee/employees`;
 
-      const response = await fetch(url, {
+      const response = await createApiRequest(url, {
         method: editingEmployee ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+       
         body: JSON.stringify(employeeData)
       });
 
@@ -442,6 +415,14 @@ const EmployeeManagement = () => {
       });
     }
   };
+
+  const [dialogRef, setDialogRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (dialogRef) {
+      dialogRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [dialogRef]);
 
   return (
     <div className="h-screen w-screen bg-amber-50 p-8">
@@ -577,7 +558,7 @@ const EmployeeManagement = () => {
       )}
       {/* 删除确认对话框 */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent ref={setDialogRef} className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>确认删除</DialogTitle>
             <DialogDescription>
@@ -597,7 +578,7 @@ const EmployeeManagement = () => {
 
       {/* 编辑对话框 */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent ref={setDialogRef} className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{editingEmployee ? '编辑员工' : '添加员工'}</DialogTitle>
             <DialogDescription>

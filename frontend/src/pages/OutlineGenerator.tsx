@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import DocumentUpload from './DocumentUpload';
 import { toast } from "@/hooks/use-toast"
 import { API_BASE_URL } from '../config/constants';
-
+import { createApiRequest } from "@/utils/errorHandler";
 interface OutlineSection {
   title: string;
   content?: string;
@@ -102,7 +102,6 @@ const OutlineGenerator: React.FC = () => {
     }
   }, [location.state?.topic]);
 
-  const token = localStorage.getItem('token');
 
   const generateOutline = async (description: string, files: File[] = []) => {
     setLoading(true);
@@ -120,11 +119,9 @@ const OutlineGenerator: React.FC = () => {
         formData.append('files', file);
       });
 
-      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+       
         body: formData,
       });
 
@@ -250,9 +247,7 @@ const OutlineGenerator: React.FC = () => {
       setGeneratingOutline(true);
       
       const formData = new FormData();
-      const token = localStorage.getItem('token');
       
-      console.log('Using token:', token);  // 调试日志
       
       uploadedFiles.forEach((file) => {
         formData.append('files', file);
@@ -264,14 +259,8 @@ const OutlineGenerator: React.FC = () => {
       formData.append('description', JSON.stringify(completeBackgroundInfo));
       formData.append('ai_model', 'gpt-4o-mini');
 
-      // 修改请求头的设置方式
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${token}`);
-      // 不要设置 Content-Type，因为是 FormData
-
-      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
-        headers: headers,
         body: formData,
         credentials: 'include'  // 添加这个选项
       });
@@ -369,9 +358,7 @@ const OutlineGenerator: React.FC = () => {
       setGeneratingOutline(true);  // 添加生成中状态
       
       const formData = new FormData();
-      const token = localStorage.getItem('token');
       
-      console.log('Using token:', token);  // 调试日志
       
       files.forEach(file => {
         formData.append('files', file);
@@ -383,14 +370,9 @@ const OutlineGenerator: React.FC = () => {
       formData.append('description', JSON.stringify(completeBackgroundInfo));
       formData.append('ai_model', 'gpt-4o-mini');
 
-      // 修改请求头的设置方式
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${token}`);
-      // 不要设置 Content-Type，因为是 FormData
-
-      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      
+      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
-        headers: headers,
         body: formData,
         credentials: 'include'  // 添加这个选项
       });
@@ -504,6 +486,7 @@ const OutlineGenerator: React.FC = () => {
     try {
       setLoading(true);
       setGeneratingOutline(true);
+      setShowImprovementInput(false);
 
       // Check if we have files
       if (!files || files.length === 0) {
@@ -530,17 +513,14 @@ const OutlineGenerator: React.FC = () => {
       
       formData.append('ai_model', 'gpt-4o-mini');
       
-      const token = localStorage.getItem('token');
       console.log('FormData contents for regeneration:');
       for (let pair of formData.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
 
-      const response = await fetch(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+       
         body: formData
       });
 

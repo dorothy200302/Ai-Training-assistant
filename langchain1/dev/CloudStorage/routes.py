@@ -65,81 +65,113 @@ TEMPLATE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 @router.post("/generate_outline_and_upload/")
 async def generate_outline_and_upload(
     files: List[UploadFile] = File(...),
+    requirements: Optional[str] = Form(None),
+    ai_model: str = Form(...),
     description: str = Form(...),
-    current_user: dict = Depends(get_current_user),  # Explicitly type as dict
-    ai_model: str = Form("gpt-4o-mini", description="AI model to use"),
-    db: Session = Depends(get_db),
-    requirements: Optional[str] = Form(None),  # 使用 Optional 类型
+    current_user: dict = Depends(get_current_user)  # 使用依赖注入
 ):
-    logger.info("Received generate_outline_and_upload request")
-    logger.info(f"Files received: {[f.filename for f in files]}")
-    logger.info(f"Description: {description}")
-    logger.info(f"Current user data: {current_user}")  # Log the entire user data
-    
-    if not isinstance(current_user, dict):
-        logger.error(f"current_user is not a dict: {type(current_user)}")
-        raise HTTPException(status_code=500, detail="Invalid user data format")
-        
-    user_email = current_user.get('email')
-    print(user_email)
-    if not user_email:
-        logger.error(f"No email found in current_user data: {current_user}")
-        raise HTTPException(status_code=500, detail="User email not found")
-    
-    logger.info(f"User email: {user_email}")
+    temp_files = []
+    temp_dir = None
     
     try:
+        # 直接使用注入的 current_user
+        logger.info(f"Current user data: {current_user}")
+        user_email = current_user.get('email')
+        if not user_email:
+            raise HTTPException(status_code=400, detail="User email not found")
+            
+        logger.info(f"User email: {user_email}")
+        
         logger.info("Received generate_outline_and_upload request")
         logger.debug(f"Requrements: {requirements}")
         logger.debug(f"Number of files: {len(files)}")
         logger.debug(f"AI Model: {ai_model}")
         logger.debug(f"Description: {description}")
         
-        if not files:
-            logger.error("No files provided")
-            raise HTTPException(status_code=400, detail="No files provided")
-
-        # Save uploaded files to temporary directory
+        # 创建临时目录
         temp_dir = tempfile.mkdtemp()
-        temp_paths = []
         
-        try:
-            for file in files:
-                temp_path = os.path.join(temp_dir, file.filename)
-                with open(temp_path, "wb") as buffer:
-                    shutil.copyfileobj(file.file, buffer)
-                temp_paths.append(temp_path)
-                logger.info(f"Saved file to {temp_path}")
-            
-            # Initialize document generator
-            doc_generator = AsyncTrainingDocGenerator(
-                file_paths=temp_paths,
-                background_informations={"description": description},
-                model_name=ai_model,
-                user_email=user_email
-            )
-            
-            # Initialize vector store
-            await doc_generator.initialize_vector_store()
-            
-            if not doc_generator.vector_store:
-                raise HTTPException(status_code=500, detail="Failed to initialize vector store")
-            
-            # Generate outline
-            outline = await doc_generator.generate_training_outline(requirements)
-            
-            if not outline:
-                raise HTTPException(status_code=500, detail="Failed to generate outline")
-            
-            return JSONResponse(content={"outline": outline})
-            
-        finally:
-            # Clean up temporary files
-            shutil.rmtree(temp_dir)
+        # 保存上传的文件
+        for file in files:
+            try:
+                # 获取文件扩展名
+                file_extension = os.path.splitext(file.filename)[1]
+                # 创建临时文件
+                temp_file = os.path.join(temp_dir, f"Doc1{file_extension}")
+                
+                # 读取并保存文件内容
+                content = await file.read()
+                if not content:
+                    logger.error(f"Empty file received: {file.filename}")
+                    continue
+                    
+                with open(temp_file, "wb") as f:
+                    f.write(content)
+                logger.info(f"Saved file to {temp_file}")
+                
+                # 验证文件是否成功保存且可读
+                if not os.path.exists(temp_file) or os.path.getsize(temp_file) == 0:
+                    logger.error(f"Failed to save file or file is empty: {temp_file}")
+                    continue
+                    
+                temp_files.append(temp_file)
+                
+            except Exception as e:
+                logger.error(f"Error processing file {file.filename}: {str(e)}")
+                continue
+        
+        if not temp_files:
+            raise HTTPException(status_code=400, detail="No valid files were uploaded")
+        
+        # 解析描述信息
+        background_info = json.loads(description)
+        
+        # 初始化文档生成器
+        doc_generator = AsyncTrainingDocGenerator(
+            file_paths=temp_files,
+            model_name=ai_model,
+            background_informations=background_info,
+            user_email=user_email
+        )
+        
+        # 生成大纲
+        outline = await doc_generator.generate_training_outline(requirements)
+        
+        # 生成完整文档
+        full_doc = await doc_generator.generate_full_training_doc(outline)
+        
+        # 保存文档
+        doc_path = await doc_generator.save_document(full_doc)
+        
+        # 返回结果
+        return {
+            "status": "success",
+            "message": "Document generated successfully",
+            "outline": outline,
+            "doc_path": doc_path
+        }
             
     except Exception as e:
         logger.error(f"Error in generate_outline_and_upload: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+    finally:
+        # 清理临时文件
+        for temp_file in temp_files:
+            try:
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
+                    logger.info(f"Successfully removed temp file: {temp_file}")
+            except Exception as e:
+                logger.error(f"Error removing temp file {temp_file}: {str(e)}")
+        
+        # 清理临时目录
+        if temp_dir and os.path.exists(temp_dir):
+            try:
+                os.rmdir(temp_dir)
+                logger.info(f"Successfully removed temp directory: {temp_dir}")
+            except Exception as e:
+                logger.error(f"Error removing temp directory: {str(e)}")
 
 @router.post("/generate_full_doc_with_doc/")
 async def generate_full_doc_with_doc(

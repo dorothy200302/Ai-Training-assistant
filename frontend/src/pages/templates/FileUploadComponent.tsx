@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { FileUp, Loader2 } from 'lucide-react';
 import DocumentUpload from '@/components/DocumentUpload';
 import { toast } from '@/hooks/use-toast';
+import { createApiRequest } from "@/utils/errorHandler"; // 新增错误处理工具
 import { API_BASE_URL } from '../../config/constants';
-
 interface FileUploadComponentProps {
   onUploadSuccess?: (content: string) => void;
 }
@@ -14,7 +14,6 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
   const [showUpload, setShowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading] = useState(false);
-  const BASE_URL = API_BASE_URL
 
   const handleUploadConfirm = async (files: File[], description?: string) => {
     if (!files || files.length === 0) {
@@ -25,7 +24,6 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
     try {
       setIsUploading(true);
       const formData = new FormData();
-      const token = localStorage.getItem('token');
 
       files.forEach(file => {
         formData.append('files', file);
@@ -35,11 +33,9 @@ export default function FileUploadComponent({ onUploadSuccess }: FileUploadCompo
         formData.append('description', description);
       }
 
-      const response = await fetch(`${BASE_URL}/api/storage/upload/`, {
+      const response = await createApiRequest(`${API_BASE_URL}/api/storage/upload/`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        
         body: formData
       });
 

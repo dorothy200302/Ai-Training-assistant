@@ -7,6 +7,7 @@ import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { Progress } from "@/components/ui/progress";
 import { useToast } from '@/hooks/use-toast';
+import { LoadingState, ButtonLoading } from "@/components/ui/loading-state";
 
 export interface DocumentUploadProps {
   onUpload?: (content: any) => void;
@@ -202,15 +203,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
             ))}
           </div>
           {uploadProgress > 0 && uploadProgress < 100 && (
-            <div className="space-y-1">
+            <div className="mt-4">
               <Progress value={uploadProgress} />
-              <p className="text-xs text-gray-500 text-right">{uploadProgress}%</p>
+              <LoadingState inline text={`上传中 ${uploadProgress}%...`} className="mt-2" />
             </div>
           )}
         </div>
       )}
 
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end space-x-2 mt-4">
         {onCancel && (
           <Button variant="outline" onClick={onCancel} disabled={isLoading}>
             取消
@@ -218,16 +219,15 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
         )}
         <Button 
           onClick={handleConfirm} 
-          disabled={isLoading || files.length === 0}
-          className="min-w-[100px]"
+          disabled={files.length === 0 || isLoading}
         >
           {isLoading ? (
-            < >
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              生成中...
-            </ >
+            <ButtonLoading text="处理中..." />
           ) : (
-            '确认上传'
+            <>
+              <Upload className="mr-2 h-4 w-4" />
+              确认上传
+            </>
           )}
         </Button>
       </div>

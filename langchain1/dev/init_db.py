@@ -13,6 +13,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.models import Base, Departments, Roles, Employees, Users
 from models.generated_document import GeneratedDocument
+from Chatbot.test_embeddings import SiliconFlowEmbeddings
+from models.payment import Subscription
 
 # SQLite configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,6 +27,10 @@ engine = create_engine(
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+embeddings = SiliconFlowEmbeddings(
+    api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+)
 
 def init_db():
     try:
@@ -81,6 +87,20 @@ def init_db():
                 db.add(admin)
                 db.commit()
                 logger.info("Created default admin user")
+                
+            # Add default subscription
+            default_sub = db.query(Subscription).filter(
+                Subscription.user_email == "admin@docgen.com"
+            ).first()
+            
+            if not default_sub:
+                default_sub = Subscription(
+                    user_email="admin@docgen.com",
+                    plan_id="free",
+                    usage_count=0
+                )
+                db.add(default_sub)
+                db.commit()
                 
         except Exception as e:
             logger.error(f"Failed to initialize default data: {str(e)}")
