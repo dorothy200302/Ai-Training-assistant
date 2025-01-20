@@ -1,6 +1,30 @@
-# 11.290
+# AI Training Assistant
 
+An intelligent training document generation and management system.
 
+## Key Features
+- AI-powered document generation
+- Interactive chat interface
+- Document management system
+- User authentication
+- File upload and processing
+
+## Components
+- Backend API (FastAPI)
+- Frontend (React + TypeScript)
+- AI Models Integration
+- Document Processing
+
+## Setup
+1. Install dependencies
+2. Configure environment variables
+3. Run database migrations
+4. Start development servers
+
+## Project Structure
+- `/langchain1/dev/` - Backend API
+- `/frontend/` - React frontend
+- `/docs/` - Documentation
 
 ## Getting started
 
