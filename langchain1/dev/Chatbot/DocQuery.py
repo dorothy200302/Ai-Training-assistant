@@ -12,7 +12,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 import os
-import httpx
 from .test_embeddings import SiliconFlowEmbeddings
 from typing import List
 import logging
@@ -20,7 +19,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class DocumentChat:
-    def __init__(self, model_name):
+    def __init__(self, model_name="deepseek-chat"):
         self.llm = ChatOpenAI(
             model_name="deepseek-chat",
             openai_api_key="sk-3767598f60e9415e852ff4c43ccc0852",
@@ -29,10 +28,7 @@ class DocumentChat:
             max_tokens=2000
         )
         
-        self.embeddings = SiliconFlowEmbeddings(
-            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
-        )
-        
+        self.embeddings = SiliconFlowEmbeddings()
         self.memory = ConversationBufferMemory(
             memory_key="chat_history",
             output_key="answer",
@@ -40,89 +36,134 @@ class DocumentChat:
         )
         self.vector_store = None
         self.text_splitter = CharacterTextSplitter(
-            chunk_size=500,  # 减小块大小
-            chunk_overlap=50,  # 减小重叠
-            length_function=len,
-            is_separator_regex=False
+            chunk_size=1000,
+            chunk_overlap=200,
+            separator="\n"
         )
 
-    async def load_document(self, file_paths: List[str]) -> None:
+    async def load_document(self, file_paths: List[str]) -> str:
         """加载文档并创建向量存储"""
         try:
+            if not file_paths:
+                raise ValueError("No files provided")
+
             texts = []
             metadatas = []
             
             for file_path in file_paths:
-                # 检查文件是否存在
+                logger.info(f"开始处理文件: {file_path}")
+                
                 if not os.path.exists(file_path):
+                    logger.error(f"文件不存在: {file_path}")
                     continue
-                    
-                # 根据文件类型选择加载器
-                file_ext = os.path.splitext(file_path)[1].lower()
+                
+                # 检查文件大小
+                file_size = os.path.getsize(file_path)
+                logger.info(f"文件大小: {file_size} bytes")
+                
+                # 检查文件是否可读
                 try:
+                    with open(file_path, 'rb') as f:
+                        content = f.read(1024)  # 读取前1KB检查文件是否可读
+                        if not content:
+                            logger.error(f"文件为空: {file_path}")
+                            continue
+                except Exception as e:
+                    logger.error(f"文件读取失败 {file_path}: {str(e)}")
+                    continue
+                
+                file_ext = os.path.splitext(file_path)[1].lower()
+                logger.info(f"文件类型: {file_ext}")
+                
+                try:
+                    # 根据文件类型选择加载器
                     if file_ext == '.pdf':
                         loader = PyPDFLoader(file_path)
+                        logger.info("使用 PDF 加载器")
                     elif file_ext in ['.docx', '.doc']:
                         loader = Docx2txtLoader(file_path)
+                        logger.info("使用 Word 加载器")
                     elif file_ext == '.txt':
                         loader = TextLoader(file_path, encoding='utf-8')
+                        logger.info("使用文本加载器")
                     else:
+                        logger.warning(f"不支持的文件类型: {file_ext}")
                         continue
                     
                     # 加载文档
+                    logger.info("开始加载文档内容...")
                     docs = loader.load()
+                    logger.info(f"成功加载文档，页数: {len(docs)}")
                     
-                    # 分割文本
-                    for doc in docs:
-                        chunks = self.text_splitter.split_text(doc.page_content)
-                        texts.extend(chunks)
-                        metadatas.extend([{'source': file_path} for _ in chunks])
+                    # 处理每个文档
+                    for i, doc in enumerate(docs):
+                        if not doc.page_content:
+                            logger.warning(f"第 {i+1} 页内容为空")
+                            continue
+                            
+                        content_length = len(doc.page_content.strip())
+                        logger.info(f"第 {i+1} 页内容长度: {content_length}")
                         
+                        if content_length < 10:
+                            logger.warning(f"第 {i+1} 页内容过短，跳过")
+                            continue
+                            
+                        # 分割文本
+                        logger.info(f"开始分割第 {i+1} 页文本...")
+                        chunks = self.text_splitter.split_text(doc.page_content)
+                        logger.info(f"生成 {len(chunks)} 个文本块")
+                        
+                        texts.extend(chunks)
+                        metadatas.extend([{'source': file_path, 'page': i+1}] * len(chunks))
+                    
                 except Exception as e:
-                    logger.error(f"Error processing file {file_path}: {str(e)}")
+                    logger.error(f"处理文件失败 {file_path}: {str(e)}")
                     continue
-            
-            # 确保有文本要处理
+
             if not texts:
-                raise ValueError("No valid text content found in documents")
-                
+                raise ValueError("未能从文档中提取有效文本内容")
+
+            logger.info(f"总共生成 {len(texts)} 个文本块")
+            
             # 创建向量存储
+            logger.info("开始创建向量存储...")
             self.vector_store = FAISS.from_texts(
                 texts=texts,
                 embedding=self.embeddings,
                 metadatas=metadatas
             )
+            logger.info("向量存储创建成功")
+            
+            return f"成功加载 {len(texts)} 个文本块，来自 {len(file_paths)} 个文档"
             
         except Exception as e:
             error_msg = f"处理文档时出错: {str(e)}"
             logger.error(error_msg)
             raise Exception(error_msg)
 
-    def chat(self, query):
-        """与文档进行对话"""
+    def chat(self, query: str) -> str:
+        """处理用户查询"""
         if not self.vector_store:
             return "请先加载文档！"
-        
-        # 创建对话链
-        qa_chain = ConversationalRetrievalChain.from_llm(
-            llm=self.llm,
-            retriever=self.vector_store.as_retriever(
-                search_kwargs={"k": 3}  # 检索最相关的3个文档片段
-            ),
-            memory=self.memory,
-            return_source_documents=True,
-            verbose=True  # 添加详细输出以便调试
-        )
-        
-        # 使用 invoke 替代直接调用
-        result = qa_chain.invoke({"question": query})
-        
-        # 打印源文档以便调试
-        print("\n相关文档片段:")
-        for doc in result['source_documents']:
-            print(f"- {doc.page_content[:200]}...")
-        
-        return result['answer']
+            
+        try:
+            qa_chain = ConversationalRetrievalChain.from_llm(
+                llm=self.llm,
+                retriever=self.vector_store.as_retriever(
+                    search_kwargs={"k": 3}
+                ),
+                memory=self.memory,
+                return_source_documents=True,
+                verbose=True
+            )
+            
+            result = qa_chain.invoke({"question": query})
+            return result['answer']
+            
+        except Exception as e:
+            error_msg = f"处理查询时出错: {str(e)}"
+            logger.error(error_msg)
+            raise Exception(error_msg)
 
 # # 使用示例
 # def main():
