@@ -136,19 +136,13 @@ async def generate_outline_and_upload(
         
         # 生成大纲
         outline = await doc_generator.generate_training_outline(requirements)
-        
-        # 生成完整文档
-        full_doc = await doc_generator.generate_full_training_doc(outline)
-        
-        # 保存文档
-        doc_path = await doc_generator.save_document(full_doc)
-        
+       
         # 返回结果
         return {
             "status": "success",
             "message": "Document generated successfully",
             "outline": outline,
-            "doc_path": doc_path
+            "doc_path": ""
         }
             
     except Exception as e:

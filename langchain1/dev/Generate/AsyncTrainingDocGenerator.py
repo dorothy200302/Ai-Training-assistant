@@ -6,7 +6,7 @@ import tempfile
 import asyncio
 import hashlib
 from datetime import datetime
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 # Third-party imports
 import numpy as np
@@ -15,6 +15,7 @@ import backoff
 from tenacity import retry, stop_after_attempt, wait_exponential
 from fastapi import HTTPException
 import logging
+import tiktoken
 
 
 # LangChain imports
@@ -213,6 +214,48 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             self.logger.error(f"Error initializing vector store: {str(e)}")
             raise
 
+        # 初始化token计数器
+        self.token_usage = {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0
+        }
+        
+        # 初始化token编码器
+        self.tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        
+        # 记录开始时间
+        self.start_time = datetime.now()
+        
+        # 价格配置(每1000个token的价格,单位:元)
+        self.price_config = {
+            'prompt_tokens': 0.002,  # 输入token价格
+            'completion_tokens': 0.004  # 输出token价格
+        }
+
+    def count_tokens(self, text: str) -> int:
+        """计算文本的token数量"""
+        try:
+            return len(self.tokenizer.encode(text))
+        except Exception as e:
+            self.logger.error(f"Token counting error: {str(e)}")
+            return 0
+
+    def update_token_usage(self, prompt_tokens: int, completion_tokens: int):
+        """更新token使用统计"""
+        self.token_usage['prompt_tokens'] += prompt_tokens
+        self.token_usage['completion_tokens'] += completion_tokens
+        self.token_usage['total_tokens'] = self.token_usage['prompt_tokens'] + self.token_usage['completion_tokens']
+
+    def calculate_cost(self) -> Dict[str, float]:
+        """计算费用"""
+        return {
+            'prompt_cost': (self.token_usage['prompt_tokens'] / 1000) * self.price_config['prompt_tokens'],
+            'completion_cost': (self.token_usage['completion_tokens'] / 1000) * self.price_config['completion_tokens'],
+            'total_cost': ((self.token_usage['prompt_tokens'] / 1000) * self.price_config['prompt_tokens'] +
+                         (self.token_usage['completion_tokens'] / 1000) * self.price_config['completion_tokens'])
+        }
+
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     async def generate_training_outline(self, requirements=True):
         """使用模型生成培训大纲，包含搜索查询和引用"""
@@ -324,6 +367,16 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             self.logger.info("Outline generation completed successfully")
             self.logger.info(f"Outline length: {len(outline)}")
             self.logger.debug(f"Outline preview: {outline[:200]}...")
+
+            # 计算输入token
+            prompt_tokens = self.count_tokens(str(self.background_informations))
+            
+            # 计算输出token
+            completion_tokens = self.count_tokens(outline)
+            
+            # 更新使用统计
+            self.update_token_usage(prompt_tokens, completion_tokens)
+            
             return outline
 
         except Exception as e:
@@ -948,6 +1001,15 @@ Content: {doc.page_content}
         # 合并所有内容
         complete_doc = '\n'.join(full_doc)
         
+        # 计算输入token
+        prompt_tokens = self.count_tokens(outline)
+        
+        # 计算输出token
+        completion_tokens = self.count_tokens(complete_doc)
+        
+        # 更新使用统计
+        self.update_token_usage(prompt_tokens, completion_tokens)
+        
         return complete_doc
 
     async def save_full_doc(self, full_doc: str) -> str:
@@ -1167,6 +1229,47 @@ Content: {doc.page_content}
             self.logger.error(f"Error initializing vector store: {str(e)}")
             raise
     
+    def get_usage_statistics(self) -> Dict[str, any]:
+        """获取使用统计信息"""
+        duration = (datetime.now() - self.start_time).total_seconds()
+        costs = self.calculate_cost()
+        
+        return {
+            'token_usage': self.token_usage,
+            'duration_seconds': duration,
+            'costs': costs,
+            'start_time': self.start_time.isoformat(),
+            'end_time': datetime.now().isoformat()
+        }
+
+    async def save_document(self, content: str, format: str = 'md') -> str:
+        """保存文档并记录最终统计信息"""
+        try:
+            # 创建输出目录
+            os.makedirs('output', exist_ok=True)
+            
+            # 生成文件名
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f'output/training_doc_{timestamp}.{format}'
+            
+            # 保存文档
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(content)
+                
+            # 保存使用统计
+            stats_filename = f'output/usage_stats_{timestamp}.json'
+            with open(stats_filename, 'w', encoding='utf-8') as f:
+                json.dump(self.get_usage_statistics(), f, ensure_ascii=False, indent=2)
+            
+            self.logger.info(f"Document saved to: {filename}")
+            self.logger.info(f"Usage statistics saved to: {stats_filename}")
+            
+            return filename
+            
+        except Exception as e:
+            self.logger.error(f"Error saving document: {str(e)}")
+            raise
+
 def insert_references(content: str) -> str:
     """
     Insert reference numbers from square brackets into the content.
