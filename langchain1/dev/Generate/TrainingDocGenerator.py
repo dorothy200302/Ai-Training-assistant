@@ -26,6 +26,7 @@ from langchain.document_loaders import (
 )
 import logging
 from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
+from ..Generate.ChartAIGenerator import ChartAIGenerator
 
 # 设置日志记录器
 logger = setup_logger("training_generator")
@@ -38,10 +39,19 @@ class TrainingDocGenerator:
         
         self.file_paths = file_paths
         self.background_informations = background_informations
+        self.document_cache = {}  # 文档缓存
         
         # 初始化嵌入模型
-        self.embeddings = SiliconFlowEmbeddings(
-            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
+        self.embeddings = SiliconFlowEmbeddings()
+        
+        # Initialize the LLM
+        self.llm = ChatOpenAI(
+            model="deepseek-chat",
+            api_key="sk-3767598f60e9415e852ff4c43ccc0852",
+            base_url="https://api.deepseek.com/v1",
+            temperature=0.7,
+            max_tokens=2000,
+            model_kwargs={}
         )
         
         try:
@@ -367,23 +377,48 @@ class TrainingDocGenerator:
     async def generate_full_training_doc(self, outline: str) -> str:
         """生成完整的培训文档"""
         try:
-            # 解析大纲中的章节
-            sections = self.parse_sections(outline)
-            logger.info(f"Parsed sections: {sections}")
+            # 解析大纲
+            sections = self._parse_outline(outline)
             
-            # 为每个章节生成内容
+            # 初始化文档内容
             full_doc = []
-            full_doc.append(outline)  # 添加大纲
             
+            # 生成每个部分的内容
             for section in sections:
-                content =  self.generate_section_content(section)
+                # 生成章节内容
+                content = await self.generate_section_content(section['title'], section['type'])
+                
+                # 为章节生成图表
+                chart_generator = ChartAIGenerator()
+                charts = await chart_generator.analyze_and_generate_charts(content)
+                
+                # 将图表嵌入到内容中
+                if charts:
+                    content = chart_generator.embed_charts_in_document(content, charts)
+                
+                # 添加到文档中
                 full_doc.append(content)
+                
+                # 如果有子章节，递归处理
+                if section.get('subsections'):
+                    for subsection in section['subsections']:
+                        subcontent = await self.generate_section_content(
+                            subsection['title'],
+                            subsection['type']
+                        )
+                        # 为子章节生成图表
+                        subcharts = await chart_generator.analyze_and_generate_charts(subcontent)
+                        if subcharts:
+                            subcontent = chart_generator.embed_charts_in_document(subcontent, subcharts)
+                        full_doc.append(subcontent)
             
-            return "\n\n".join(full_doc)
+            # 合并所有内容
+            complete_doc = '\n\n'.join(full_doc)
+            
+            return complete_doc
             
         except Exception as e:
-            logger.error(f"Error generating full training doc: {str(e)}")
-            logger.error(traceback.format_exc())
+            print(f"Error generating full document: {str(e)}")
             raise
 
     def review_content(self, content):

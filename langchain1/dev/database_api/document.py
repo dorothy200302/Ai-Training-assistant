@@ -1,18 +1,110 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Dict, List, Optional
 from sqlalchemy.orm import Session
-from dev.models.models import Documents
-from dev.schemas.document import DocumentCreate, DocumentResponse, UrlsMapDTO
+from models.models import Documents
+from schemas.document import DocumentCreate, DocumentResponse, UrlsMapDTO
 from datetime import datetime
-from dev.crud.crud_document import document_crud
-from dev.core.security import get_current_user
-from dev.database import get_db
+from crud.crud_document import document_crud
+from core.security import get_current_user
+from database import get_db
 
 router = APIRouter(
     prefix="/documents",
     tags=["documents"]
 )
 
+@router.post("/{document_id}/permissions")
+async def grant_document_access(
+    document_id: str,
+    user_id: int,
+    permission_level: PermissionLevel,
+    expires_in_days: Optional[int] = None,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """授予文档访问权限"""
+    permission_service = PermissionService(db)
+    return permission_service.grant_access(
+        document_id=document_id,
+        user_id=user_id,
+        granted_by=current_user['user_id'],
+        permission_level=permission_level,
+        expires_in_days=expires_in_days
+    )
+
+@router.delete("/{document_id}/permissions/{user_id}")
+async def revoke_document_access(
+    document_id: str,
+    user_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """撤销文档访问权限"""
+    permission_service = PermissionService(db)
+    return permission_service.revoke_access(
+        document_id=document_id,
+        user_id=user_id
+    )
+
+@router.post("/{document_id}/progress")
+async def update_learning_progress(
+    document_id: str,
+    current_section: str,
+    progress_percentage: float,
+    completed: bool = False,
+    quiz_scores: Optional[Dict] = None,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """更新学习进度"""
+    progress_service = ProgressService(db)
+    return progress_service.update_progress(
+        user_id=current_user['user_id'],
+        document_id=document_id,
+        current_section=current_section,
+        progress_percentage=progress_percentage,
+        completed=completed,
+        quiz_scores=quiz_scores
+    )
+
+@router.get("/{document_id}/progress")
+async def get_document_progress(
+    document_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取文档学习进度"""
+    progress_service = ProgressService(db)
+    return progress_service.get_document_progress(document_id)
+
+@router.get("/team/progress")
+async def get_team_progress(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取团队学习进度"""
+    progress_service = ProgressService(db)
+    return progress_service.get_team_progress(current_user['user_id'])
+
+@router.get("/{document_id}/statistics")
+async def get_document_statistics(
+    document_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取文档统计数据"""
+    # 获取访问统计
+    access_log_service = AccessLogService(db)
+    access_stats = access_log_service.get_access_statistics(document_id)
+    
+    # 获取测验统计
+    progress_service = ProgressService(db)
+    quiz_stats = progress_service.get_quiz_statistics(document_id)
+    
+    return {
+        "access_statistics": access_stats,
+        "quiz_statistics": quiz_stats
+    }
 @router.post("/", response_model=DocumentResponse)
 def create_document(
     document: DocumentCreate, 

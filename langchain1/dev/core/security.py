@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
-from typing import Dict, Optional
+from typing import Dict, Optional, Any, Union
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from dev.config.settings import settings
-from dev.utils.redis import RedisClient
-from dev.utils.mail import EmailService
+from config.settings import settings
+from utils.redis import RedisClient
+from utils.mail import EmailService
+from .token_verifier import verify_user_from_email
 import random
 import json
 import logging
@@ -99,25 +100,7 @@ class Security:
                         detail="Invalid token: email field is empty"
                     )
 
-                # 从数据库获取用户信息
-                from dev.crud.crud_user import user_crud
-                from dev.database import SessionLocal
-                
-                db = SessionLocal()
-                try:
-                    user = user_crud.get_by_email(db, email)
-                    if not user:
-                        raise HTTPException(
-                            status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="User not found"
-                        )
-                    return {
-                        "user_id": user.user_id,  # 使用 user_id 而不是 id
-                        "email": user.email,
-                        "is_active": True  # Users table doesn't have is_active field
-                    }
-                finally:
-                    db.close()
+                return verify_user_from_email(email)
 
             except json.JSONDecodeError as e:
                 logging.error(f"[verify_token] Failed to parse token data: {e}")

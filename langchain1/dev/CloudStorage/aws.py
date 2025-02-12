@@ -4,10 +4,15 @@ from urllib.parse import urlparse, parse_qs
 import os
 from dev.models import *
 from dev.config.database import SessionLocal
-from dev.crud import document_crud
+from crud.crud_document import document_crud
 from typing import Tuple
 import urllib3
 import socket
+import boto3
+import logging
+from botocore.exceptions import ClientError
+from fastapi import HTTPException
+from typing import Optional
 
 # 禁用代理设置
 os.environ['NO_PROXY'] = '*'
@@ -46,7 +51,12 @@ def get_presigned_url(file_key):
     url = url + 'sub_path=' + file_type + '&file_key=' + file_key
     
     try:
-        response = requests.get(url, headers=headers, timeout=30, verify=False, proxies={'http': None, 'https': None})
+        response = requests.get(
+            url, 
+            headers=headers, 
+            timeout=30, 
+            verify=False
+        )
         
         if response.status_code == 200:
             presign_url = response.json()['data']['presign_url']
@@ -82,7 +92,13 @@ def upload_file_to_s3(presigned_url: str, file_path: str) -> str:
             headers = {
                 'Content-Type': content_type
             }
-            response = requests.put(presigned_url, data=file, headers=headers, timeout=30, verify=False, proxies={'http': None, 'https': None})
+            response = requests.put(
+                presigned_url, 
+                data=file, 
+                headers=headers, 
+                timeout=30,
+                verify=False
+            )
             
             if response.status_code in [200, 201]:
                 # 从预签名URL中提取基本URL
@@ -110,7 +126,12 @@ def record_file_metadata(s3_url, description=""):
         "file_type": file_type,
         "s3_url": s3_url
     }
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(
+        url, 
+        headers=headers, 
+        data=json.dumps(data),
+        verify=False
+    )
     return response.json()
 
 if __name__ == "__main__":

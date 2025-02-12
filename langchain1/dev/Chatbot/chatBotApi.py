@@ -88,10 +88,10 @@ async def upload_chat_document(
             for file in files:
                 # Validate file extension
                 file_ext = os.path.splitext(file.filename)[1].lower()
-                if file_ext not in ['.doc', '.docx', '.pdf', '.txt', '.md']:
+                if file_ext not in ['.doc', '.docx', '.pdf', '.txt', '.md', '.ppt', '.pptx']:
                     raise HTTPException(
                         status_code=400, 
-                        detail=f"Unsupported file type: {file_ext}"
+                        detail=f"Unsupported file type: {file_ext}. Supported types are: .doc, .docx, .pdf, .txt, .md, .ppt, .pptx"
                     )
                 
                 # Generate safe filename
@@ -164,6 +164,7 @@ async def chat_endpoint(
                         continue
                     try:
                         with open(temp_file, 'rb') as f:
+                            # 尝试读取文件的前几个字节来验证可读性
                             f.read(1024)
                         temp_files.append(temp_file)
                         print(f"Successfully validated file: {temp_file}")
@@ -186,9 +187,9 @@ async def chat_endpoint(
                 file_size = os.path.getsize(file_path)
                 print(f"Loading file: {file_path}, Size: {file_size} bytes")
             
-            # 加载所有文档 - 添加 await
+            # 加载所有文档
             try:
-                load_result = await doc_chat.load_document(temp_files)  # 添加 await
+                load_result = doc_chat.load_document(temp_files)
                 print(f"Document loading result: {load_result}")
             except Exception as e:
                 print(f"Error in load_document: {str(e)}")

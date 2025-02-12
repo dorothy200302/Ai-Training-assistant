@@ -1,13 +1,18 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class UserBase(BaseModel):
     email: EmailStr
+    username: str
 
 class UserCreate(UserBase):
     password: str
-    username: str
 
-class UserLogin(UserBase):
+class UserUpdate(UserBase):
+    password: Optional[str] = None
+
+class UserLogin(BaseModel):
+    email: EmailStr
     password: str
 
 class UserInDB(UserBase):
@@ -20,7 +25,7 @@ class UserInDB(UserBase):
 
 class User(UserBase):
     id: int
-    is_active: bool
+    is_active: bool = True
     
     class Config:
         from_attributes = True
@@ -37,9 +42,9 @@ class UserResponse(BaseModel):
         populate_by_name = True
 
 class UserRegisterRequest(BaseModel):
-    email: str
-    password: str
+    email: EmailStr
     username: str
+    password: str
     verification_code: str
 
 class EmailVerifyRequest(BaseModel):

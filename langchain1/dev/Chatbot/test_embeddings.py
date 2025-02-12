@@ -21,7 +21,6 @@ class SiliconFlowEmbeddings(Embeddings):
         self.client = httpx.Client(
             verify=False,
             timeout=httpx.Timeout(30.0),
-            proxies=None,
             trust_env=False
         )
         

@@ -9,12 +9,8 @@ if project_root not in sys.path:
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
-from fastapi.openapi.docs import (
-    get_swagger_ui_html,
-    get_swagger_ui_oauth2_redirect_html,
-)
-from fastapi.openapi.utils import get_openapi
 
 # Use relative imports
 from database_api.document import router as document_router
@@ -27,12 +23,10 @@ from Chatbot.chatBotApi import router as chatbot_router
 app = FastAPI(
     title="Training Document API",
     description="API for managing training documents",
-    version="1.0.0",
-    docs_url=None,  # 禁用默认的 docs 路径
-    redoc_url=None  # 禁用默认的 redoc 路径
+    version="1.0.0"
 )
 
-# 更新 CORS 中间件配置
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],
@@ -70,52 +64,3 @@ async def list_routes():
 @app.get("/")
 async def root():
     return {"status": "ok", "message": "Training Document API is running"}
-
-# 自定义 OpenAPI 文档
-@app.get("/docs", include_in_schema=False)
-async def custom_swagger_ui_html():
-    return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
-        title=f"{app.title} - Swagger UI",
-        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
-        swagger_js_url="/static/swagger-ui-bundle.js",
-        swagger_css_url="/static/swagger-ui.css",
-    )
-
-@app.get("/redoc", include_in_schema=False)
-async def redoc_html():
-    return get_redoc_html(
-        openapi_url=app.openapi_url,
-        title=f"{app.title} - ReDoc",
-        redoc_js_url="/static/redoc.standalone.js",
-    )
-
-# 自定义 OpenAPI schema
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    
-    openapi_schema = get_openapi(
-        title=app.title,
-        version=app.version,
-        description=app.description,
-        routes=app.routes,
-    )
-    
-    # 添加安全定义
-    openapi_schema["components"]["securitySchemes"] = {
-        "OAuth2PasswordBearer": {
-            "type": "oauth2",
-            "flows": {
-                "password": {
-                    "tokenUrl": "/api/user/login",
-                    "scopes": {}
-                }
-            }
-        }
-    }
-    
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-app.openapi = custom_openapi

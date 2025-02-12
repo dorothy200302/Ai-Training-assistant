@@ -106,18 +106,6 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             is_separator_regex=False,
         )
         
-        # Initialize embeddings with batching
-        self.llm = ChatOpenAI(
-            model_name="deepseek-chat",
-            openai_api_key="sk-3767598f60e9415e852ff4c43ccc0852",
-            openai_api_base="https://api.deepseek.com/v1",
-            temperature=0.7,
-            max_tokens=2000
-        )
-        
-        self.embeddings = SiliconFlowEmbeddings(
-            api_key="sk-jfiddowyvulysbcxctumczcxqwiwtrfuldjgfvpwujtvncbg"
-        )
         # Initialize document loader based on file type
         try:
             documents = []
@@ -231,6 +219,20 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
         self.price_config = {
             'prompt_tokens': 0.002,  # 输入token价格
             'completion_tokens': 0.004  # 输出token价格
+        }
+
+        # Initialize table processor
+        self.table_processor = TableProcessor()
+        
+        # Initialize PPT generator
+        self.ppt_generator = PPTGenerator()
+        
+        # Configure generation parameters
+        self.outline_versions = []
+        self.generation_config = {
+            'max_outline_versions': 3,
+            'outline_timeout': 10,  # 10 seconds timeout
+            'temperature_values': [0.5, 0.7, 0.9]  # Different outline creativity
         }
 
     def count_tokens(self, text: str) -> int:
@@ -1269,6 +1271,138 @@ Content: {doc.page_content}
         except Exception as e:
             self.logger.error(f"Error saving document: {str(e)}")
             raise
+
+    async def generate_multiple_outlines(self, requirements=None) -> List[str]:
+        """生成多个版本的大纲供选择"""
+        try:
+            outlines = []
+            tasks = []
+            
+            # 使用不同的temperature生成多个版本
+            for temp in self.generation_config['temperature_values']:
+                task = asyncio.create_task(
+                    self._generate_single_outline(requirements, temperature=temp)
+                )
+                tasks.append(task)
+            
+            # 等待所有任务完成或超时
+            done, pending = await asyncio.wait(
+                tasks,
+                timeout=self.generation_config['outline_timeout']
+            )
+            
+            # 处理完成的任务
+            for task in done:
+                try:
+                    outline = await task
+                    if outline:
+                        outlines.append(outline)
+                except Exception as e:
+                    logger.error(f"Error generating outline: {str(e)}")
+            
+            # 取消未完成的任务
+            for task in pending:
+                task.cancel()
+            
+            # 存储生成的大纲版本
+            self.outline_versions = outlines
+            
+            return outlines
+            
+        except Exception as e:
+            logger.error(f"Error generating multiple outlines: {str(e)}")
+            raise
+
+    async def _generate_single_outline(self, requirements=None, temperature=0.7) -> str:
+        """生成单个版本的大纲"""
+        prompt_of_informations = self.generate_prompt()
+        
+        # 获取相关文档内容
+        docs = self.vector_store.similarity_search("培训课程设计")
+        references = []
+        local_context = []
+        
+        for i, doc in enumerate(docs):
+            source = doc.metadata.get('source', 'Local Document')
+            content = doc.page_content
+            reference_id = f"[{i+1}]"
+            references.append(f"{reference_id} {source}")
+            local_context.append(f"{content} {reference_id}")
+        
+        context = "\n\n".join(local_context)
+        
+        # 使用修改后的提示模板
+        outline_prompt = PromptTemplate(
+            template=prompt_of_informations + OUTLINE_PROMPT + """
+            请生成一个独特的培训大纲版本，考虑以下要素：
+            1. 内容的完整性和逻辑性
+            2. 章节的合理组织
+            3. 重点内容的突出
+            4. 实践环节的设计
+            
+            在使用文档内容时，请使用[1]、[2]等格式标注引用来源。
+            在大纲最后添加"参考文档"部分列出所有引用的文档。
+            
+            参考文档内容：
+            {context}
+            
+            引用格式示例：
+            - 根据[1]的最佳实践...
+            - 参考[2]的培训方法...
+            
+            参考文档：
+            {references}
+            """,
+            input_variables=["context", "references"]
+        )
+        
+        qa_chain = RetrievalQA.from_chain_type(
+            llm=self.llm,
+            chain_type="stuff",
+            retriever=self.vector_store.as_retriever(),
+            chain_type_kwargs={
+                "prompt": outline_prompt
+            }
+        )
+        
+        # 设置temperature以控制创意度
+        self.llm.temperature = temperature
+        
+        outline = await qa_chain.ainvoke({
+            "query": f"{self.background_informations.get('project_title')}培训课程设计"
+        })
+        
+        return outline['result'] if isinstance(outline, dict) else outline
+
+    class TableProcessor:
+        """处理复杂表格样式的类"""
+        def __init__(self):
+            self.supported_styles = ['simple', 'grid', 'pipe', 'html']
+            
+        def parse_table(self, markdown_table: str) -> dict:
+            """解析markdown表格，返回结构化数据"""
+            # 实现表格解析逻辑
+            pass
+            
+        def format_table(self, table_data: dict, style: str = 'grid') -> str:
+            """将表格数据格式化为指定样式"""
+            # 实现表格格式化逻辑
+            pass
+
+    class PPTGenerator:
+        """处理PPT生成的类"""
+        def __init__(self):
+            self.template_path = "templates/ppt/"
+            
+        def create_presentation(self, content: str) -> None:
+            """创建PPT演示文稿"""
+            # 实现PPT生成逻辑
+            pass
+            
+        def add_slide(self, content: str, slide_type: str = 'content') -> None:
+            """添加幻灯片"""
+            # 实现幻灯片添加逻辑
+            pass
 
 def insert_references(content: str) -> str:
     """

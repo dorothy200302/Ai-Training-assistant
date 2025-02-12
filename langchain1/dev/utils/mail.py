@@ -2,11 +2,13 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+import os
+import logging
+import json
+from config.settings import settings
 from typing import List, Optional
 from pathlib import Path
 from fastapi import HTTPException
-from dev.config.settings import settings
-import logging
 
 logger = logging.getLogger(__name__)
 

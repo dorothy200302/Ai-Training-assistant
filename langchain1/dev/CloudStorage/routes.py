@@ -68,18 +68,34 @@ async def generate_outline_and_upload(
     requirements: Optional[str] = Form(None),
     ai_model: str = Form(...),
     description: str = Form(...),
-    current_user: dict = Depends(get_current_user)  # 使用依赖注入
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    temp_files = []
+    temp_files = []  # 将变量声明移到函数开始处
     temp_dir = None
     
     try:
-        # 直接使用注入的 current_user
-        logger.info(f"Current user data: {current_user}")
-        user_email = current_user.get('email')
-        if not user_email:
-            raise HTTPException(status_code=400, detail="User email not found")
+        user_email = current_user["email"]
+        
+        # 检查用户能量值
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user or user.energy < 5:
+            return JSONResponse(
+                status_code=402,
+                content={
+                    "status": "energy_insufficient",
+                    "message": "能量值不足,请充值",
+                    "current_energy": user.energy if user else 0,
+                    "required_energy": 5,
+                    "redirect_url": "/recharge"
+                }
+            )
             
+        # 扣除能量值
+        user.energy -= 5
+        db.commit()
+        
+        logger.info(f"Current user data: {current_user}")
         logger.info(f"User email: {user_email}")
         
         logger.info("Received generate_outline_and_upload request")
@@ -127,15 +143,16 @@ async def generate_outline_and_upload(
         background_info = json.loads(description)
         
         # 初始化文档生成器
-        doc_generator = AsyncTrainingDocGenerator(
+        generator = AsyncTrainingDocGenerator(
             file_paths=temp_files,
             model_name=ai_model,
             background_informations=background_info,
-            user_email=user_email
+            user_email=user_email,
+            db=db  # 传入数据库会话
         )
         
         # 生成大纲
-        outline = await doc_generator.generate_training_outline(requirements)
+        outline = await generator.generate()
        
         # 返回结果
         return {
@@ -144,28 +161,37 @@ async def generate_outline_and_upload(
             "outline": outline,
             "doc_path": ""
         }
+    
             
+    except HTTPException as he:
+        if he.status_code == 402:
+            # 能量不足的情况
+            return JSONResponse(
+                status_code=402,
+                content={
+                    "status": "energy_insufficient",
+                    "message": "能量值不足,请充值",
+                    **he.detail,
+                    "redirect_url": "/recharge"
+                }
+            )
+        raise he
     except Exception as e:
         logger.error(f"Error in generate_outline_and_upload: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-    
-    finally:
         # 清理临时文件
         for temp_file in temp_files:
             try:
                 if os.path.exists(temp_file):
                     os.remove(temp_file)
-                    logger.info(f"Successfully removed temp file: {temp_file}")
-            except Exception as e:
-                logger.error(f"Error removing temp file {temp_file}: {str(e)}")
-        
-        # 清理临时目录
+            except Exception as cleanup_error:
+                logger.error(f"Error cleaning up temp file: {cleanup_error}")
+                
         if temp_dir and os.path.exists(temp_dir):
             try:
                 os.rmdir(temp_dir)
-                logger.info(f"Successfully removed temp directory: {temp_dir}")
-            except Exception as e:
-                logger.error(f"Error removing temp directory: {str(e)}")
+            except:
+                pass
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/generate_full_doc_with_doc/")
 async def generate_full_doc_with_doc(
@@ -856,3 +882,62 @@ async def delete_generated_document(
         "status": "success",
         "message": "Document deleted successfully"
     }
+
+@router.post("/export-document")
+async def export_document(
+    document_content: str = Body(...),
+    format: str = Body(...),
+    document_name: str = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """导出并保存完整文档"""
+    try:
+        # 生成文件名
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{document_name}_{timestamp}.{format}"
+        
+        # 转换文档格式
+        if format == 'pdf':
+            file_content = await generate_pdf(document_content)
+            content_type = 'application/pdf'
+        elif format == 'docx':
+            file_content = await generate_docx(document_content)
+            content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        else:
+            raise HTTPException(status_code=400, detail="Unsupported format")
+        
+        # 上传到S3
+        file_key = f"documents/{current_user['user_id']}/{filename}"
+        s3_url = await upload_file_to_s3_by_key(file_key, file_content)
+        
+        # 创建文档记录
+        document = Documents(
+            upload_file_name=filename,
+            url=s3_url,
+            user_id=current_user['user_id'],
+            user_email=current_user['email'],
+            status='completed'
+        )
+        
+        db.add(document)
+        db.commit()
+        
+        # 记录访问日志
+        access_log_service = AccessLogService(db)
+        await access_log_service.log_access(
+            user_id=current_user['user_id'],
+            document_id=str(document.document_id),
+            action='export'
+        )
+        
+        return {
+            "message": "Document exported and saved successfully",
+            "url": s3_url,
+            "document_id": document.document_id
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+

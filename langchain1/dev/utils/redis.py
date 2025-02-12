@@ -1,11 +1,12 @@
-from redis import Redis
-from typing import Dict, Any, Optional
+import redis
 import json
-from dev.config.settings import settings
+import logging
+from config.settings import settings
+from typing import Dict, Any, Optional
 
 class RedisClient:
     def __init__(self):
-        self.client = Redis(
+        self.client = redis.Redis(
             host=settings.REDIS_HOST,
             port=settings.REDIS_PORT,
             db=settings.REDIS_DB,

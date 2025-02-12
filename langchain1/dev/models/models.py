@@ -22,6 +22,7 @@ class Users(Base):
     company_id = Column(Integer)
     department = Column(String(50))
     privilege = Column(Integer, default=0)
+    energy = Column(Integer, default=5)
 
 class Documents(Base):
     __tablename__ = "documents"
@@ -96,6 +97,59 @@ class AccessLevel(enum.Enum):
 
 class Role(enum.Enum):
     ADMIN = "admin"
+    USER = "user"
+    MANAGER = "manager"
+
+class Permissions(Base):
+    __tablename__ = "permissions"
+    
+    permission_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("employees.id", ondelete='CASCADE'))
+    role = Column(String(20))
+    resource = Column(String(100))
+    access_level = Column(String(20))
+    
+    # Add reverse relationship
+    employee = relationship("Employees", back_populates="permissions")
+
+class TrainingDocuments(Base):
+    __tablename__ = "trainingdocuments"
+    
+    training_document_id = Column(Integer, primary_key=True, autoincrement=True)
+    document_id = Column(Integer, ForeignKey("documents.document_id", ondelete='CASCADE'))
+    training_topic = Column(String(255), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    updated_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+
+    # Add relationship to Documents
+    document = relationship("Documents", back_populates="training_documents")
+
+class Feedback(Base):
+    __tablename__ = "feedback"
+    
+    feedback_id = Column(Integer, primary_key=True, autoincrement=True)
+    document_id = Column(Integer, ForeignKey("documents.document_id", ondelete='CASCADE'))
+    feedback_text = Column(Text)
+    created_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    updated_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+
+    # Add relationship to Documents
+    document = relationship("Documents", back_populates="feedback")
+
+class FileIndex(Base):
+    __tablename__ = "file_index"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    document_id = Column(Integer, ForeignKey("documents.document_id", ondelete='CASCADE'))
+    file_path = Column(String(500))
+    file_name = Column(String(255))
+    file_type = Column(String(50))
+    created_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    updated_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+
+    # Add relationship to Documents
+    document = relationship("Documents", back_populates="file_indices")
+
     USER = "user"
     MANAGER = "manager"
 

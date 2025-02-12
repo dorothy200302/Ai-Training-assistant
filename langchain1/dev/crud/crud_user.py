@@ -2,23 +2,30 @@ import logging
 import traceback
 from typing import Optional
 from sqlalchemy.orm import Session
-from dev.models.models import Users
-from dev.crud.crud_base import CRUDBase
-from dev.core.security import Security
-from dev.schemas.user import UserCreate, UserRegisterRequest
+from core.password import get_password_hash, verify_password
+from fastapi import HTTPException, status
+from models.models import Users
+from schemas.user import UserCreate, UserUpdate, UserRegisterRequest
+from .base import CRUDBase
 import datetime
 
 # 配置日志
 logger = logging.getLogger(__name__)
 
-class CRUDUser(CRUDBase[Users]):
+class CRUDUser(CRUDBase[Users, UserCreate, UserUpdate]):
     def get_by_email(self, db: Session, email: str) -> Optional[Users]:
-        return db.query(Users).filter(Users.email == email).first()
+        """根据邮箱获取用户"""
+        try:
+            return db.query(Users).filter(Users.email == email).first()
+        except Exception as e:
+            logger.error(f"Error getting user by email: {str(e)}")
+            logger.error(traceback.format_exc())
+            return None
     
     def create_user(self, db: Session, user_data):
         try:
             logger.info(f"Creating user with data: {user_data}")
-            hashed_password = Security.get_password_hash(user_data.password)
+            hashed_password = get_password_hash(user_data.password)
             
             # 创建用户数据字典
             user_dict = {
@@ -58,7 +65,7 @@ class CRUDUser(CRUDBase[Users]):
         user = self.get_by_email(db, email)
         if not user:
             return None
-        if not Security.verify_password(password, user.password):
+        if not verify_password(password, user.password):
             return None
         return user
 

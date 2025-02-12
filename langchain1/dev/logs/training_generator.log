@@ -1,0 +1,107 @@
+2025-02-11 23:03:21,135 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpgwl1fyja\d3ba8656-2ce0-4a6b-b1bb-c844d99478ce.docx
+2025-02-11 23:03:25,909 - training_generator - INFO - Loaded 4 documents from C:\Users\dorot\AppData\Local\Temp\tmpgwl1fyja\d3ba8656-2ce0-4a6b-b1bb-c844d99478ce.docx
+2025-02-11 23:03:25,909 - training_generator - INFO - Added document with 205 characters
+2025-02-11 23:03:25,910 - training_generator - INFO - Added document with 375 characters
+2025-02-11 23:03:25,910 - training_generator - INFO - Added document with 157 characters
+2025-02-11 23:03:25,910 - training_generator - INFO - Added document with 405 characters
+2025-02-11 23:03:25,911 - training_generator - INFO - Split document into 1 chunks
+2025-02-11 23:03:25,911 - training_generator - INFO - Added chunk with 205 characters
+2025-02-11 23:03:25,911 - training_generator - INFO - Split document into 1 chunks
+2025-02-11 23:03:25,911 - training_generator - INFO - Added chunk with 375 characters
+2025-02-11 23:03:25,911 - training_generator - INFO - Split document into 1 chunks
+2025-02-11 23:03:25,911 - training_generator - INFO - Added chunk with 157 characters
+2025-02-11 23:03:25,912 - training_generator - INFO - Split document into 1 chunks
+2025-02-11 23:03:25,912 - training_generator - INFO - Added chunk with 405 characters
+2025-02-11 23:03:25,912 - training_generator - INFO - Created 4 total chunks
+2025-02-11 23:03:51,589 - training_generator - INFO - Successfully created vector store
+2025-02-11 23:19:42,708 - training_generator - ERROR - Error loading file C:\Users\dorot\AppData\Local\Temp\tmpi8t5hvcg\793100f0-142b-49d1-995c-e658dc7b18b1.docx: name 'UnstructuredWordDocumentLoader' is not defined
+2025-02-11 23:19:42,709 - training_generator - ERROR - Error during initialization: No valid documents were loaded
+2025-02-11 23:19:42,710 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 69, in __init__
+    self._initialize_documents()
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 146, in _initialize_documents
+    raise ValueError("No valid documents were loaded")
+ValueError: No valid documents were loaded
+2025-02-12 17:37:39,025 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpqomeq6h4\702cc6ea-f7f4-4106-92bd-66306e96264d.docx
+2025-02-12 17:37:46,158 - training_generator - INFO - Loaded 7 documents from C:\Users\dorot\AppData\Local\Temp\tmpqomeq6h4\702cc6ea-f7f4-4106-92bd-66306e96264d.docx
+2025-02-12 17:37:46,159 - training_generator - INFO - Added document with 72 characters
+2025-02-12 17:37:46,159 - training_generator - INFO - Added document with 175 characters
+2025-02-12 17:37:46,159 - training_generator - INFO - Added document with 174 characters
+2025-02-12 17:37:46,159 - training_generator - INFO - Added document with 165 characters
+2025-02-12 17:37:46,159 - training_generator - INFO - Added document with 197 characters
+2025-02-12 17:37:46,161 - training_generator - INFO - Added document with 157 characters
+2025-02-12 17:37:46,161 - training_generator - INFO - Added document with 121 characters
+2025-02-12 17:37:46,161 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,161 - training_generator - INFO - Added chunk with 72 characters
+2025-02-12 17:37:46,161 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,161 - training_generator - INFO - Added chunk with 175 characters
+2025-02-12 17:37:46,162 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,162 - training_generator - INFO - Added chunk with 174 characters
+2025-02-12 17:37:46,162 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,162 - training_generator - INFO - Added chunk with 165 characters
+2025-02-12 17:37:46,162 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,162 - training_generator - INFO - Added chunk with 197 characters
+2025-02-12 17:37:46,162 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,162 - training_generator - INFO - Added chunk with 157 characters
+2025-02-12 17:37:46,162 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:37:46,163 - training_generator - INFO - Added chunk with 121 characters
+2025-02-12 17:37:46,163 - training_generator - INFO - Created 7 total chunks
+2025-02-12 17:37:55,158 - training_generator - INFO - Successfully created vector store
+2025-02-12 17:45:26,104 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpbzrs1r8j\c189a094-c72b-4c6d-9bd4-5be88237313b.docx
+2025-02-12 17:45:28,801 - training_generator - INFO - Loaded 4 documents from C:\Users\dorot\AppData\Local\Temp\tmpbzrs1r8j\c189a094-c72b-4c6d-9bd4-5be88237313b.docx
+2025-02-12 17:45:28,802 - training_generator - INFO - Added document with 205 characters
+2025-02-12 17:45:28,802 - training_generator - INFO - Added document with 375 characters
+2025-02-12 17:45:28,802 - training_generator - INFO - Added document with 157 characters
+2025-02-12 17:45:28,802 - training_generator - INFO - Added document with 405 characters
+2025-02-12 17:45:28,803 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:45:28,803 - training_generator - INFO - Added chunk with 205 characters
+2025-02-12 17:45:28,803 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:45:28,803 - training_generator - INFO - Added chunk with 375 characters
+2025-02-12 17:45:28,803 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:45:28,804 - training_generator - INFO - Added chunk with 157 characters
+2025-02-12 17:45:28,804 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:45:28,804 - training_generator - INFO - Added chunk with 405 characters
+2025-02-12 17:45:28,804 - training_generator - INFO - Created 4 total chunks
+2025-02-12 17:45:36,121 - training_generator - INFO - Successfully created vector store
+2025-02-12 17:49:22,725 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpvey5rsk5\3175be26-42d8-47ea-94d8-d6034c17ef47.docx
+2025-02-12 17:49:25,396 - training_generator - INFO - Loaded 7 documents from C:\Users\dorot\AppData\Local\Temp\tmpvey5rsk5\3175be26-42d8-47ea-94d8-d6034c17ef47.docx
+2025-02-12 17:49:25,397 - training_generator - INFO - Added document with 72 characters
+2025-02-12 17:49:25,397 - training_generator - INFO - Added document with 175 characters
+2025-02-12 17:49:25,397 - training_generator - INFO - Added document with 174 characters
+2025-02-12 17:49:25,398 - training_generator - INFO - Added document with 165 characters
+2025-02-12 17:49:25,398 - training_generator - INFO - Added document with 197 characters
+2025-02-12 17:49:25,398 - training_generator - INFO - Added document with 157 characters
+2025-02-12 17:49:25,398 - training_generator - INFO - Added document with 121 characters
+2025-02-12 17:49:25,398 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,398 - training_generator - INFO - Added chunk with 72 characters
+2025-02-12 17:49:25,399 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,399 - training_generator - INFO - Added chunk with 175 characters
+2025-02-12 17:49:25,399 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,399 - training_generator - INFO - Added chunk with 174 characters
+2025-02-12 17:49:25,399 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,399 - training_generator - INFO - Added chunk with 165 characters
+2025-02-12 17:49:25,399 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,399 - training_generator - INFO - Added chunk with 197 characters
+2025-02-12 17:49:25,399 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,401 - training_generator - INFO - Added chunk with 157 characters
+2025-02-12 17:49:25,401 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 17:49:25,401 - training_generator - INFO - Added chunk with 121 characters
+2025-02-12 17:49:25,401 - training_generator - INFO - Created 7 total chunks
+2025-02-12 17:49:34,017 - training_generator - INFO - Successfully created vector store
+2025-02-12 18:22:13,869 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmplfakxp6n\ebfee935-3938-4ad6-b23e-edcf0b68aad6.docx
+2025-02-12 18:22:13,932 - training_generator - INFO - Loaded 4 documents from C:\Users\dorot\AppData\Local\Temp\tmplfakxp6n\ebfee935-3938-4ad6-b23e-edcf0b68aad6.docx
+2025-02-12 18:22:13,933 - training_generator - INFO - Added document with 205 characters
+2025-02-12 18:22:13,934 - training_generator - INFO - Added document with 375 characters
+2025-02-12 18:22:13,934 - training_generator - INFO - Added document with 157 characters
+2025-02-12 18:22:13,934 - training_generator - INFO - Added document with 405 characters
+2025-02-12 18:22:13,935 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 18:22:13,935 - training_generator - INFO - Added chunk with 205 characters
+2025-02-12 18:22:13,935 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 18:22:13,935 - training_generator - INFO - Added chunk with 375 characters
+2025-02-12 18:22:13,935 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 18:22:13,936 - training_generator - INFO - Added chunk with 157 characters
+2025-02-12 18:22:13,936 - training_generator - INFO - Split document into 1 chunks
+2025-02-12 18:22:13,936 - training_generator - INFO - Added chunk with 405 characters
+2025-02-12 18:22:13,936 - training_generator - INFO - Created 4 total chunks
+2025-02-12 18:22:21,158 - training_generator - INFO - Successfully created vector store
