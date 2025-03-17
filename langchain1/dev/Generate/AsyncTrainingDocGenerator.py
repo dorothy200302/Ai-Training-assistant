@@ -6,25 +6,22 @@ import tempfile
 import asyncio
 import hashlib
 from datetime import datetime
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Any
 
 # Third-party imports
 import numpy as np
 from pydantic import BaseModel, Field
-import backoff
 from tenacity import retry, stop_after_attempt, wait_exponential
-from fastapi import HTTPException
 import logging
 import tiktoken
 
 
 # LangChain imports
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import BaseOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.documents import Document
-from langchain.chains import LLMChain
+from langchain.chains import LLMChain, RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import (
@@ -33,20 +30,33 @@ from langchain_community.document_loaders import (
     TextLoader,
     BSHTMLLoader
 )
-from langchain_community.retrievers import WikipediaRetriever
-
-# Transformer imports
-from sentence_transformers import CrossEncoder, SentenceTransformer
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from langchain.chains.retrieval_qa.base import RetrievalQA
 
 # Local imports
-from dev.Generate.TrainingDocGenerator import TrainingDocGenerator
-from dev.CloudStorage.aws import download_file_from_s3, upload_file_to_s3_by_key
-from dev.prompts.outlinePrompt import OUTLINE_PROMPT
-from dev.prompts.reviewPrompt import *
-from dev.models import *
-from dev.Generate.search import search_query_ideas
-from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
+from TrainingDocGenerator import TrainingDocGenerator
+# from dev.CloudStorage.aws import download_file_from_s3, upload_file_to_s3_by_key
+# from dev.prompts.outlinePrompt import OUTLINE_PROMPT
+# from dev.prompts.reviewPrompt import *
+# from dev.models import *
+# from dev.Generate.search import search_query_ideas
+# from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
+# from .content_extractor import ContentExtractor
+# from .ImageUnderstanding import ImageUnderstanding
+
+# 创建简单的替代类
+class ContentExtractor:
+    def __init__(self, *args, **kwargs):
+        pass
+    
+    def extract_content(self, *args, **kwargs):
+        return {}
+
+class ImageUnderstanding:
+    def __init__(self, *args, **kwargs):
+        pass
+    
+    def process_images(self, *args, **kwargs):
+        return []
 
 class Citation(BaseModel):
     """引用来源的结构定义"""
@@ -58,6 +68,15 @@ class Citation(BaseModel):
         ...,
         description="引用的具体内容片段"
     )
+
+
+class MultimodalContent:
+    """多模态内容处理结果"""
+    def __init__(self):
+        self.text_content: str = ""
+        self.images: List[Dict] = []
+        self.tables: List[Dict] = []
+        self.charts: List[Dict] = []
 
 class QuotedAnswer(BaseModel):
     """带引用的回答结构"""
@@ -105,6 +124,12 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
             length_function=len,
             is_separator_regex=False,
         )
+           # 初始化处理器
+        self.content_extractor = ContentExtractor()
+        self.image_understanding = ImageUnderstanding()
+         # 初始化向量存储
+        self.text_vector_store = None
+        self.visual_vector_store = None
         
         # Initialize document loader based on file type
         try:
@@ -222,10 +247,10 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
         }
 
         # Initialize table processor
-        self.table_processor = TableProcessor()
+        self.table_processor = self.TableProcessor()
         
         # Initialize PPT generator
-        self.ppt_generator = PPTGenerator()
+        self.ppt_generator = self.PPTGenerator()
         
         # Configure generation parameters
         self.outline_versions = []
@@ -258,6 +283,205 @@ class AsyncTrainingDocGenerator(TrainingDocGenerator):
                          (self.token_usage['completion_tokens'] / 1000) * self.price_config['completion_tokens'])
         }
 
+    async def _process_documents(self):
+        """处理上传的文档"""
+        try:
+            multimodal_contents = []
+            
+            for path in self.file_paths:
+                # 获取文件类型
+                file_type = os.path.splitext(path)[1][1:].lower()
+                processor = get_file_processor(file_type)
+                
+                # 提取内容
+                with open(path, 'rb') as f:
+                    # 提取文本
+                    text_content = await processor.extract_text(f)
+                    f.seek(0)
+                    
+                    # 提取表格
+                    tables = await processor.extract_tables(f)
+                    f.seek(0)
+                    
+                    # 提取图片和图表
+                    images = await processor.extract_images(f)
+                    
+                    # 创建多模态内容
+                    content = MultimodalContent()
+                    content.text_content = text_content
+                    
+                    # 处理图片和图表
+                    for img_data in images:
+                        analysis = await self.image_understanding.analyze_image(img_data)
+                        if analysis['type'] == 'chart':
+                            content.charts.append(analysis)
+                        else:
+                            content.images.append(analysis)
+                    
+                    # 处理表格
+                    content.tables = tables
+                    multimodal_contents.append(content)
+            
+            # 初始化向量存储
+            await self._initialize_vector_stores(multimodal_contents)
+            
+        except Exception as e:
+            self.logger.error(f"Document processing error: {str(e)}")
+            raise
+    
+    async def _initialize_vector_stores(self, contents: List[MultimodalContent]):
+        """初始化向量存储"""
+        try:
+            # 处理文本内容
+            text_documents = []
+            for content in contents:
+                chunks = self.text_splitter.split_text(content.text_content)
+                text_documents.extend([
+                    Document(page_content=chunk, metadata={"type": "text"})
+                    for chunk in chunks
+                ])
+            
+            # 处理视觉内容
+            visual_documents = []
+            for content in contents:
+                # 处理图片
+                for img in content.images:
+                    visual_documents.append(
+                        Document(
+                            page_content=img['content'],
+                            metadata={"type": "image"}
+                        )
+                    )
+                
+                # 处理图表
+                for chart in content.charts:
+                    visual_documents.append(
+                        Document(
+                            page_content=chart['content'],
+                            metadata={"type": "chart"}
+                        )
+                    )
+                
+                # 处理表格
+                for table in content.tables:
+                    visual_documents.append(
+                        Document(
+                            page_content=json.dumps(table, ensure_ascii=False),
+                            metadata={"type": "table"}
+                        )
+                    )
+            
+            # 创建向量存储
+            self.text_vector_store = FAISS.from_documents(text_documents, self.embeddings)
+            self.visual_vector_store = FAISS.from_documents(visual_documents, self.embeddings)
+            
+        except Exception as e:
+            self.logger.error(f"Vector store initialization error: {str(e)}")
+            raise
+    
+    async def hybrid_retrieve(self, query: str, k: int = 5) -> List[Document]:
+        """混合检索"""
+        try:
+            # 文本检索
+            text_results = self.text_vector_store.similarity_search(query, k=k)
+            
+            # 视觉内容检索
+            visual_results = self.visual_vector_store.similarity_search(query, k=k//2)
+            
+            # 结果融合
+            all_results = text_results + visual_results
+            
+            # 根据相关性排序
+            sorted_results = sorted(
+                all_results,
+                key=lambda x: x.metadata.get('score', 0),
+                reverse=True
+            )
+            
+            return sorted_results[:k]
+            
+        except Exception as e:
+            self.logger.error(f"Hybrid retrieval error: {str(e)}")
+            raise
+    
+    def _enhance_prompt_with_visuals(self, query: str, retrieved_docs: List[Document]) -> str:
+        """增强提示词，加入视觉内容"""
+        prompt = f"基于以下文本和视觉信息回答问题：\n\n问题：{query}\n\n"
+        
+        # 添加文本内容
+        text_docs = [doc for doc in retrieved_docs if doc.metadata['type'] == 'text']
+        if text_docs:
+            prompt += "\n文本内容：\n"
+            for doc in text_docs:
+                prompt += f"{doc.page_content}\n"
+        
+        # 添加图片描述
+        image_docs = [doc for doc in retrieved_docs if doc.metadata['type'] == 'image']
+        if image_docs:
+            prompt += "\n图片描述：\n"
+            for doc in image_docs:
+                prompt += f"[图片] {doc.page_content}\n"
+        
+        # 添加图表描述
+        chart_docs = [doc for doc in retrieved_docs if doc.metadata['type'] == 'chart']
+        if chart_docs:
+            prompt += "\n图表描述：\n"
+            for doc in chart_docs:
+                prompt += f"[图表] {doc.page_content}\n"
+        
+        # 添加表格内容
+        table_docs = [doc for doc in retrieved_docs if doc.metadata['type'] == 'table']
+        if table_docs:
+            prompt += "\n表格内容：\n"
+            for doc in table_docs:
+                prompt += f"[表格] {doc.page_content}\n"
+        
+        return prompt
+    
+    #   async def generate_training_outline(self, requirements=None):
+    #     """生成培训大纲"""
+    #     try:
+    #         # 构建查询
+    #         query = "生成一个培训大纲"
+    #         if requirements:
+    #             query += f"，要求：{requirements}"
+            
+    #         # 混合检索
+    #         retrieved_docs = await self.hybrid_retrieve(query)
+            
+    #         # 构建增强提示词
+    #         prompt = self._enhance_prompt_with_visuals(query, retrieved_docs)
+            
+    #         # 生成大纲
+    #         response = await self.llm.agenerate(prompt)
+            
+    #         return response.generations[0].text
+            
+    #     except Exception as e:
+    #         self.logger.error(f"Outline generation error: {str(e)}")
+    #         raise
+    
+    # async def generate_section_content(self, section_title: str, section_type: str = "theory") -> str:
+    #     """生成章节内容"""
+    #     try:
+    #         # 构建查询
+    #         query = f"生成'{section_title}'章节的{section_type}内容"
+            
+    #         # 混合检索
+    #         retrieved_docs = await self.hybrid_retrieve(query)
+            
+    #         # 构建增强提示词
+    #         prompt = self._enhance_prompt_with_visuals(query, retrieved_docs)
+            
+    #         # 生成内容
+    #         response = await self.llm.agenerate(prompt)
+            
+    #         return response.generations[0].text
+            
+    #     except Exception as e:
+    #         self.logger.error(f"Section content generation error: {str(e)}")
+    #         raise
+# 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     async def generate_training_outline(self, requirements=True):
         """使用模型生成培训大纲，包含搜索查询和引用"""
@@ -847,6 +1071,52 @@ Content: {doc.page_content}
         # 8. 插入引用
         content = insert_references(content)
         
+        # 9. 如果启用了图片检索功能，检索并插入相关图片
+        if hasattr(self, 'enable_image_retrieval') and self.enable_image_retrieval and hasattr(self, 'image_retriever'):
+            try:
+                # 将内容分成段落
+                paragraphs = content.split('\n\n')
+                enhanced_paragraphs = []
+                
+                # 首先基于章节标题检索图片
+                title_images = self.retrieve_relevant_images(
+                    text=section_title,
+                    top_k=1,
+                    similarity_threshold=0.25  # 对标题要求更高的相似度
+                )
+                
+                # 如果有基于标题的图片，在第一段后插入
+                if title_images and len(paragraphs) > 0:
+                    enhanced_paragraphs.append(paragraphs[0])
+                    img = title_images[0]
+                    enhanced_paragraphs.append(f"\n![{img['filename']}]({img['path']})\n")
+                    paragraphs = paragraphs[1:]
+                
+                # 处理剩余段落
+                for i, para in enumerate(paragraphs):
+                    enhanced_paragraphs.append(para)
+                    
+                    # 每3个段落检索一次图片
+                    if (i + 1) % 3 == 0 and len(para) > 100:
+                        # 基于段落内容检索图片
+                        para_images = self.retrieve_relevant_images(
+                            text=para,
+                            top_k=1,
+                            similarity_threshold=0.2
+                        )
+                        
+                        # 如果找到相关图片，插入到段落后
+                        if para_images:
+                            img = para_images[0]
+                            enhanced_paragraphs.append(f"\n![{img['filename']}]({img['path']})\n")
+                
+                # 重新组合内容
+                content = '\n\n'.join(enhanced_paragraphs)
+                logging.info("Added relevant images to section content")
+            except Exception as e:
+                logging.error(f"Error adding images to section content: {str(e)}")
+                # 如果添加图片失败，继续使用原始内容
+        
         logging.info("Section content generated successfully")
         logging.info(f"Section content length: {len(content)}")
         logging.info(f"Section content preview: {content[:200]}...")  
@@ -1329,7 +1599,7 @@ Content: {doc.page_content}
             references.append(f"{reference_id} {source}")
             local_context.append(f"{content} {reference_id}")
         
-        context = "\n\n".join(local_context)
+
         
         # 使用修改后的提示模板
         outline_prompt = PromptTemplate(
@@ -1403,6 +1673,49 @@ Content: {doc.page_content}
             """添加幻灯片"""
             # 实现幻灯片添加逻辑
             pass
+
+    def retrieve_relevant_images(self, text: str, top_k: int = 3, similarity_threshold: float = 0.2) -> List[Dict[str, Any]]:
+        """
+        检索与给定文本相关的图片
+        
+        Args:
+            text: 用于检索的文本
+            top_k: 返回的最大图片数量
+            similarity_threshold: 相似度阈值，低于此值的图片将被过滤
+            
+        Returns:
+            包含图片路径、文件名和相似度分数的字典列表
+        """
+        if not hasattr(self, 'image_retriever') or not self.image_retriever:
+            logging.warning("Image retriever not initialized")
+            return []
+            
+        try:
+            # 使用图片检索器检索相关图片
+            results = self.image_retriever.retrieve_images(
+                query_text=text,
+                top_k=top_k,
+                similarity_threshold=similarity_threshold
+            )
+            
+            # 格式化结果
+            formatted_results = []
+            for img_path, score in results:
+                # 获取文件名
+                filename = os.path.basename(img_path)
+                
+                formatted_results.append({
+                    "path": img_path,
+                    "filename": filename,
+                    "similarity_score": score
+                })
+                
+            logging.info(f"Retrieved {len(formatted_results)} images for text: {text[:50]}...")
+            return formatted_results
+            
+        except Exception as e:
+            logging.error(f"Error retrieving images: {str(e)}")
+            return []
 
 def insert_references(content: str) -> str:
     """

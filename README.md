@@ -1,117 +1,216 @@
-# AI Training Assistant
 
-An intelligent training document generation and management system.
+# trainingdoc
+>>>>>>> b5dfe3350b6b5ecf05234ddbc68920beba6f670b
+智能培训文档生成系统项目文档
+一、项目概述
+目标：为企业提供一站式培训文档生成平台，支持智能生成、多格式导出、团队协作及知识管理。
+核心价值：
+效率提升：30分钟内完成从大纲生成到导出全流程（传统方式需3-5天）
+合规保障：内置200+行业标准模板（ISO/HIPAA/GMP等）
+知识沉淀：文档版本管理+企业知识库对话
+二、系统功能模块
+1. 用户输入与大纲生成
+输入字段：
+必填：岗位类型（下拉选择/自定义）、行业领域、员工技能水平（初级/中级/高级）
+可选：关联知识库（上传企业SOP/产品手册等）、自定义关键词（如“安全操作”“客户服务标准”）
+大纲生成逻辑：
+Mermaid
+拆分
+拷贝
+标题
+graph TD
+  A[用户输入] --> B(调用LLM生成3版大纲)
+  B --> C{人工选择或编辑}
+  C --> D[锁定终版大纲]
+  D --> E(触发全文生成)
 
-## Key Features
-- AI-powered document generation
-- Interactive chat interface
-- Document management system
-- User authentication
-- File upload and processing
+用户输入
 
-## Components
-- Backend API (FastAPI)
-- Frontend (React + TypeScript)
-- AI Models Integration
-- Document Processing
+调用LLM生成3版大纲
 
-## Setup
-1. Install dependencies
-2. Configure environment variables
-3. Run database migrations
-4. Start development servers
+人工选择或编辑
 
-## Project Structure
-- `/langchain1/dev/` - Backend API
-- `/frontend/` - React frontend
-- `/docs/` - Documentation
+锁定终版大纲
 
-## Getting started
+触发全文生成
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+​
+技术实现：
+使用deepseek生成大纲选项（temperature=0.7增加多样性）
+前端实时渲染大纲树形结构（基于React Flow）
+2. 全文生成与模板系统
+模板库架构：
+模板类型
+适用场景
+示例模板
+PPT
+新员工入职培训
+带动态图表占位符的Deck模板
+Word
+操作规范手册
+三级标题+表格模板
+PDF
+合规审计文档
+页眉页脚+水印模板
+样式注入技术：
+使用Pandoc转换Markdown到各格式
+基于CSS/LaTeX预编译模板（保留企业品牌色/字体）
+3. 文档预览与编辑
+交互流程：
+用户选择导出格式（PPT/Word/PDF）
+系统渲染预览界面（可视化）
+支持以下编辑操作：
+文本修改（富文本编辑器）
+图片替换（拖拽上传）
+模板切换（保留内容更换样式）
+实时渲染方案：
+PPT预览：使用pptx.js实现浏览器端PPT编辑
+PDF预览：基于PDF.js渲染并标注修改区域
+4. 存储与协作
+文档存储结构：
+JSON
+拷贝
+标题
+{
+  "user_id": "uuid",
+  "doc_id": "doc_001",
+  "versions": [
+    {
+      "version": "v1.0",
+      "content": "markdown_content",
+      "formats": {
+        "ppt": "s3://bucket/xxx.pptx",
+        "pdf": "s3://bucket/xxx.pdf"
+      },
+      "permissions": {
+        "view": ["group:hr"],
+        "edit": ["user:admin"]
+      }
+    }
+  ],
+  "training_stats": {
+    "completed_users": 15,
+    "avg_score": 86
+  }
+}
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+​
+知识库对话集成：
+基于RAG架构，将用户文档与上传知识库构建向量索引
+对话界面支持提问：“根据《销售手册》第三章，客户异议处理流程是什么？”
+三、技术方案
+1. 系统架构
+Mermaid
+拆分
+拷贝
+标题
+graph LR
+  A[前端] --> B{API Gateway}
+  B --> C[文档生成服务]
+  B --> D[知识库服务]
+  C --> E[(向量数据库)]
+  D --> F[(S3存储)]
+  C --> G[模板引擎]
+  G --> H[Pandoc/pptx.js]
 
-## Add your files
+前端
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+API Gateway
 
-```
-cd existing_repo
-git remote add origin https://git.agiplusone.com/yangrong/11.290.git
-git branch -M main
-git push -uf origin main
-```
+文档生成服务
 
-## Integrate with your tools
+知识库服务
 
-- [ ] [Set up project integrations](https://git.agiplusone.com/yangrong/11.290/-/settings/integrations)
+向量数据库
 
-## Collaborate with your team
+S3存储
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+模板引擎
 
-## Test and Deploy
+Pandoc/pptx.js
 
-Use the built-in continuous integration in GitLab.
+​
+2. 技术栈选型
+模块
+技术方案
+说明
+前端
+Next.js + TailwindCSS
+支持SSR快速加载预览
+后端
+Python FastAPI
+异步处理文档生成任务
+文档生成
+GPT-4 API + LangChain
+控制生成内容的准确性
+向量检索
+Weaviate
+支持Hybrid搜索（关键词+向量）
+存储
+MinIO（自建S3兼容存储）
+保障企业数据私有化
+任务队列
+Celery + Redis
+异步处理PDF导出等耗时操作
+3. 关键API定义
+生成大纲
+导出文档
+Shell
+拷贝
+标题
+POST /api/v1/export
+Request Body:
+{
+  "content": "markdown_content",
+  "format": "ppt",
+  "template_id": "tpl_medical"
+}
+Response:
+{
+  "preview_url": "/preview/xxxx",
+  "download_url": "/download/xxxx"
+}
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+​
+四、开发里程碑
+Phase 1：核心功能开发（4周）
+用户输入与大纲生成（5天）
+前端：实现带自动补全的岗位选择组件
+后端：集成GPT-4生成多版本大纲
+模板系统与导出（10天）
+PPTX模板引擎开发（基于python-pptx）
+实现PDF水印注入功能
+文档存储与权限（7天）
+设计RBAC（基于角色的访问控制）模型
+集成MinIO对象存储
+Phase 2：增强功能开发（3周）
+知识库对话（8天）
+构建文档向量索引（Weaviate）
+开发聊天界面（类似ChatGPT样式）
+学习进度跟踪（5天）
+实现文档学习状态标记（已读/未读）
+集成简单测试题系统（Markdown嵌入）
+五、风险与应对
+风险点
+应对方案
+复杂表格样式丢失
+开发专用Markdown扩展语法（如:::table）
+高并发导出性能瓶颈
+引入Celery任务队列+限流机制
+企业模板个性化需求爆发
+提供低代码模板设计器（拖拽生成CSS/LaTeX）
+六、验收标准
+功能验收
+大纲生成：输入后10秒内返回3个可选方案
+文档导出：PPT/Word/PDF格式100%保留模板样式
+性能指标
+50并发用户下API响应时间<1.5秒
+生成10页PPT耗时<20秒
+安全要求
+文档下载链接有效期<24小时
+知识库文件存储加密（AES-256）
+附录：
+UI原型图（Figma链接）
+详细接口文档（Postman集合）
+测试数据集（包含医疗/制造/金融行业样例文档）
+此文档已覆盖核心业务场景，开发人员可依据模块划分并行开发。建议优先实现MVP（最小可行产品）后快速迭代。

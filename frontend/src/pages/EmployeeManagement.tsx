@@ -10,6 +10,9 @@ import { toast } from "@/hooks/use-toast"
 import { useUser } from "@/contexts/UserContext";
 import { API_BASE_URL } from '../config/constants';
 import { createApiRequest } from "@/utils/errorHandler";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Employee {
   id: string;
@@ -20,6 +23,14 @@ interface Employee {
   status: string;
 }
 
+interface TeamProgress {
+  user_id: number;
+  name: string;
+  completed_documents: number;
+  total_documents: number;
+  average_progress: number;
+  last_activity: string;
+}
 
 const API_URL = API_BASE_URL;
 
@@ -43,6 +54,7 @@ const EmployeeManagement = () => {
   const [error, setError] = useState<Error | null>(null);
   const token = localStorage.getItem('token');
   const { user } = useUser();
+  const [teamProgress, setTeamProgress] = useState<TeamProgress[]>([]);
 
   // 获取部门列表
   const fetchDepartments = async () => {
@@ -424,8 +436,24 @@ const EmployeeManagement = () => {
     }
   }, [dialogRef]);
 
+  useEffect(() => {
+    fetchTeamProgress();
+  }, []);
+
+  const fetchTeamProgress = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/documents/team/progress`);
+      if (response.ok) {
+        const data = await response.json();
+        setTeamProgress(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch team progress:', error);
+    }
+  };
+
   return (
-    <div className="h-screen w-screen bg-amber-50 p-8">
+    <div className="container mx-auto p-4">
       {error ? (
         <div className="p-4 text-red-500">
           <h2>Something went wrong:</h2>
@@ -676,6 +704,33 @@ const EmployeeManagement = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <h2 className="text-2xl font-bold">团队学习进度</h2>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[400px]">
+            <div className="space-y-6">
+              {teamProgress.map((member) => (
+                <div key={member.user_id} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">{member.name}</h3>
+                    <span className="text-sm text-gray-500">
+                      最后活动: {new Date(member.last_activity).toLocaleString()}
+                    </span>
+                  </div>
+                  <Progress value={member.average_progress} className="h-2" />
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>已完成文档: {member.completed_documents}/{member.total_documents}</span>
+                    <span>平均进度: {member.average_progress.toFixed(1)}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </div>
   );
 }

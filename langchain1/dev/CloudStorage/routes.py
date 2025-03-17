@@ -1,4 +1,4 @@
-import os
+﻿import os
 import io
 import uuid
 import json
@@ -7,6 +7,8 @@ import asyncio
 import tempfile
 import re
 import shutil
+import time
+import traceback
 from datetime import datetime
 from typing import List, Optional
 from fastapi import (
@@ -25,7 +27,7 @@ from sqlalchemy.orm import Session
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
-from dev.models.models import Users as User
+from dev.models.models import Users as User, Documents
 from dev.database import get_db
 from dev.core.security import get_current_user
 from dev.crud.crud_generated_document import generated_document_crud
@@ -35,6 +37,8 @@ from fastapi.templating import Jinja2Templates
 from .aws import download_file_by_url
 import mimetypes
 from pathlib import Path
+from dev.Generate.VisionRagProcessor import VisionRAGProcessor
+from dev.services.access_log import AccessLogService
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -882,62 +886,3 @@ async def delete_generated_document(
         "status": "success",
         "message": "Document deleted successfully"
     }
-
-@router.post("/export-document")
-async def export_document(
-    document_content: str = Body(...),
-    format: str = Body(...),
-    document_name: str = Body(...),
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """导出并保存完整文档"""
-    try:
-        # 生成文件名
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{document_name}_{timestamp}.{format}"
-        
-        # 转换文档格式
-        if format == 'pdf':
-            file_content = await generate_pdf(document_content)
-            content_type = 'application/pdf'
-        elif format == 'docx':
-            file_content = await generate_docx(document_content)
-            content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        else:
-            raise HTTPException(status_code=400, detail="Unsupported format")
-        
-        # 上传到S3
-        file_key = f"documents/{current_user['user_id']}/{filename}"
-        s3_url = await upload_file_to_s3_by_key(file_key, file_content)
-        
-        # 创建文档记录
-        document = Documents(
-            upload_file_name=filename,
-            url=s3_url,
-            user_id=current_user['user_id'],
-            user_email=current_user['email'],
-            status='completed'
-        )
-        
-        db.add(document)
-        db.commit()
-        
-        # 记录访问日志
-        access_log_service = AccessLogService(db)
-        await access_log_service.log_access(
-            user_id=current_user['user_id'],
-            document_id=str(document.document_id),
-            action='export'
-        )
-        
-        return {
-            "message": "Document exported and saved successfully",
-            "url": s3_url,
-            "document_id": document.document_id
-        }
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-

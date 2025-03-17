@@ -66297,3 +66297,1910 @@ ValueError: No valid documents were loaded. Please check if the files contain re
 ---
 #### 4. 参考资料
 [1] 本地文档：生活小常识1 - 味精食用不当易中毒。
+2025-01-21 22:12:46,685 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp3lhkg86j\Doc1.docx
+2025-01-21 22:12:50,472 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp3lhkg86j\Doc1.docx
+2025-01-21 22:12:50,473 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:12:50,473 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:12:50,474 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:12:50,474 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:12:50,474 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:12:50,474 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:12:50,475 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:12:50,475 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:12:50,475 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:12:50,475 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:12:50,476 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:12:50,476 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:12:50,476 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:12:50,476 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:12:50,476 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:12:50,477 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:12:50,477 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:12:50,477 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:12:50,477 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,478 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:12:50,478 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,478 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:12:50,478 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,479 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:12:50,479 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,479 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:12:50,479 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,480 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:12:50,480 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,480 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:12:50,480 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,480 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:12:50,481 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,481 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:12:50,481 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,481 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:12:50,481 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,481 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:12:50,482 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,482 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:12:50,482 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,482 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:12:50,483 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,483 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:12:50,483 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,483 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:12:50,484 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,484 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:12:50,484 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,484 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:12:50,484 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,485 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:12:50,485 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:12:50,485 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:12:50,485 - training_generator - INFO - Created 18 total chunks
+2025-01-21 22:13:09,776 - training_generator - INFO - Successfully created vector store
+2025-01-21 22:13:36,807 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景\n- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。\n- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。\n- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。', '1.2 培训对象\n- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。\n- 角色职责：确保食品调味符合标准，提升食品口感和安全性[1]。', '1.3 培训意义\n- 提升食品安全意识，减少因味精使用不当导致的健康风险[1]。\n- 优化食品调味效果，提升客户满意度[1]。\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的定义与成分\n- 味精是调味料的一种，主要成分为谷氨酸钠[1]。\n- 味精的作用：提升食品鲜味，改善口感[1]。', '2.1.2 味精的适用场景\n- 适用于汤类、炒菜、炖菜等[1]。\n- 不适用于甜口菜肴、酸性或碱性食物[1]。', '2.2 味精使用的五大禁忌', '2.2.1 低、高温使用\n- 高温（超过90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。\n- 低温时味精不易溶解，建议用温开水化开后再使用[1]。', '2.2.2 用于酸、碱性食物\n- 碱性环境中，味精会产生不良气味的谷氨酸二钠[1]。\n- 酸性环境中，味精不易溶解，效果差[1]。', '2.2.3 用于甜口菜肴\n- 甜菜加味精会破坏鲜味和甜味，影响口感[1]。', '2.2.4 投放过量\n- 过量使用会产生怪味，且可能引发头痛、恶心等症状[1]。\n- 建议每人每天食用味精不超过6克[1]。', '2.2.5 用于炒黄菜（炒鸡蛋）\n- 鸡蛋本身含有谷氨酸，与盐加热后会产生谷氨酸钠，无需额外添加味精[1]。', '2.3 味精使用的注意事项', '2.3.1 每日摄入量控制\n- 每人每天不宜超过6克，特殊人群（老年人、高血压患者等）需谨慎食用[1]。', '2.3.2 特殊人群的食用建议\n- 老年人、高血压、肾炎、水肿患者应减少味精摄入[1]。', '2.4 味精使用的实际操作技巧', '2.4.1 温度控制\n- 最佳溶解温度为70℃－90℃[1]。\n- 凉菜中使用时，可先用温开水化开[1]。', '2.4.2 与其他调味料的搭配\n- 避免与醋、柠檬汁等酸性调料同时使用[1]。\n- 与盐搭配时需注意比例，避免过咸[1]。\n---\n#### 3. 总结', '3.1 培训要点回顾\n- 味精的正确使用方法及五大禁忌[1]。\n- 每日摄入量的控制与特殊人群的注意事项[1]。', '3.2 实践建议\n- 在日常工作中严格按照培训内容操作，确保食品安全与健康[1]。\n- 定期检查食品调味流程，优化味精使用效果[1]。', '3.3 后续行动计划\n- 组织食品安全知识竞赛，巩固培训内容[1]。\n- 定期开展味精使用情况的内部检查与反馈[1]。\n---\n#### 4. 参考资料\n[1] 本地文档《生活小常识1：味精食用不当易中毒》\n---\n以上大纲结构清晰，内容完整，兼顾实用性与专业性，适合用于公司内部培训。']
+2025-01-21 22:13:36,812 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 22:13:49,905 - training_generator - INFO - Generating section content for 1.1 培训背景
+- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。
+- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。
+- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。
+2025-01-21 22:14:04,094 - training_generator - INFO - Generating section content for 1.2 培训对象
+- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。
+- 角色职责：确保食品调味符合标准，提升食品口感和安全性[1]。
+2025-01-21 22:14:18,368 - training_generator - INFO - Generating section content for 1.3 培训意义
+- 提升食品安全意识，减少因味精使用不当导致的健康风险[1]。
+- 优化食品调味效果，提升客户满意度[1]。
+---
+#### 2. 主要内容
+2025-01-21 22:14:34,623 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-21 22:14:47,896 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与成分
+- 味精是调味料的一种，主要成分为谷氨酸钠[1]。
+- 味精的作用：提升食品鲜味，改善口感[1]。
+2025-01-21 22:15:03,578 - training_generator - INFO - Generating section content for 2.1.2 味精的适用场景
+- 适用于汤类、炒菜、炖菜等[1]。
+- 不适用于甜口菜肴、酸性或碱性食物[1]。
+2025-01-21 22:15:16,081 - training_generator - INFO - Generating section content for 2.2 味精使用的五大禁忌
+2025-01-21 22:15:33,461 - training_generator - INFO - Generating section content for 2.2.1 低、高温使用
+- 高温（超过90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。
+- 低温时味精不易溶解，建议用温开水化开后再使用[1]。
+2025-01-21 22:15:44,876 - training_generator - INFO - Generating section content for 2.2.2 用于酸、碱性食物
+- 碱性环境中，味精会产生不良气味的谷氨酸二钠[1]。
+- 酸性环境中，味精不易溶解，效果差[1]。
+2025-01-21 22:15:53,764 - training_generator - INFO - Generating section content for 2.2.3 用于甜口菜肴
+- 甜菜加味精会破坏鲜味和甜味，影响口感[1]。
+2025-01-21 22:16:04,432 - training_generator - INFO - Generating section content for 2.2.4 投放过量
+- 过量使用会产生怪味，且可能引发头痛、恶心等症状[1]。
+- 建议每人每天食用味精不超过6克[1]。
+2025-01-21 22:16:15,421 - training_generator - INFO - Generating section content for 2.2.5 用于炒黄菜（炒鸡蛋）
+- 鸡蛋本身含有谷氨酸，与盐加热后会产生谷氨酸钠，无需额外添加味精[1]。
+2025-01-21 22:16:29,190 - training_generator - INFO - Generating section content for 2.3 味精使用的注意事项
+2025-01-21 22:16:44,037 - training_generator - INFO - Generating section content for 2.3.1 每日摄入量控制
+- 每人每天不宜超过6克，特殊人群（老年人、高血压患者等）需谨慎食用[1]。
+2025-01-21 22:16:56,190 - training_generator - INFO - Generating section content for 2.3.2 特殊人群的食用建议
+- 老年人、高血压、肾炎、水肿患者应减少味精摄入[1]。
+2025-01-21 22:17:07,354 - training_generator - INFO - Generating section content for 2.4 味精使用的实际操作技巧
+2025-01-21 22:17:23,450 - training_generator - INFO - Generating section content for 2.4.1 温度控制
+- 最佳溶解温度为70℃－90℃[1]。
+- 凉菜中使用时，可先用温开水化开[1]。
+2025-01-21 22:17:33,692 - training_generator - INFO - Generating section content for 2.4.2 与其他调味料的搭配
+- 避免与醋、柠檬汁等酸性调料同时使用[1]。
+- 与盐搭配时需注意比例，避免过咸[1]。
+---
+#### 3. 总结
+2025-01-21 22:17:47,109 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+- 味精的正确使用方法及五大禁忌[1]。
+- 每日摄入量的控制与特殊人群的注意事项[1]。
+2025-01-21 22:18:05,204 - training_generator - INFO - Generating section content for 3.2 实践建议
+- 在日常工作中严格按照培训内容操作，确保食品安全与健康[1]。
+- 定期检查食品调味流程，优化味精使用效果[1]。
+2025-01-21 22:18:15,871 - training_generator - INFO - Generating section content for 3.3 后续行动计划
+- 组织食品安全知识竞赛，巩固培训内容[1]。
+- 定期开展味精使用情况的内部检查与反馈[1]。
+---
+#### 4. 参考资料
+[1] 本地文档《生活小常识1：味精食用不当易中毒》
+---
+以上大纲结构清晰，内容完整，兼顾实用性与专业性，适合用于公司内部培训。
+2025-01-21 22:21:56,659 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpd9pxrk6n\Doc1.docx
+2025-01-21 22:21:59,805 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpd9pxrk6n\Doc1.docx
+2025-01-21 22:21:59,806 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:21:59,806 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:21:59,807 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:21:59,807 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:21:59,807 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:21:59,808 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:21:59,809 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:21:59,810 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,810 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:21:59,810 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,810 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:21:59,811 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,811 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:21:59,811 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,811 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:21:59,811 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,812 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:21:59,812 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,812 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:21:59,812 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,813 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:21:59,813 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,813 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:21:59,813 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,813 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:21:59,814 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,814 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:21:59,814 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,814 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:21:59,815 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,815 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:21:59,815 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,815 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:21:59,816 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,816 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:21:59,816 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,816 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:21:59,817 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,817 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:21:59,817 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,817 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:21:59,817 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:21:59,817 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:21:59,818 - training_generator - INFO - Created 18 total chunks
+2025-01-21 22:22:19,329 - training_generator - INFO - Successfully created vector store
+2025-01-21 22:22:47,453 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 **培训背景**\n- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。\n- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。\n- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。', '1.2 **培训对象**\n- 目标受众：公司食品研发、生产、销售及餐饮服务相关人员[1]。\n- 角色职责：确保食品调味符合标准，提升产品品质与客户满意度[1]。', '1.3 **培训主题**\n- 主题：味精的科学使用与注意事项\n- 目标：通过培训，使学员了解味精的特性、正确使用方法及常见误区[1]。\n---\n#### 2. 主要内容', '2.1 **味精的基本知识**', '2.1.1 味精的定义与成分\n- 味精是调味料的一种，主要成分为谷氨酸钠[1]。\n- 作用：提升食物鲜味，改善口感[1]。', '2.1.2 味精的营养价值与健康影响\n- 适量使用可辅助治疗神经衰弱，改善细胞营养状况[1]。\n- 过量使用可能导致头痛、恶心、发热等症状，甚至引发高血糖[1]。', '2.2 **味精的正确使用方法**', '2.2.1 温度控制\n- 适宜温度：70℃－90℃，此时溶解度最佳[1]。\n- 避免高温：高温下味精会转化为焦谷氨酸钠，产生轻微毒素[1]。\n- 低温处理：凉菜中使用时，可先用温开水化开，晾凉后使用[1]。', '2.2.2 酸碱环境下的使用\n- 避免碱性食物：在碱性溶液中，味精会生成谷氨酸二钠，产生不良气味[1]。\n- 酸性食物：味精在酸性环境中不易溶解，效果较差[1]。', '2.2.3 甜味菜肴中的使用\n- 甜菜不宜加味精：如“冰糖莲子”、“番茄虾仁”等，味精会破坏甜味与鲜味[1]。', '2.2.4 用量控制\n- 每日摄入量：每人每天不宜超过6克[1]。\n- 过量后果：产生怪味，影响健康[1]。', '2.2.5 特殊菜肴的使用\n- 炒鸡蛋：鸡蛋本身含有谷氨酸，加盐后会产生谷氨酸钠，无需额外添加味精[1]。', '2.3 **常见误区与注意事项**', '2.3.1 误区一：味精越多越好\n- 事实：过量使用会产生怪味，且对健康不利[1]。', '2.3.2 误区二：味精适用于所有菜肴\n- 事实：甜菜、碱性食物、炒鸡蛋等不适合使用味精[1]。', '2.3.3 注意事项\n- 老年人及患有高血压、肾炎、水肿等疾病的患者应慎用味精[1]。\n---\n#### 3. 总结', '3.1 **培训回顾**\n- 味精的正确使用方法：温度控制、酸碱环境、用量控制等[1]。\n- 常见误区：过量使用、不适用于所有菜肴等[1]。', '3.2 **实践建议**\n- 在日常工作中，严格按照科学方法使用味精，确保食品安全与健康[1]。\n- 定期检查食品调味流程，避免因使用不当导致的产品质量问题[1]。', '3.3 **后续行动**\n- 培训结束后，学员需提交一份关于味精使用的实践报告，反馈实际工作中的改进措施[1]。\n- 公司将持续关注食品安全问题，定期组织相关培训[1]。\n---\n#### 4. 参考资料\n- [1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n**备注**：本大纲旨在提供清晰、结构化的培训内容，确保学员能够全面掌握味精的正确使用方法，并在实际工作中加以应用。']
+2025-01-21 22:22:47,456 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 22:23:01,407 - training_generator - INFO - Generating section content for 1.1 **培训背景**
+- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。
+- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。
+- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。
+2025-01-21 22:23:14,155 - training_generator - INFO - Generating section content for 1.2 **培训对象**
+- 目标受众：公司食品研发、生产、销售及餐饮服务相关人员[1]。
+- 角色职责：确保食品调味符合标准，提升产品品质与客户满意度[1]。
+2025-01-21 22:23:28,248 - training_generator - INFO - Generating section content for 1.3 **培训主题**
+- 主题：味精的科学使用与注意事项
+- 目标：通过培训，使学员了解味精的特性、正确使用方法及常见误区[1]。
+---
+#### 2. 主要内容
+2025-01-21 22:23:46,884 - training_generator - INFO - Generating section content for 2.1 **味精的基本知识**
+2025-01-21 22:24:00,034 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与成分
+- 味精是调味料的一种，主要成分为谷氨酸钠[1]。
+- 作用：提升食物鲜味，改善口感[1]。
+2025-01-21 22:24:13,209 - training_generator - INFO - Generating section content for 2.1.2 味精的营养价值与健康影响
+- 适量使用可辅助治疗神经衰弱，改善细胞营养状况[1]。
+- 过量使用可能导致头痛、恶心、发热等症状，甚至引发高血糖[1]。
+2025-01-21 22:24:26,598 - training_generator - INFO - Generating section content for 2.2 **味精的正确使用方法**
+2025-01-21 22:24:37,713 - training_generator - INFO - Generating section content for 2.2.1 温度控制
+- 适宜温度：70℃－90℃，此时溶解度最佳[1]。
+- 避免高温：高温下味精会转化为焦谷氨酸钠，产生轻微毒素[1]。
+- 低温处理：凉菜中使用时，可先用温开水化开，晾凉后使用[1]。
+2025-01-21 22:24:53,020 - training_generator - INFO - Generating section content for 2.2.2 酸碱环境下的使用
+- 避免碱性食物：在碱性溶液中，味精会生成谷氨酸二钠，产生不良气味[1]。
+- 酸性食物：味精在酸性环境中不易溶解，效果较差[1]。
+2025-01-21 22:25:04,469 - training_generator - INFO - Generating section content for 2.2.3 甜味菜肴中的使用
+- 甜菜不宜加味精：如“冰糖莲子”、“番茄虾仁”等，味精会破坏甜味与鲜味[1]。
+2025-01-21 22:25:14,628 - training_generator - INFO - Generating section content for 2.2.4 用量控制
+- 每日摄入量：每人每天不宜超过6克[1]。
+- 过量后果：产生怪味，影响健康[1]。
+2025-01-21 22:25:25,994 - training_generator - INFO - Generating section content for 2.2.5 特殊菜肴的使用
+- 炒鸡蛋：鸡蛋本身含有谷氨酸，加盐后会产生谷氨酸钠，无需额外添加味精[1]。
+2025-01-21 22:25:36,342 - training_generator - INFO - Generating section content for 2.3 **常见误区与注意事项**
+2025-01-21 22:25:50,857 - training_generator - INFO - Generating section content for 2.3.1 误区一：味精越多越好
+- 事实：过量使用会产生怪味，且对健康不利[1]。
+2025-01-21 22:26:02,692 - training_generator - INFO - Generating section content for 2.3.2 误区二：味精适用于所有菜肴
+- 事实：甜菜、碱性食物、炒鸡蛋等不适合使用味精[1]。
+2025-01-21 22:26:11,219 - training_generator - INFO - Generating section content for 2.3.3 注意事项
+- 老年人及患有高血压、肾炎、水肿等疾病的患者应慎用味精[1]。
+---
+#### 3. 总结
+2025-01-21 22:26:23,222 - training_generator - INFO - Generating section content for 3.1 **培训回顾**
+- 味精的正确使用方法：温度控制、酸碱环境、用量控制等[1]。
+- 常见误区：过量使用、不适用于所有菜肴等[1]。
+2025-01-21 22:26:41,597 - training_generator - INFO - Generating section content for 3.2 **实践建议**
+- 在日常工作中，严格按照科学方法使用味精，确保食品安全与健康[1]。
+- 定期检查食品调味流程，避免因使用不当导致的产品质量问题[1]。
+2025-01-21 22:26:52,561 - training_generator - INFO - Generating section content for 3.3 **后续行动**
+- 培训结束后，学员需提交一份关于味精使用的实践报告，反馈实际工作中的改进措施[1]。
+- 公司将持续关注食品安全问题，定期组织相关培训[1]。
+---
+#### 4. 参考资料
+- [1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+**备注**：本大纲旨在提供清晰、结构化的培训内容，确保学员能够全面掌握味精的正确使用方法，并在实际工作中加以应用。
+2025-01-21 22:36:57,140 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmppgwmz44v\Doc1.docx
+2025-01-21 22:37:00,979 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmppgwmz44v\Doc1.docx
+2025-01-21 22:37:00,980 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:37:00,981 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:37:00,981 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:37:00,981 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:37:00,981 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:37:00,982 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:37:00,982 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:37:00,982 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:37:00,982 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:37:00,982 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:37:00,983 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:37:00,983 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:37:00,983 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:37:00,983 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:37:00,983 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:37:00,984 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:37:00,984 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:37:00,985 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:37:00,985 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmppgwmz44v\Doc1.docx
+2025-01-21 22:37:01,060 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmppgwmz44v\Doc1.docx
+2025-01-21 22:37:01,061 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:37:01,061 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:37:01,062 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:37:01,062 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:37:01,063 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:37:01,063 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:37:01,063 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:37:01,063 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:37:01,064 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:37:01,064 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:37:01,064 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:37:01,065 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:37:01,065 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:37:01,065 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:37:01,065 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:37:01,066 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:37:01,066 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:37:01,066 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:37:01,067 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,067 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:37:01,067 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,067 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:37:01,067 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,067 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:37:01,068 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,068 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:37:01,068 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,068 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:37:01,068 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,068 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:37:01,069 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,069 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:37:01,069 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,069 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:37:01,069 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,069 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:37:01,070 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,070 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:37:01,070 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,070 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:37:01,070 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,071 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:37:01,071 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,071 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:37:01,071 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,072 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:37:01,072 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,072 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:37:01,072 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,072 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:37:01,073 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,073 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:37:01,073 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,073 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:37:01,073 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,073 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:37:01,074 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,074 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:37:01,074 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,074 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:37:01,074 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,075 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:37:01,075 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,078 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:37:01,078 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,079 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:37:01,080 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,080 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:37:01,080 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,081 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:37:01,081 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,081 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:37:01,081 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,082 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:37:01,082 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,082 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:37:01,082 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,082 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:37:01,083 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,083 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:37:01,083 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,083 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:37:01,083 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,084 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:37:01,084 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,084 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:37:01,084 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,084 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:37:01,084 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:37:01,085 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:37:01,085 - training_generator - INFO - Created 36 total chunks
+2025-01-21 22:37:39,870 - training_generator - INFO - Successfully created vector store
+2025-01-21 22:38:07,034 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景\n- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。\n- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。\n- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。', '1.2 培训对象\n- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。\n- 用户角色：食品研发人员、厨师、食品安全管理人员[1]。', '1.3 培训主题\n- 主题：味精的正确使用与注意事项\n- 目标：提升员工对味精使用的科学认知，确保食品安全与健康[1]。\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的成分与作用\n- 主要成分：谷氨酸钠[1]。\n- 作用：提升菜肴鲜味，辅助治疗神经衰弱等[1]。', '2.1.2 味精的适用场景\n- 适用于大多数咸味菜肴[1]。\n- 不适用于甜味菜肴、碱性食物及酸性食物[1]。', '2.2 味精使用的五大禁忌', '2.2.1 低、高温使用\n- 高温（>90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。\n- 低温（<70℃）时味精不易溶解，建议用温开水化开[1]。', '2.2.2 用于酸、碱性食物\n- 碱性食物中会产生谷氨酸二钠，影响味道[1]。\n- 酸性食物中味精不易溶解，效果差[1]。', '2.2.3 用于甜口菜肴\n- 甜味菜肴加味精会破坏鲜味和甜味[1]。', '2.2.4 投放过量\n- 过量使用会产生怪味，每人每天不宜超过6克[1]。', '2.2.5 用于炒鸡蛋\n- 鸡蛋本身含有谷氨酸，加味精会破坏鲜味[1]。', '2.3 味精使用的健康建议', '2.3.1 每日摄入量\n- 建议每人每天不超过6克[1]。', '2.3.2 特殊人群注意事项\n- 老年人及患有高血压、肾炎、水肿等疾病的患者应慎用[1]。\n---\n#### 3. 总结', '3.1 培训要点回顾\n- 味精的正确使用方法及五大禁忌[1]。\n- 味精的健康摄入量及特殊人群注意事项[1]。', '3.2 实践建议\n- 在日常工作中严格按照科学方法使用味精，确保食品安全与健康[1]。\n- 定期组织食品安全培训，提升员工的专业素养[1]。', '3.3 后续行动\n- 提供味精使用手册，供员工参考[1]。\n- 建立反馈机制，收集员工在实际操作中的问题与建议[1]。\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n此大纲结构清晰，内容完整，结合了参考资料中的关键信息，适用于公司内部培训使用。']
+2025-01-21 22:38:07,036 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 22:38:18,531 - training_generator - INFO - Generating section content for 1.1 培训背景
+- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。
+- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。
+- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康问题[1]。
+2025-01-21 22:38:30,178 - training_generator - INFO - Generating section content for 1.2 培训对象
+- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。
+- 用户角色：食品研发人员、厨师、食品安全管理人员[1]。
+2025-01-21 22:38:41,091 - training_generator - INFO - Generating section content for 1.3 培训主题
+- 主题：味精的正确使用与注意事项
+- 目标：提升员工对味精使用的科学认知，确保食品安全与健康[1]。
+---
+#### 2. 主要内容
+2025-01-21 22:38:56,435 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-21 22:39:16,379 - training_generator - INFO - Generating section content for 2.1.1 味精的成分与作用
+- 主要成分：谷氨酸钠[1]。
+- 作用：提升菜肴鲜味，辅助治疗神经衰弱等[1]。
+2025-01-21 22:39:31,533 - training_generator - INFO - Generating section content for 2.1.2 味精的适用场景
+- 适用于大多数咸味菜肴[1]。
+- 不适用于甜味菜肴、碱性食物及酸性食物[1]。
+2025-01-21 22:39:43,853 - training_generator - INFO - Generating section content for 2.2 味精使用的五大禁忌
+2025-01-21 22:40:03,869 - training_generator - INFO - Generating section content for 2.2.1 低、高温使用
+- 高温（>90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。
+- 低温（<70℃）时味精不易溶解，建议用温开水化开[1]。
+2025-01-21 22:40:15,059 - training_generator - INFO - Generating section content for 2.2.2 用于酸、碱性食物
+- 碱性食物中会产生谷氨酸二钠，影响味道[1]。
+- 酸性食物中味精不易溶解，效果差[1]。
+2025-01-21 22:40:24,308 - training_generator - INFO - Generating section content for 2.2.3 用于甜口菜肴
+- 甜味菜肴加味精会破坏鲜味和甜味[1]。
+2025-01-21 22:40:35,123 - training_generator - INFO - Generating section content for 2.2.4 投放过量
+- 过量使用会产生怪味，每人每天不宜超过6克[1]。
+2025-01-21 22:40:42,607 - training_generator - INFO - Generating section content for 2.2.5 用于炒鸡蛋
+- 鸡蛋本身含有谷氨酸，加味精会破坏鲜味[1]。
+2025-01-21 22:40:52,612 - training_generator - INFO - Generating section content for 2.3 味精使用的健康建议
+2025-01-21 22:41:02,503 - training_generator - INFO - Generating section content for 2.3.1 每日摄入量
+- 建议每人每天不超过6克[1]。
+2025-01-21 22:41:11,329 - training_generator - INFO - Generating section content for 2.3.2 特殊人群注意事项
+- 老年人及患有高血压、肾炎、水肿等疾病的患者应慎用[1]。
+---
+#### 3. 总结
+2025-01-21 22:41:22,996 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+- 味精的正确使用方法及五大禁忌[1]。
+- 味精的健康摄入量及特殊人群注意事项[1]。
+2025-01-21 22:41:40,272 - training_generator - INFO - Generating section content for 3.2 实践建议
+- 在日常工作中严格按照科学方法使用味精，确保食品安全与健康[1]。
+- 定期组织食品安全培训，提升员工的专业素养[1]。
+2025-01-21 22:41:53,501 - training_generator - INFO - Generating section content for 3.3 后续行动
+- 提供味精使用手册，供员工参考[1]。
+- 建立反馈机制，收集员工在实际操作中的问题与建议[1]。
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+此大纲结构清晰，内容完整，结合了参考资料中的关键信息，适用于公司内部培训使用。
+2025-01-21 22:46:43,158 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp_lpkeqn7\Doc1.docx
+2025-01-21 22:46:46,611 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp_lpkeqn7\Doc1.docx
+2025-01-21 22:46:46,611 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:46:46,612 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:46:46,612 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:46:46,612 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:46:46,613 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:46:46,613 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:46:46,613 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:46:46,614 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:46:46,614 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:46:46,614 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:46:46,614 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:46:46,614 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:46:46,615 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:46:46,616 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp_lpkeqn7\Doc1.docx
+2025-01-21 22:46:46,692 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp_lpkeqn7\Doc1.docx
+2025-01-21 22:46:46,693 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:46:46,694 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:46:46,694 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:46:46,694 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:46:46,694 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:46:46,695 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:46:46,695 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:46:46,695 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:46:46,695 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:46:46,696 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:46:46,697 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:46:46,697 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:46:46,697 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:46:46,698 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,698 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:46:46,698 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,698 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:46:46,699 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,699 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:46:46,699 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,699 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:46:46,700 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,700 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:46:46,700 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,701 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:46:46,701 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,702 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:46:46,702 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,702 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:46:46,703 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,703 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:46:46,703 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,704 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:46:46,704 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,704 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:46:46,705 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,705 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:46:46,705 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,705 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:46:46,706 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,706 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:46:46,706 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,706 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:46:46,707 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,707 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:46:46,707 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,707 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:46:46,708 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,708 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:46:46,708 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,708 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:46:46,709 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,709 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:46:46,709 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,710 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:46:46,710 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,710 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:46:46,711 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,711 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:46:46,711 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,711 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:46:46,712 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,712 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:46:46,712 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,712 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:46:46,712 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,713 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:46:46,713 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,713 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:46:46,714 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,714 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:46:46,714 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,715 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:46:46,715 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,715 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:46:46,715 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,716 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:46:46,716 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,716 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:46:46,716 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,717 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:46:46,717 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,717 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:46:46,718 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:46:46,718 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:46:46,719 - training_generator - INFO - Created 36 total chunks
+2025-01-21 22:47:25,433 - training_generator - INFO - Successfully created vector store
+2025-01-21 22:47:56,822 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景\n- 1.1.1 行业背景：味精作为调味料在食品行业中的广泛应用[1]\n- 1.1.2 公司背景：公司文化及行业竞争环境对味精使用的潜在影响[1]\n- 1.1.3 项目背景：项目目标与主题，旨在提升员工对味精使用的科学认知[1]', '1.2 培训目标\n- 1.2.1 了解味精的基本成分及其作用[1]\n- 1.2.2 掌握味精的正确使用方法及注意事项[1]\n- 1.2.3 避免因不当使用味精导致的健康问题[1]', '1.3 培训对象\n- 1.3.1 目标受众：公司内部员工，特别是与食品加工、烹饪相关的岗位[1]\n- 1.3.2 受众角色：项目相关职责及对味精使用的需求[1]\n---\n#### 2. 主要内容', '2.1 味精的基本知识\n- 2.1.1 味精的定义与主要成分（谷氨酸钠）[1]\n- 2.1.2 味精的营养价值与辅助治疗作用[1]', '2.2 味精的正确使用方法\n- 2.2.1 温度控制：70℃－90℃为最佳溶解温度[1]\n- 2.2.1.1 高温使用风险：焦谷氨酸钠的形成及毒性[1]\n- 2.2.1.2 低温使用建议：温开水溶解后用于凉菜[1]\n- 2.2.2 酸碱环境下的使用限制[1]\n- 2.2.2.1 碱性食物中的化学反应：谷氨酸二钠的形成[1]\n- 2.2.2.2 酸性食物中的溶解性问题[1]\n- 2.2.3 甜口菜肴中的禁用原则[1]\n- 2.2.3.1 甜味与鲜味的冲突[1]\n- 2.2.3.2 实例分析：冰糖莲子、番茄虾仁[1]\n- 2.2.4 味精的适量使用[1]\n- 2.2.4.1 过量使用的副作用：头痛、恶心、发热等[1]\n- 2.2.4.2 每日推荐摄入量：不超过6克[1]', '2.3 特殊场景下的味精使用\n- 2.3.1 炒鸡蛋中的味精使用：画蛇添足的原因[1]\n- 2.3.1.1 鸡蛋中的天然谷氨酸与盐的反应[1]\n- 2.3.1.2 味精添加的负面影响[1]\n- 2.3.2 特殊人群的注意事项：老年人及慢性病患者[1]\n- 2.3.2.1 高血压、肾炎、水肿患者的禁忌[1]\n- 2.3.2.2 高血糖风险的提示[1]\n---\n#### 3. 总结', '3.1 培训要点回顾\n- 3.1.1 味精的正确使用方法及注意事项[1]\n- 3.1.2 特殊场景下的使用限制[1]', '3.2 实践建议\n- 3.2.1 在日常烹饪中科学使用味精[1]\n- 3.2.2 避免因不当使用导致的健康问题[1]', '3.3 后续行动\n- 3.3.1 培训效果评估：通过测试或问卷调查[1]\n- 3.3.2 持续学习：提供相关参考资料或进一步培训机会[1]\n---\n#### 4. 参考资料\n- [1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，同时结合公司文化及行业背景，确保培训内容的实用性与完整性。']
+2025-01-21 22:47:56,824 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 22:48:09,512 - training_generator - INFO - Generating section content for 1.1 培训背景
+- 1.1.1 行业背景：味精作为调味料在食品行业中的广泛应用[1]
+- 1.1.2 公司背景：公司文化及行业竞争环境对味精使用的潜在影响[1]
+- 1.1.3 项目背景：项目目标与主题，旨在提升员工对味精使用的科学认知[1]
+2025-01-21 22:48:25,677 - training_generator - INFO - Generating section content for 1.2 培训目标
+- 1.2.1 了解味精的基本成分及其作用[1]
+- 1.2.2 掌握味精的正确使用方法及注意事项[1]
+- 1.2.3 避免因不当使用味精导致的健康问题[1]
+2025-01-21 22:48:43,383 - training_generator - INFO - Generating section content for 1.3 培训对象
+- 1.3.1 目标受众：公司内部员工，特别是与食品加工、烹饪相关的岗位[1]
+- 1.3.2 受众角色：项目相关职责及对味精使用的需求[1]
+---
+#### 2. 主要内容
+2025-01-21 22:49:01,301 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+- 2.1.1 味精的定义与主要成分（谷氨酸钠）[1]
+- 2.1.2 味精的营养价值与辅助治疗作用[1]
+2025-01-21 22:49:14,038 - training_generator - INFO - Generating section content for 2.2 味精的正确使用方法
+- 2.2.1 温度控制：70℃－90℃为最佳溶解温度[1]
+- 2.2.1.1 高温使用风险：焦谷氨酸钠的形成及毒性[1]
+- 2.2.1.2 低温使用建议：温开水溶解后用于凉菜[1]
+- 2.2.2 酸碱环境下的使用限制[1]
+- 2.2.2.1 碱性食物中的化学反应：谷氨酸二钠的形成[1]
+- 2.2.2.2 酸性食物中的溶解性问题[1]
+- 2.2.3 甜口菜肴中的禁用原则[1]
+- 2.2.3.1 甜味与鲜味的冲突[1]
+- 2.2.3.2 实例分析：冰糖莲子、番茄虾仁[1]
+- 2.2.4 味精的适量使用[1]
+- 2.2.4.1 过量使用的副作用：头痛、恶心、发热等[1]
+- 2.2.4.2 每日推荐摄入量：不超过6克[1]
+2025-01-21 22:49:30,772 - training_generator - INFO - Generating section content for 2.3 特殊场景下的味精使用
+- 2.3.1 炒鸡蛋中的味精使用：画蛇添足的原因[1]
+- 2.3.1.1 鸡蛋中的天然谷氨酸与盐的反应[1]
+- 2.3.1.2 味精添加的负面影响[1]
+- 2.3.2 特殊人群的注意事项：老年人及慢性病患者[1]
+- 2.3.2.1 高血压、肾炎、水肿患者的禁忌[1]
+- 2.3.2.2 高血糖风险的提示[1]
+---
+#### 3. 总结
+2025-01-21 22:49:44,386 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+- 3.1.1 味精的正确使用方法及注意事项[1]
+- 3.1.2 特殊场景下的使用限制[1]
+2025-01-21 22:49:57,812 - training_generator - INFO - Generating section content for 3.2 实践建议
+- 3.2.1 在日常烹饪中科学使用味精[1]
+- 3.2.2 避免因不当使用导致的健康问题[1]
+2025-01-21 22:50:09,941 - training_generator - INFO - Generating section content for 3.3 后续行动
+- 3.3.1 培训效果评估：通过测试或问卷调查[1]
+- 3.3.2 持续学习：提供相关参考资料或进一步培训机会[1]
+---
+#### 4. 参考资料
+- [1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，同时结合公司文化及行业背景，确保培训内容的实用性与完整性。
+2025-01-21 22:58:06,272 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmprkhyxkxd\Doc1.docx
+2025-01-21 22:58:09,529 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmprkhyxkxd\Doc1.docx
+2025-01-21 22:58:09,530 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:58:09,530 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:58:09,530 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:58:09,531 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:58:09,532 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:58:09,532 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:58:09,532 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:58:09,532 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:58:09,533 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:58:09,533 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:58:09,533 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:58:09,533 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:58:09,534 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:58:09,534 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmprkhyxkxd\Doc1.docx
+2025-01-21 22:58:09,624 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmprkhyxkxd\Doc1.docx
+2025-01-21 22:58:09,625 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:58:09,626 - training_generator - INFO - Added document with 6 characters
+2025-01-21 22:58:09,626 - training_generator - INFO - Added document with 3 characters
+2025-01-21 22:58:09,627 - training_generator - INFO - Added document with 92 characters
+2025-01-21 22:58:09,628 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:58:09,628 - training_generator - INFO - Added document with 103 characters
+2025-01-21 22:58:09,629 - training_generator - INFO - Added document with 48 characters
+2025-01-21 22:58:09,629 - training_generator - INFO - Added document with 11 characters
+2025-01-21 22:58:09,629 - training_generator - INFO - Added document with 66 characters
+2025-01-21 22:58:09,629 - training_generator - INFO - Added document with 29 characters
+2025-01-21 22:58:09,630 - training_generator - INFO - Added document with 9 characters
+2025-01-21 22:58:09,630 - training_generator - INFO - Added document with 58 characters
+2025-01-21 22:58:09,630 - training_generator - INFO - Added document with 7 characters
+2025-01-21 22:58:09,631 - training_generator - INFO - Added document with 34 characters
+2025-01-21 22:58:09,631 - training_generator - INFO - Added document with 8 characters
+2025-01-21 22:58:09,631 - training_generator - INFO - Added document with 118 characters
+2025-01-21 22:58:09,631 - training_generator - INFO - Added document with 4 characters
+2025-01-21 22:58:09,632 - training_generator - INFO - Added document with 94 characters
+2025-01-21 22:58:09,632 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,633 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:58:09,633 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,633 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:58:09,634 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,634 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:58:09,634 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,634 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:58:09,635 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,635 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:58:09,635 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,636 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:58:09,636 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,636 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:58:09,637 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,637 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:58:09,637 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,637 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:58:09,638 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,638 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:58:09,638 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,638 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:58:09,639 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,639 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:58:09,639 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,640 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:58:09,640 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,641 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:58:09,642 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,642 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:58:09,643 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,643 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:58:09,644 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,644 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:58:09,644 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,645 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:58:09,645 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,645 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:58:09,646 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,646 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 22:58:09,646 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,647 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 22:58:09,647 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,647 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 22:58:09,647 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,648 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:58:09,648 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,648 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 22:58:09,648 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,649 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 22:58:09,649 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,649 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 22:58:09,649 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,650 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 22:58:09,650 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,650 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 22:58:09,650 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,651 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 22:58:09,651 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,651 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 22:58:09,651 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,652 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 22:58:09,652 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,652 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 22:58:09,652 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,652 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 22:58:09,653 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,653 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 22:58:09,653 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,654 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 22:58:09,654 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 22:58:09,654 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 22:58:09,654 - training_generator - INFO - Created 36 total chunks
+2025-01-21 22:58:48,640 - training_generator - INFO - Successfully created vector store
+2025-01-21 22:59:14,549 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景\n- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。\n- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。\n- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康风险[1]。', '1.2 培训对象\n- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。\n- 用户角色：负责食品调味、烹饪及质量控制的员工[1]。', '1.3 培训主题\n- 主题：味精的正确使用与注意事项\n- 目标：通过培训，提升员工对味精使用的科学认知，确保食品安全与健康[1]。\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的成分与作用\n- 主要成分：谷氨酸钠[1]。\n- 作用：提升菜肴鲜味，辅助治疗神经衰弱等[1]。', '2.1.2 味精的适用场景\n- 适用于咸味菜肴，不适用于甜味菜肴[1]。', '2.2 味精使用的五大禁忌', '2.2.1 低、高温使用\n- 高温（>90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。\n- 低温（<70℃）时味精不易溶解，建议用温开水化开后再使用[1]。', '2.2.2 用于酸、碱性食物\n- 碱性食物中会产生谷氨酸二钠，影响味道[1]。\n- 酸性食物中味精不易溶解，效果差[1]。', '2.2.3 用于甜口菜肴\n- 甜味菜肴加味精会破坏鲜味和甜味[1]。', '2.2.4 投放过量\n- 过量使用会产生怪味，建议每人每天不超过6克[1]。', '2.2.5 用于炒鸡蛋\n- 鸡蛋本身含有谷氨酸，加味精会破坏其天然鲜味[1]。', '2.3 味精使用的健康建议', '2.3.1 每日摄入量\n- 建议每人每天不超过6克，避免头痛、恶心等症状[1]。', '2.3.2 特殊人群注意事项\n- 老年人及患有高血压、肾炎等疾病者应慎用[1]。\n---\n#### 3. 总结', '3.1 培训要点回顾\n- 味精的正确使用方法及五大禁忌[1]。\n- 味精的健康摄入量及特殊人群注意事项[1]。', '3.2 实践建议\n- 在日常工作中严格按照培训内容操作，确保食品安全与健康[1]。', '3.3 后续行动\n- 定期组织复习与考核，确保培训内容落实到位[1]。\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n以上大纲结构清晰，内容完整，兼顾实用性与科学性，适合用于公司内部培训。']
+2025-01-21 22:59:14,552 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 22:59:27,244 - training_generator - INFO - Generating section content for 1.1 培训背景
+- 行业背景：食品行业对调味品的使用有严格要求，味精作为常见调味品，其正确使用对食品安全和健康至关重要[1]。
+- 公司文化：公司注重食品安全与健康，倡导科学饮食文化[1]。
+- 培训目标：帮助员工掌握味精的正确使用方法，避免因使用不当导致的健康风险[1]。
+2025-01-21 22:59:39,726 - training_generator - INFO - Generating section content for 1.2 培训对象
+- 目标受众：公司食品研发、生产及餐饮服务相关人员[1]。
+- 用户角色：负责食品调味、烹饪及质量控制的员工[1]。
+2025-01-21 22:59:50,114 - training_generator - INFO - Generating section content for 1.3 培训主题
+- 主题：味精的正确使用与注意事项
+- 目标：通过培训，提升员工对味精使用的科学认知，确保食品安全与健康[1]。
+---
+#### 2. 主要内容
+2025-01-21 23:00:03,831 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-21 23:00:20,905 - training_generator - INFO - Generating section content for 2.1.1 味精的成分与作用
+- 主要成分：谷氨酸钠[1]。
+- 作用：提升菜肴鲜味，辅助治疗神经衰弱等[1]。
+2025-01-21 23:00:32,822 - training_generator - INFO - Generating section content for 2.1.2 味精的适用场景
+- 适用于咸味菜肴，不适用于甜味菜肴[1]。
+2025-01-21 23:00:44,995 - training_generator - INFO - Generating section content for 2.2 味精使用的五大禁忌
+2025-01-21 23:01:02,859 - training_generator - INFO - Generating section content for 2.2.1 低、高温使用
+- 高温（>90℃）会导致味精转化为焦谷氨酸钠，产生轻微毒素[1]。
+- 低温（<70℃）时味精不易溶解，建议用温开水化开后再使用[1]。
+2025-01-21 23:01:11,685 - training_generator - INFO - Generating section content for 2.2.2 用于酸、碱性食物
+- 碱性食物中会产生谷氨酸二钠，影响味道[1]。
+- 酸性食物中味精不易溶解，效果差[1]。
+2025-01-21 23:01:20,290 - training_generator - INFO - Generating section content for 2.2.3 用于甜口菜肴
+- 甜味菜肴加味精会破坏鲜味和甜味[1]。
+2025-01-21 23:01:29,044 - training_generator - INFO - Generating section content for 2.2.4 投放过量
+- 过量使用会产生怪味，建议每人每天不超过6克[1]。
+2025-01-21 23:01:38,175 - training_generator - INFO - Generating section content for 2.2.5 用于炒鸡蛋
+- 鸡蛋本身含有谷氨酸，加味精会破坏其天然鲜味[1]。
+2025-01-21 23:01:47,280 - training_generator - INFO - Generating section content for 2.3 味精使用的健康建议
+2025-01-21 23:01:56,273 - training_generator - INFO - Generating section content for 2.3.1 每日摄入量
+- 建议每人每天不超过6克，避免头痛、恶心等症状[1]。
+2025-01-21 23:02:06,287 - training_generator - INFO - Generating section content for 2.3.2 特殊人群注意事项
+- 老年人及患有高血压、肾炎等疾病者应慎用[1]。
+---
+#### 3. 总结
+2025-01-21 23:02:16,656 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+- 味精的正确使用方法及五大禁忌[1]。
+- 味精的健康摄入量及特殊人群注意事项[1]。
+2025-01-21 23:02:33,760 - training_generator - INFO - Generating section content for 3.2 实践建议
+- 在日常工作中严格按照培训内容操作，确保食品安全与健康[1]。
+2025-01-21 23:02:44,877 - training_generator - INFO - Generating section content for 3.3 后续行动
+- 定期组织复习与考核，确保培训内容落实到位[1]。
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+以上大纲结构清晰，内容完整，兼顾实用性与科学性，适合用于公司内部培训。
+2025-01-21 23:07:06,587 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpi9539q8z\Doc1.docx
+2025-01-21 23:07:11,061 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpi9539q8z\Doc1.docx
+2025-01-21 23:07:11,062 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:07:11,062 - training_generator - INFO - Added document with 6 characters
+2025-01-21 23:07:11,063 - training_generator - INFO - Added document with 3 characters
+2025-01-21 23:07:11,063 - training_generator - INFO - Added document with 92 characters
+2025-01-21 23:07:11,064 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:07:11,064 - training_generator - INFO - Added document with 103 characters
+2025-01-21 23:07:11,064 - training_generator - INFO - Added document with 48 characters
+2025-01-21 23:07:11,064 - training_generator - INFO - Added document with 11 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 66 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 29 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 58 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:07:11,065 - training_generator - INFO - Added document with 34 characters
+2025-01-21 23:07:11,066 - training_generator - INFO - Added document with 8 characters
+2025-01-21 23:07:11,066 - training_generator - INFO - Added document with 118 characters
+2025-01-21 23:07:11,066 - training_generator - INFO - Added document with 4 characters
+2025-01-21 23:07:11,066 - training_generator - INFO - Added document with 94 characters
+2025-01-21 23:07:11,067 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpi9539q8z\Doc1.docx
+2025-01-21 23:07:11,138 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpi9539q8z\Doc1.docx
+2025-01-21 23:07:11,139 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:07:11,139 - training_generator - INFO - Added document with 6 characters
+2025-01-21 23:07:11,140 - training_generator - INFO - Added document with 3 characters
+2025-01-21 23:07:11,140 - training_generator - INFO - Added document with 92 characters
+2025-01-21 23:07:11,140 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:07:11,140 - training_generator - INFO - Added document with 103 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 48 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 11 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 66 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 29 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:07:11,141 - training_generator - INFO - Added document with 58 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 34 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 8 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 118 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 4 characters
+2025-01-21 23:07:11,142 - training_generator - INFO - Added document with 94 characters
+2025-01-21 23:07:11,143 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,143 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:07:11,143 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,143 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 23:07:11,144 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,144 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 23:07:11,144 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,144 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 23:07:11,145 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,145 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:07:11,145 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,145 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 23:07:11,146 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,146 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 23:07:11,146 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,146 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 23:07:11,147 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,147 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 23:07:11,147 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,147 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 23:07:11,147 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,147 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:07:11,148 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,148 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 23:07:11,148 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,148 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:07:11,148 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,149 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 23:07:11,149 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,149 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 23:07:11,149 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,150 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 23:07:11,150 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,150 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 23:07:11,150 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,150 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 23:07:11,151 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,151 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:07:11,151 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,152 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 23:07:11,152 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,152 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 23:07:11,152 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,153 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 23:07:11,153 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,153 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:07:11,153 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,154 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 23:07:11,154 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,154 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 23:07:11,154 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,154 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 23:07:11,155 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,155 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 23:07:11,155 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,155 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 23:07:11,155 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,155 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:07:11,156 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,156 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 23:07:11,156 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,156 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:07:11,156 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,156 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 23:07:11,156 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,157 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 23:07:11,157 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,157 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 23:07:11,157 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,157 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 23:07:11,157 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:07:11,158 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 23:07:11,158 - training_generator - INFO - Created 36 total chunks
+2025-01-21 23:07:49,720 - training_generator - INFO - Successfully created vector store
+2025-01-21 23:08:16,371 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景', '1.1.1 行业背景：食品行业对调味品使用的规范要求[1]', '1.1.2 公司文化：注重健康饮食与食品安全[1]', '1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当操作[1]', '1.2 培训对象', '1.2.1 目标受众：公司餐饮部门员工、食品研发人员[1]', '1.2.2 角色定位：负责食品制作与调味的关键岗位[1]', '1.3 培训主题', '1.3.1 主题名称：味精的正确使用与注意事项[1]', '1.3.2 核心内容：味精的化学特性、使用禁忌及健康影响[1]\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的定义与成分：谷氨酸钠[1]', '2.1.2 味精的作用：提鲜、改善口感[1]', '2.1.3 味精的适用场景：日常烹饪、食品加工[1]', '2.2 味精使用的五大禁忌', '2.2.1 禁忌一：低、高温使用', '2.2.1.1 高温使用：产生焦谷氨酸钠，轻微毒素[1]', '2.2.1.2 低温使用：不易溶解，需用温开水化开[1]', '2.2.2 禁忌二：用于酸、碱性食物', '2.2.2.1 碱性食物：产生谷氨酸二钠，不良气味[1]', '2.2.2.2 酸性食物：不易溶解，效果差[1]', '2.2.3 禁忌三：用于甜口菜肴', '2.2.3.1 甜菜加味精：破坏鲜味与甜味[1]', '2.2.4 禁忌四：投放过量', '2.2.4.1 过量后果：产生怪味，影响健康[1]', '2.2.5 禁忌五：用于炒鸡蛋', '2.2.5.1 鸡蛋本身含谷氨酸，加味精多余[1]', '2.3 味精的健康影响', '2.3.1 每日摄入量：不超过6克[1]', '2.3.2 过量危害：头痛、恶心、发热、高血糖[1]', '2.3.3 特殊人群注意事项：老年人、高血压患者等[1]\n---\n#### 3. 总结', '3.1 培训要点回顾', '3.1.1 味精的正确使用方法[1]', '3.1.2 使用味精的五大禁忌[1]', '3.1.3 味精对健康的潜在影响[1]', '3.2 实践建议', '3.2.1 在日常烹饪中科学使用味精[1]', '3.2.2 定期检查味精使用量，避免过量[1]', '3.3 后续行动', '3.3.1 制定公司内部味精使用规范[1]', '3.3.2 定期开展食品安全培训[1]\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒']
+2025-01-21 23:08:16,373 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 23:08:29,303 - training_generator - INFO - Generating section content for 1.1 培训背景
+2025-01-21 23:08:41,742 - training_generator - INFO - Generating section content for 1.1.1 行业背景：食品行业对调味品使用的规范要求[1]
+2025-01-21 23:08:54,312 - training_generator - INFO - Generating section content for 1.1.2 公司文化：注重健康饮食与食品安全[1]
+2025-01-21 23:09:04,598 - training_generator - INFO - Generating section content for 1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当操作[1]
+2025-01-21 23:09:15,153 - training_generator - INFO - Generating section content for 1.2 培训对象
+2025-01-21 23:09:25,998 - training_generator - INFO - Generating section content for 1.2.1 目标受众：公司餐饮部门员工、食品研发人员[1]
+2025-01-21 23:09:38,489 - training_generator - INFO - Generating section content for 1.2.2 角色定位：负责食品制作与调味的关键岗位[1]
+2025-01-21 23:09:51,491 - training_generator - INFO - Generating section content for 1.3 培训主题
+2025-01-21 23:10:01,369 - training_generator - INFO - Generating section content for 1.3.1 主题名称：味精的正确使用与注意事项[1]
+2025-01-21 23:10:15,427 - training_generator - INFO - Generating section content for 1.3.2 核心内容：味精的化学特性、使用禁忌及健康影响[1]
+---
+#### 2. 主要内容
+2025-01-21 23:10:34,044 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-21 23:10:53,935 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与成分：谷氨酸钠[1]
+2025-01-21 23:11:05,942 - training_generator - INFO - Generating section content for 2.1.2 味精的作用：提鲜、改善口感[1]
+2025-01-21 23:11:19,769 - training_generator - INFO - Generating section content for 2.1.3 味精的适用场景：日常烹饪、食品加工[1]
+2025-01-21 23:11:31,521 - training_generator - INFO - Generating section content for 2.2 味精使用的五大禁忌
+2025-01-21 23:11:47,693 - training_generator - INFO - Generating section content for 2.2.1 禁忌一：低、高温使用
+2025-01-21 23:11:58,880 - training_generator - INFO - Generating section content for 2.2.1.1 高温使用：产生焦谷氨酸钠，轻微毒素[1]
+2025-01-21 23:12:08,959 - training_generator - INFO - Generating section content for 2.2.1.2 低温使用：不易溶解，需用温开水化开[1]
+2025-01-21 23:12:19,456 - training_generator - INFO - Generating section content for 2.2.2 禁忌二：用于酸、碱性食物
+2025-01-21 23:12:27,722 - training_generator - INFO - Generating section content for 2.2.2.1 碱性食物：产生谷氨酸二钠，不良气味[1]
+2025-01-21 23:12:37,835 - training_generator - INFO - Generating section content for 2.2.2.2 酸性食物：不易溶解，效果差[1]
+2025-01-21 23:12:46,179 - training_generator - INFO - Generating section content for 2.2.3 禁忌三：用于甜口菜肴
+2025-01-21 23:12:56,955 - training_generator - INFO - Generating section content for 2.2.3.1 甜菜加味精：破坏鲜味与甜味[1]
+2025-01-21 23:13:07,461 - training_generator - INFO - Generating section content for 2.2.4 禁忌四：投放过量
+2025-01-21 23:13:15,893 - training_generator - INFO - Generating section content for 2.2.4.1 过量后果：产生怪味，影响健康[1]
+2025-01-21 23:13:25,272 - training_generator - INFO - Generating section content for 2.2.5 禁忌五：用于炒鸡蛋
+2025-01-21 23:13:37,211 - training_generator - INFO - Generating section content for 2.2.5.1 鸡蛋本身含谷氨酸，加味精多余[1]
+2025-01-21 23:13:49,505 - training_generator - INFO - Generating section content for 2.3 味精的健康影响
+2025-01-21 23:14:00,637 - training_generator - INFO - Generating section content for 2.3.1 每日摄入量：不超过6克[1]
+2025-01-21 23:14:11,140 - training_generator - INFO - Generating section content for 2.3.2 过量危害：头痛、恶心、发热、高血糖[1]
+2025-01-21 23:14:22,230 - training_generator - INFO - Generating section content for 2.3.3 特殊人群注意事项：老年人、高血压患者等[1]
+---
+#### 3. 总结
+2025-01-21 23:14:32,148 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+2025-01-21 23:14:41,821 - training_generator - INFO - Generating section content for 3.1.1 味精的正确使用方法[1]
+2025-01-21 23:14:55,125 - training_generator - INFO - Generating section content for 3.1.2 使用味精的五大禁忌[1]
+2025-01-21 23:15:13,383 - training_generator - INFO - Generating section content for 3.1.3 味精对健康的潜在影响[1]
+2025-01-21 23:15:27,382 - training_generator - INFO - Generating section content for 3.2 实践建议
+2025-01-21 23:15:39,696 - training_generator - INFO - Generating section content for 3.2.1 在日常烹饪中科学使用味精[1]
+2025-01-21 23:15:55,753 - training_generator - INFO - Generating section content for 3.2.2 定期检查味精使用量，避免过量[1]
+2025-01-21 23:16:06,586 - training_generator - INFO - Generating section content for 3.3 后续行动
+2025-01-21 23:16:14,776 - training_generator - INFO - Generating section content for 3.3.1 制定公司内部味精使用规范[1]
+2025-01-21 23:16:29,987 - training_generator - INFO - Generating section content for 3.3.2 定期开展食品安全培训[1]
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+2025-01-21 23:25:15,531 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmptomq4rg2\Doc1.docx
+2025-01-21 23:25:19,227 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmptomq4rg2\Doc1.docx
+2025-01-21 23:25:19,227 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:25:19,228 - training_generator - INFO - Added document with 6 characters
+2025-01-21 23:25:19,228 - training_generator - INFO - Added document with 3 characters
+2025-01-21 23:25:19,228 - training_generator - INFO - Added document with 92 characters
+2025-01-21 23:25:19,228 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:25:19,229 - training_generator - INFO - Added document with 103 characters
+2025-01-21 23:25:19,229 - training_generator - INFO - Added document with 48 characters
+2025-01-21 23:25:19,229 - training_generator - INFO - Added document with 11 characters
+2025-01-21 23:25:19,229 - training_generator - INFO - Added document with 66 characters
+2025-01-21 23:25:19,229 - training_generator - INFO - Added document with 29 characters
+2025-01-21 23:25:19,230 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:25:19,230 - training_generator - INFO - Added document with 58 characters
+2025-01-21 23:25:19,230 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:25:19,230 - training_generator - INFO - Added document with 34 characters
+2025-01-21 23:25:19,231 - training_generator - INFO - Added document with 8 characters
+2025-01-21 23:25:19,231 - training_generator - INFO - Added document with 118 characters
+2025-01-21 23:25:19,232 - training_generator - INFO - Added document with 4 characters
+2025-01-21 23:25:19,232 - training_generator - INFO - Added document with 94 characters
+2025-01-21 23:25:19,232 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmptomq4rg2\Doc1.docx
+2025-01-21 23:25:19,304 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmptomq4rg2\Doc1.docx
+2025-01-21 23:25:19,305 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:25:19,306 - training_generator - INFO - Added document with 6 characters
+2025-01-21 23:25:19,306 - training_generator - INFO - Added document with 3 characters
+2025-01-21 23:25:19,307 - training_generator - INFO - Added document with 92 characters
+2025-01-21 23:25:19,307 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:25:19,307 - training_generator - INFO - Added document with 103 characters
+2025-01-21 23:25:19,308 - training_generator - INFO - Added document with 48 characters
+2025-01-21 23:25:19,308 - training_generator - INFO - Added document with 11 characters
+2025-01-21 23:25:19,308 - training_generator - INFO - Added document with 66 characters
+2025-01-21 23:25:19,308 - training_generator - INFO - Added document with 29 characters
+2025-01-21 23:25:19,308 - training_generator - INFO - Added document with 9 characters
+2025-01-21 23:25:19,309 - training_generator - INFO - Added document with 58 characters
+2025-01-21 23:25:19,309 - training_generator - INFO - Added document with 7 characters
+2025-01-21 23:25:19,309 - training_generator - INFO - Added document with 34 characters
+2025-01-21 23:25:19,309 - training_generator - INFO - Added document with 8 characters
+2025-01-21 23:25:19,310 - training_generator - INFO - Added document with 118 characters
+2025-01-21 23:25:19,310 - training_generator - INFO - Added document with 4 characters
+2025-01-21 23:25:19,310 - training_generator - INFO - Added document with 94 characters
+2025-01-21 23:25:19,310 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,311 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:25:19,311 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,311 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 23:25:19,312 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,312 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 23:25:19,312 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,312 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 23:25:19,312 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,313 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:25:19,313 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,313 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 23:25:19,313 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,313 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 23:25:19,313 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,314 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 23:25:19,314 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,314 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 23:25:19,314 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,314 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 23:25:19,314 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,314 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:25:19,315 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,315 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 23:25:19,315 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,315 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:25:19,315 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,316 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 23:25:19,316 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,316 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 23:25:19,316 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,316 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 23:25:19,317 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,317 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 23:25:19,317 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,317 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 23:25:19,317 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,317 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:25:19,317 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,318 - training_generator - INFO - Added chunk with 6 characters
+2025-01-21 23:25:19,318 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,318 - training_generator - INFO - Added chunk with 3 characters
+2025-01-21 23:25:19,318 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,318 - training_generator - INFO - Added chunk with 92 characters
+2025-01-21 23:25:19,319 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,319 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:25:19,319 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,319 - training_generator - INFO - Added chunk with 103 characters
+2025-01-21 23:25:19,319 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,319 - training_generator - INFO - Added chunk with 48 characters
+2025-01-21 23:25:19,320 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,320 - training_generator - INFO - Added chunk with 11 characters
+2025-01-21 23:25:19,320 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,320 - training_generator - INFO - Added chunk with 66 characters
+2025-01-21 23:25:19,320 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,321 - training_generator - INFO - Added chunk with 29 characters
+2025-01-21 23:25:19,321 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,321 - training_generator - INFO - Added chunk with 9 characters
+2025-01-21 23:25:19,321 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,321 - training_generator - INFO - Added chunk with 58 characters
+2025-01-21 23:25:19,322 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,322 - training_generator - INFO - Added chunk with 7 characters
+2025-01-21 23:25:19,322 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,323 - training_generator - INFO - Added chunk with 34 characters
+2025-01-21 23:25:19,323 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,323 - training_generator - INFO - Added chunk with 8 characters
+2025-01-21 23:25:19,324 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,324 - training_generator - INFO - Added chunk with 118 characters
+2025-01-21 23:25:19,324 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,324 - training_generator - INFO - Added chunk with 4 characters
+2025-01-21 23:25:19,324 - training_generator - INFO - Split document into 1 chunks
+2025-01-21 23:25:19,325 - training_generator - INFO - Added chunk with 94 characters
+2025-01-21 23:25:19,325 - training_generator - INFO - Created 36 total chunks
+2025-01-21 23:25:57,869 - training_generator - INFO - Successfully created vector store
+2025-01-21 23:26:28,569 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景', '1.1.1 行业背景：食品行业对调味品使用的规范要求[1]', '1.1.2 公司文化：注重健康饮食与食品安全[1]', '1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险[1]', '1.2 培训对象', '1.2.1 目标受众：公司内部厨师、食品研发人员及相关岗位员工[1]', '1.2.2 角色职责：确保食品制作过程中调味品的合理使用[1]', '1.3 培训主题', '1.3.1 主题：味精的正确使用与注意事项[1]', '1.3.2 核心内容：味精的化学特性、使用禁忌及健康影响[1]\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的定义与成分', '2.1.1.1 主要成分：谷氨酸钠[1]', '2.1.1.2 调味作用：提升菜肴鲜味[1]', '2.1.2 味精的化学特性', '2.1.2.1 溶解度：在70℃－90℃时最佳[1]', '2.1.2.2 化学反应：高温下生成焦谷氨酸钠[1]', '2.2 味精的使用禁忌', '2.2.1 温度禁忌', '2.2.1.1 高温使用：避免在高温菜肴中直接加入味精[1]', '2.2.1.2 低温使用：凉菜中需用温水溶解后使用[1]', '2.2.2 酸碱环境禁忌', '2.2.2.1 碱性食物：如碱发鱿鱼，避免使用味精[1]', '2.2.2.2 酸性食物：酸度越高，味精溶解效果越差[1]', '2.2.3 甜味菜肴禁忌', '2.2.3.1 甜菜中加味精会破坏鲜味与甜味[1]', '2.2.4 用量禁忌', '2.2.4.1 过量使用会产生怪味，每日摄入量不宜超过6克[1]', '2.2.5 特定菜肴禁忌', '2.2.5.1 炒鸡蛋：鸡蛋本身含谷氨酸，无需额外添加味精[1]', '2.3 味精的健康影响', '2.3.1 适量使用的益处', '2.3.1.1 改善细胞营养状况[1]', '2.3.1.2 辅助治疗神经衰弱[1]', '2.3.2 过量使用的危害', '2.3.2.1 可能引发头痛、恶心、发热等症状[1]', '2.3.2.2 可能导致高血糖，老年人及特定疾病患者需慎用[1]\n---\n#### 3. 总结', '3.1 培训要点回顾', '3.1.1 味精的正确使用方法', '3.1.2 使用禁忌与健康影响', '3.2 实践建议', '3.2.1 在日常烹饪中遵循科学使用原则', '3.2.2 定期检查调味品使用规范，确保食品安全', '3.3 后续行动', '3.3.1 提供相关参考资料供员工深入学习[1]', '3.3.2 定期组织食品安全培训，强化员工意识\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒']
+2025-01-21 23:26:28,571 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-21 23:26:42,415 - training_generator - INFO - Generating section content for 1.1 培训背景
+2025-01-21 23:26:53,275 - training_generator - INFO - Generating section content for 1.1.1 行业背景：食品行业对调味品使用的规范要求[1]
+2025-01-21 23:27:07,117 - training_generator - INFO - Generating section content for 1.1.2 公司文化：注重健康饮食与食品安全[1]
+2025-01-21 23:27:17,159 - training_generator - INFO - Generating section content for 1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险[1]
+2025-01-21 23:27:29,634 - training_generator - INFO - Generating section content for 1.2 培训对象
+2025-01-21 23:27:39,887 - training_generator - INFO - Generating section content for 1.2.1 目标受众：公司内部厨师、食品研发人员及相关岗位员工[1]
+2025-01-21 23:27:53,346 - training_generator - INFO - Generating section content for 1.2.2 角色职责：确保食品制作过程中调味品的合理使用[1]
+2025-01-21 23:28:09,780 - training_generator - INFO - Generating section content for 1.3 培训主题
+2025-01-21 23:28:20,392 - training_generator - INFO - Generating section content for 1.3.1 主题：味精的正确使用与注意事项[1]
+2025-01-21 23:28:32,881 - training_generator - INFO - Generating section content for 1.3.2 核心内容：味精的化学特性、使用禁忌及健康影响[1]
+---
+#### 2. 主要内容
+2025-01-21 23:28:48,365 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-21 23:29:04,405 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与成分
+2025-01-21 23:29:15,973 - training_generator - INFO - Generating section content for 2.1.1.1 主要成分：谷氨酸钠[1]
+2025-01-21 23:29:28,486 - training_generator - INFO - Generating section content for 2.1.1.2 调味作用：提升菜肴鲜味[1]
+2025-01-21 23:29:40,173 - training_generator - INFO - Generating section content for 2.1.2 味精的化学特性
+2025-01-21 23:29:55,887 - training_generator - INFO - Generating section content for 2.1.2.1 溶解度：在70℃－90℃时最佳[1]
+2025-01-21 23:30:06,546 - training_generator - INFO - Generating section content for 2.1.2.2 化学反应：高温下生成焦谷氨酸钠[1]
+2025-01-21 23:30:19,256 - training_generator - INFO - Generating section content for 2.2 味精的使用禁忌
+2025-01-21 23:30:33,614 - training_generator - INFO - Generating section content for 2.2.1 温度禁忌
+2025-01-21 23:30:42,818 - training_generator - INFO - Generating section content for 2.2.1.1 高温使用：避免在高温菜肴中直接加入味精[1]
+2025-01-21 23:30:52,441 - training_generator - INFO - Generating section content for 2.2.1.2 低温使用：凉菜中需用温水溶解后使用[1]
+2025-01-21 23:31:02,206 - training_generator - INFO - Generating section content for 2.2.2 酸碱环境禁忌
+2025-01-21 23:31:09,750 - training_generator - INFO - Generating section content for 2.2.2.1 碱性食物：如碱发鱿鱼，避免使用味精[1]
+2025-01-21 23:31:20,535 - training_generator - INFO - Generating section content for 2.2.2.2 酸性食物：酸度越高，味精溶解效果越差[1]
+2025-01-21 23:31:28,449 - training_generator - INFO - Generating section content for 2.2.3 甜味菜肴禁忌
+2025-01-21 23:31:37,359 - training_generator - INFO - Generating section content for 2.2.3.1 甜菜中加味精会破坏鲜味与甜味[1]
+2025-01-21 23:31:47,358 - training_generator - INFO - Generating section content for 2.2.4 用量禁忌
+2025-01-21 23:32:01,419 - training_generator - INFO - Generating section content for 2.2.4.1 过量使用会产生怪味，每日摄入量不宜超过6克[1]
+2025-01-21 23:32:12,555 - training_generator - INFO - Generating section content for 2.2.5 特定菜肴禁忌
+2025-01-21 23:32:25,401 - training_generator - INFO - Generating section content for 2.2.5.1 炒鸡蛋：鸡蛋本身含谷氨酸，无需额外添加味精[1]
+2025-01-21 23:32:37,347 - training_generator - INFO - Generating section content for 2.3 味精的健康影响
+2025-01-21 23:32:49,941 - training_generator - INFO - Generating section content for 2.3.1 适量使用的益处
+2025-01-21 23:32:59,659 - training_generator - INFO - Generating section content for 2.3.1.1 改善细胞营养状况[1]
+2025-01-21 23:33:12,280 - training_generator - INFO - Generating section content for 2.3.1.2 辅助治疗神经衰弱[1]
+2025-01-21 23:33:26,198 - training_generator - INFO - Generating section content for 2.3.2 过量使用的危害
+2025-01-21 23:33:33,989 - training_generator - INFO - Generating section content for 2.3.2.1 可能引发头痛、恶心、发热等症状[1]
+2025-01-21 23:33:41,296 - training_generator - INFO - Generating section content for 2.3.2.2 可能导致高血糖，老年人及特定疾病患者需慎用[1]
+---
+#### 3. 总结
+2025-01-21 23:33:52,723 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+2025-01-21 23:34:04,852 - training_generator - INFO - Generating section content for 3.1.1 味精的正确使用方法
+2025-01-21 23:34:20,413 - training_generator - INFO - Generating section content for 3.1.2 使用禁忌与健康影响
+2025-01-21 23:34:36,518 - training_generator - INFO - Generating section content for 3.2 实践建议
+2025-01-21 23:34:48,046 - training_generator - INFO - Generating section content for 3.2.1 在日常烹饪中遵循科学使用原则
+2025-01-21 23:35:00,540 - training_generator - INFO - Generating section content for 3.2.2 定期检查调味品使用规范，确保食品安全
+2025-01-21 23:35:13,255 - training_generator - INFO - Generating section content for 3.3 后续行动
+2025-01-21 23:35:21,088 - training_generator - INFO - Generating section content for 3.3.1 提供相关参考资料供员工深入学习[1]
+2025-01-21 23:35:32,962 - training_generator - INFO - Generating section content for 3.3.2 定期组织食品安全培训，强化员工意识
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+2025-01-22 10:12:48,333 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp3fybk20s\Doc1.docx
+2025-01-22 10:12:48,437 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmp3fybk20s\Doc1.docx
+2025-01-22 10:12:48,438 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmp3fybk20s\Doc1.docx
+2025-01-22 10:12:48,438 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 10:12:48,439 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 10:14:17,859 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 10:14:17,860 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpxkttgrbh\Doc1.docx
+2025-01-22 10:14:17,861 - training_generator - INFO - File size: 195791 bytes
+2025-01-22 10:14:17,880 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpxkttgrbh\Doc1.docx
+2025-01-22 10:14:17,881 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpxkttgrbh\Doc1.docx
+2025-01-22 10:14:17,882 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 10:14:17,883 - training_generator - ERROR - Traceback:
+NoneType: None
+2025-01-22 10:14:17,884 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 10:14:17,884 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 115, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 10:16:19,516 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 10:16:19,517 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:19,518 - training_generator - INFO - File size: 90890 bytes
+2025-01-22 10:16:23,397 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,398 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,399 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,399 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,399 - training_generator - INFO - Added document with 92 characters
+2025-01-22 10:16:23,400 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,400 - training_generator - INFO - Added document with 103 characters
+2025-01-22 10:16:23,400 - training_generator - INFO - Added document with 48 characters
+2025-01-22 10:16:23,400 - training_generator - INFO - Added document with 11 characters
+2025-01-22 10:16:23,401 - training_generator - INFO - Added document with 66 characters
+2025-01-22 10:16:23,401 - training_generator - INFO - Added document with 29 characters
+2025-01-22 10:16:23,401 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,401 - training_generator - INFO - Added document with 58 characters
+2025-01-22 10:16:23,401 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,401 - training_generator - INFO - Added document with 34 characters
+2025-01-22 10:16:23,402 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,402 - training_generator - INFO - Added document with 118 characters
+2025-01-22 10:16:23,402 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp0qh0gk2w\Doc1.docx
+2025-01-22 10:16:23,402 - training_generator - INFO - Added document with 94 characters
+2025-01-22 10:16:23,402 - training_generator - INFO - Successfully loaded 10 valid documents
+2025-01-22 10:16:23,403 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,403 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,403 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,404 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,404 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,404 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,404 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,405 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,405 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,405 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 10:16:23,405 - training_generator - INFO - Created 10 text chunks
+2025-01-22 10:16:34,874 - training_generator - INFO - Successfully created vector store
+2025-01-22 10:16:59,925 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与注意事项\n---\n#### 1. 介绍', '1.1 培训背景', '1.1.1 行业背景：味精在食品行业中的广泛应用[1]', '1.1.2 公司文化：注重健康饮食与食品安全[1]', '1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险[1]', '1.2 培训对象', '1.2.1 目标受众：公司内部食品研发、生产及餐饮服务人员[1]', '1.2.2 角色定位：确保食品安全与品质的关键岗位[1]', '1.3 培训意义', '1.3.1 提升食品安全意识', '1.3.2 优化食品调味技术', '1.3.3 减少因不当使用味精导致的健康问题[1]\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的定义与成分：谷氨酸钠[1]', '2.1.2 味精的作用：调味、增鲜、辅助治疗神经衰弱等[1]', '2.2 味精使用的五大禁忌', '2.2.1 低、高温使用', '2.2.1.1 高温使用：70℃-90℃为最佳溶解温度，过高会产生焦谷氨酸钠[1]', '2.2.1.2 低温使用：需用温开水化开后再使用[1]', '2.2.2 用于酸、碱性食物', '2.2.2.1 碱性食物：产生谷氨酸二钠，影响味道[1]', '2.2.2.2 酸性食物：不易溶解，效果差[1]', '2.2.3 用于甜口菜肴', '2.2.3.1 甜菜加味精会破坏鲜味与甜味[1]', '2.2.4 投放过量', '2.2.4.1 过量使用会产生怪味，且可能引发健康问题[1]', '2.2.5 用于炒黄菜（炒鸡蛋）', '2.2.5.1 鸡蛋本身含谷氨酸，加味精多余[1]', '2.3 味精使用的注意事项', '2.3.1 每日摄入量：每人每天不超过6克[1]', '2.3.2 特殊人群：老年人、高血压、肾炎患者需慎用[1]', '2.4 味精使用的实用技巧', '2.4.1 如何科学添加味精', '2.4.2 味精与其他调味料的搭配建议\n---\n#### 3. 总结', '3.1 培训要点回顾', '3.1.1 味精的正确使用方法', '3.1.2 避免味精使用中的常见误区', '3.2 实践应用建议', '3.2.1 在日常工作中落实培训内容', '3.2.2 定期检查与反馈味精使用情况', '3.3 后续行动计划', '3.3.1 制定味精使用规范', '3.3.2 开展定期培训与考核\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，避免因不当使用导致的健康风险，同时提升食品安全与品质管理水平。']
+2025-01-22 10:16:59,927 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与注意事项
+---
+#### 1. 介绍
+2025-01-22 10:17:17,188 - training_generator - INFO - Generating section content for 1.1 培训背景
+2025-01-22 10:17:30,416 - training_generator - INFO - Generating section content for 1.1.1 行业背景：味精在食品行业中的广泛应用[1]
+2025-01-22 10:17:42,002 - training_generator - INFO - Generating section content for 1.1.2 公司文化：注重健康饮食与食品安全[1]
+2025-01-22 10:17:55,101 - training_generator - INFO - Generating section content for 1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险[1]
+2025-01-22 10:18:08,606 - training_generator - INFO - Generating section content for 1.2 培训对象
+2025-01-22 10:18:19,605 - training_generator - INFO - Generating section content for 1.2.1 目标受众：公司内部食品研发、生产及餐饮服务人员[1]
+2025-01-22 10:18:34,633 - training_generator - INFO - Generating section content for 1.2.2 角色定位：确保食品安全与品质的关键岗位[1]
+2025-01-22 10:18:49,439 - training_generator - INFO - Generating section content for 1.3 培训意义
+2025-01-22 10:18:57,980 - training_generator - INFO - Generating section content for 1.3.1 提升食品安全意识
+2025-01-22 10:19:08,499 - training_generator - INFO - Generating section content for 1.3.2 优化食品调味技术
+2025-01-22 10:19:21,053 - training_generator - INFO - Generating section content for 1.3.3 减少因不当使用味精导致的健康问题[1]
+---
+#### 2. 主要内容
+2025-01-22 10:19:32,438 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-22 10:19:51,083 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与成分：谷氨酸钠[1]
+2025-01-22 10:20:03,937 - training_generator - INFO - Generating section content for 2.1.2 味精的作用：调味、增鲜、辅助治疗神经衰弱等[1]
+2025-01-22 10:20:16,536 - training_generator - INFO - Generating section content for 2.2 味精使用的五大禁忌
+2025-01-22 10:20:33,437 - training_generator - INFO - Generating section content for 2.2.1 低、高温使用
+2025-01-22 10:20:43,068 - training_generator - INFO - Generating section content for 2.2.1.1 高温使用：70℃-90℃为最佳溶解温度，过高会产生焦谷氨酸钠[1]
+2025-01-22 10:20:56,995 - training_generator - INFO - Generating section content for 2.2.1.2 低温使用：需用温开水化开后再使用[1]
+2025-01-22 10:21:07,610 - training_generator - INFO - Generating section content for 2.2.2 用于酸、碱性食物
+2025-01-22 10:21:16,005 - training_generator - INFO - Generating section content for 2.2.2.1 碱性食物：产生谷氨酸二钠，影响味道[1]
+2025-01-22 10:21:26,449 - training_generator - INFO - Generating section content for 2.2.2.2 酸性食物：不易溶解，效果差[1]
+2025-01-22 10:21:36,802 - training_generator - INFO - Generating section content for 2.2.3 用于甜口菜肴
+2025-01-22 10:21:46,895 - training_generator - INFO - Generating section content for 2.2.3.1 甜菜加味精会破坏鲜味与甜味[1]
+2025-01-22 10:21:56,266 - training_generator - INFO - Generating section content for 2.2.4 投放过量
+2025-01-22 10:22:05,766 - training_generator - INFO - Generating section content for 2.2.4.1 过量使用会产生怪味，且可能引发健康问题[1]
+2025-01-22 10:22:15,690 - training_generator - INFO - Generating section content for 2.2.5 用于炒黄菜（炒鸡蛋）
+2025-01-22 10:22:26,574 - training_generator - INFO - Generating section content for 2.2.5.1 鸡蛋本身含谷氨酸，加味精多余[1]
+2025-01-22 10:22:39,736 - training_generator - INFO - Generating section content for 2.3 味精使用的注意事项
+2025-01-22 10:22:54,153 - training_generator - INFO - Generating section content for 2.3.1 每日摄入量：每人每天不超过6克[1]
+2025-01-22 10:23:05,757 - training_generator - INFO - Generating section content for 2.3.2 特殊人群：老年人、高血压、肾炎患者需慎用[1]
+2025-01-22 10:23:15,939 - training_generator - INFO - Generating section content for 2.4 味精使用的实用技巧
+2025-01-22 10:23:30,491 - training_generator - INFO - Generating section content for 2.4.1 如何科学添加味精
+2025-01-22 10:23:42,784 - training_generator - INFO - Generating section content for 2.4.2 味精与其他调味料的搭配建议
+---
+#### 3. 总结
+2025-01-22 10:23:55,519 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+2025-01-22 10:24:06,102 - training_generator - INFO - Generating section content for 3.1.1 味精的正确使用方法
+2025-01-22 10:24:18,337 - training_generator - INFO - Generating section content for 3.1.2 避免味精使用中的常见误区
+2025-01-22 10:24:33,430 - training_generator - INFO - Generating section content for 3.2 实践应用建议
+2025-01-22 10:24:45,506 - training_generator - INFO - Generating section content for 3.2.1 在日常工作中落实培训内容
+2025-01-22 10:24:59,167 - training_generator - INFO - Generating section content for 3.2.2 定期检查与反馈味精使用情况
+2025-01-22 10:25:14,655 - training_generator - INFO - Generating section content for 3.3 后续行动计划
+2025-01-22 10:25:27,393 - training_generator - INFO - Generating section content for 3.3.1 制定味精使用规范
+2025-01-22 10:25:41,630 - training_generator - INFO - Generating section content for 3.3.2 开展定期培训与考核
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，避免因不当使用导致的健康风险，同时提升食品安全与品质管理水平。
+2025-01-22 15:04:24,686 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 15:04:24,695 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp1o23bl65\Doc1.docx
+2025-01-22 15:04:24,696 - training_generator - INFO - File size: 17469 bytes
+2025-01-22 15:04:24,929 - training_generator - INFO - Loaded 2 documents from C:\Users\dorot\AppData\Local\Temp\tmp1o23bl65\Doc1.docx
+2025-01-22 15:04:24,929 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp1o23bl65\Doc1.docx
+2025-01-22 15:04:24,930 - training_generator - INFO - Added document with 238 characters
+2025-01-22 15:04:24,930 - training_generator - INFO - Successfully loaded 1 valid documents
+2025-01-22 15:04:24,932 - training_generator - INFO - Added 1 chunks from document
+2025-01-22 15:04:24,933 - training_generator - INFO - Created 1 text chunks
+2025-01-22 15:04:26,168 - training_generator - INFO - Successfully created vector store
+2025-01-22 15:04:45,353 - training_generator - INFO - Parsed sections: ['### 培训大纲：商品利润分析与优化策略\n---\n#### 1. 介绍', '1.1 培训背景\n- 行业背景：1\n- 公司背景：1（公司名称、文化、行业、竞争环境）\n- 项目背景：1（项目标题、职责、目标、主题、目的）', '1.2 培训目标\n- 帮助学员掌握商品利润分析的基本方法\n- 提升学员对利润优化策略的理解与应用能力\n- 结合公司实际业务场景，提供实用工具与案例分析', '1.3 培训对象\n- 用户角色：1\n- 学员需求：1（内容需求、格式风格、文件要求）\n---\n#### 2. 主要内容', '2.1 商品利润分析基础', '2.1.1 利润计算公式与关键指标\n- 利润 = 售价 - 进价\n- 利润率 = 利润 / 售价 × 100%\n- 参考数据：[1]（部分商品利润分析表）', '2.1.2 商品分类与利润分布\n- 服饰类、家用品、家电类的利润对比\n- 高利润商品与低利润商品的识别\n- 参考数据：[1]（商品类别与利润分布）', '2.2 利润优化策略', '2.2.1 定价策略优化\n- 基于市场需求与竞争环境的定价调整\n- 高利润商品的定价策略（如西服、皮鞋）\n- 低利润商品的定价策略（如手电筒）', '2.2.2 成本控制与供应链优化\n- 进价谈判与供应商管理\n- 库存管理与商品周转率提升', '2.2.3 商品组合与促销策略\n- 高利润商品与低利润商品的组合销售\n- 促销活动对利润的影响分析', '2.3 数据分析工具与实操', '2.3.1 利润分析表的制作与解读\n- 数据整理与可视化（如利润柱状图、饼图）\n- 参考数据：[1]（部分商品利润分析表）', '2.3.2 利润预测与决策支持\n- 基于历史数据的利润趋势分析\n- 利润优化方案的模拟与评估\n---\n#### 3. 总结与行动计划', '3.1 培训总结\n- 回顾商品利润分析的核心知识点\n- 强调利润优化策略的实际应用价值', '3.2 行动计划\n- 学员制定个人或团队的利润优化计划\n- 定期跟踪与反馈机制', '3.3 参考资料与工具\n- 参考数据：[1]（部分商品利润分析表）\n- 推荐工具：Excel、数据分析软件\n---\n#### 4. 附录', '4.1 培训材料\n- 利润分析表模板\n- 利润优化策略案例集', '4.2 联系方式\n- 培训负责人：1\n- 技术支持：1\n---\n以上大纲旨在提供清晰、结构化的培训内容，确保学员能够掌握商品利润分析的核心技能，并将其应用于实际工作中。']
+2025-01-22 15:04:45,358 - training_generator - INFO - Generating section content for ### 培训大纲：商品利润分析与优化策略
+---
+#### 1. 介绍
+2025-01-22 15:05:00,682 - training_generator - INFO - Generating section content for 1.1 培训背景
+- 行业背景：1
+- 公司背景：1（公司名称、文化、行业、竞争环境）
+- 项目背景：1（项目标题、职责、目标、主题、目的）
+2025-01-22 15:05:22,877 - training_generator - INFO - Generating section content for 1.2 培训目标
+- 帮助学员掌握商品利润分析的基本方法
+- 提升学员对利润优化策略的理解与应用能力
+- 结合公司实际业务场景，提供实用工具与案例分析
+2025-01-22 15:05:38,530 - training_generator - INFO - Generating section content for 1.3 培训对象
+- 用户角色：1
+- 学员需求：1（内容需求、格式风格、文件要求）
+---
+#### 2. 主要内容
+2025-01-22 15:05:58,896 - training_generator - INFO - Generating section content for 2.1 商品利润分析基础
+2025-01-22 15:06:13,342 - training_generator - INFO - Generating section content for 2.1.1 利润计算公式与关键指标
+- 利润 = 售价 - 进价
+- 利润率 = 利润 / 售价 × 100%
+- 参考数据：[1]（部分商品利润分析表）
+2025-01-22 15:06:26,362 - training_generator - INFO - Generating section content for 2.1.2 商品分类与利润分布
+- 服饰类、家用品、家电类的利润对比
+- 高利润商品与低利润商品的识别
+- 参考数据：[1]（商品类别与利润分布）
+2025-01-22 15:06:39,024 - training_generator - INFO - Generating section content for 2.2 利润优化策略
+2025-01-22 15:06:56,835 - training_generator - INFO - Generating section content for 2.2.1 定价策略优化
+- 基于市场需求与竞争环境的定价调整
+- 高利润商品的定价策略（如西服、皮鞋）
+- 低利润商品的定价策略（如手电筒）
+2025-01-22 15:07:18,946 - training_generator - INFO - Generating section content for 2.2.2 成本控制与供应链优化
+- 进价谈判与供应商管理
+- 库存管理与商品周转率提升
+2025-01-22 15:07:35,039 - training_generator - INFO - Generating section content for 2.2.3 商品组合与促销策略
+- 高利润商品与低利润商品的组合销售
+- 促销活动对利润的影响分析
+2025-01-22 15:07:53,642 - training_generator - INFO - Generating section content for 2.3 数据分析工具与实操
+2025-01-22 15:08:06,341 - training_generator - INFO - Generating section content for 2.3.1 利润分析表的制作与解读
+- 数据整理与可视化（如利润柱状图、饼图）
+- 参考数据：[1]（部分商品利润分析表）
+2025-01-22 15:08:21,468 - training_generator - INFO - Generating section content for 2.3.2 利润预测与决策支持
+- 基于历史数据的利润趋势分析
+- 利润优化方案的模拟与评估
+---
+#### 3. 总结与行动计划
+2025-01-22 15:08:42,819 - training_generator - INFO - Generating section content for 3.1 培训总结
+- 回顾商品利润分析的核心知识点
+- 强调利润优化策略的实际应用价值
+2025-01-22 15:08:58,084 - training_generator - INFO - Generating section content for 3.2 行动计划
+- 学员制定个人或团队的利润优化计划
+- 定期跟踪与反馈机制
+2025-01-22 15:09:13,298 - training_generator - INFO - Generating section content for 3.3 参考资料与工具
+- 参考数据：[1]（部分商品利润分析表）
+- 推荐工具：Excel、数据分析软件
+---
+#### 4. 附录
+2025-01-22 15:09:31,825 - training_generator - INFO - Generating section content for 4.1 培训材料
+- 利润分析表模板
+- 利润优化策略案例集
+2025-01-22 15:09:48,475 - training_generator - INFO - Generating section content for 4.2 联系方式
+- 培训负责人：1
+- 技术支持：1
+---
+以上大纲旨在提供清晰、结构化的培训内容，确保学员能够掌握商品利润分析的核心技能，并将其应用于实际工作中。
+2025-01-22 22:42:31,004 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 22:42:31,013 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpov7fa8p4\Doc1.docx
+2025-01-22 22:42:31,014 - training_generator - INFO - File size: 195791 bytes
+2025-01-22 22:42:31,125 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpov7fa8p4\Doc1.docx
+2025-01-22 22:42:31,125 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmpov7fa8p4\Doc1.docx
+2025-01-22 22:42:31,127 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:42:31,127 - training_generator - ERROR - Traceback: NoneType: None
+
+2025-01-22 22:42:31,127 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:42:31,128 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 126, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 22:42:33,899 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 22:42:33,900 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp7_p69k5d\Doc1.docx
+2025-01-22 22:42:33,901 - training_generator - INFO - File size: 195791 bytes
+2025-01-22 22:42:33,969 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmp7_p69k5d\Doc1.docx
+2025-01-22 22:42:33,970 - training_generator - WARNING - Skipped document with insufficient content from C:\Users\dorot\AppData\Local\Temp\tmp7_p69k5d\Doc1.docx
+2025-01-22 22:42:33,970 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:42:33,971 - training_generator - ERROR - Traceback: NoneType: None
+
+2025-01-22 22:42:33,971 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:42:33,971 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 126, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 22:44:48,956 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 22:44:48,957 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpjvdhh8kf\Doc1.docx
+2025-01-22 22:44:48,958 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmpjvdhh8kf\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 22:44:48,974 - training_generator - INFO - Successfully read 195791 bytes from file
+2025-01-22 22:44:48,979 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 22:44:48,979 - training_generator - INFO - Starting document loading...
+2025-01-22 22:44:53,401 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 22:44:53,401 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 22:44:53,402 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 22:44:53,402 - training_generator - ERROR - No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:44:53,403 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:44:53,403 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 149, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 22:50:26,872 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 22:50:26,873 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpuabzjuvq\Doc1.docx
+2025-01-22 22:50:26,874 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmpuabzjuvq\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 22:50:26,887 - training_generator - INFO - Successfully read 195791 bytes from file
+2025-01-22 22:50:26,888 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 22:50:26,888 - training_generator - INFO - Starting document loading...
+2025-01-22 22:50:26,945 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 22:50:26,946 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 22:50:26,946 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 22:50:26,946 - training_generator - ERROR - No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:50:26,948 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 22:50:26,948 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 149, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 23:00:26,805 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 23:00:26,806 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmputkuuxsb\Doc1.docx
+2025-01-22 23:00:26,807 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmputkuuxsb\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 23:00:26,819 - training_generator - INFO - Successfully read 195791 bytes from file
+2025-01-22 23:00:26,824 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 23:00:26,824 - training_generator - INFO - Starting document loading...
+2025-01-22 23:00:29,596 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 23:00:29,596 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 23:00:29,596 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 23:00:29,596 - training_generator - ERROR - No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:00:29,596 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:00:29,598 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 149, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 23:02:18,624 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 23:02:18,624 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp0xjbcjd5\Doc1.docx
+2025-01-22 23:02:18,625 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmp0xjbcjd5\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 23:02:18,641 - training_generator - INFO - Successfully read 195791 bytes from file
+2025-01-22 23:02:18,644 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 23:02:18,645 - training_generator - INFO - Starting document loading...
+2025-01-22 23:02:21,327 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 23:02:21,328 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 23:02:21,328 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 23:02:21,328 - training_generator - ERROR - No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:02:21,329 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:02:21,329 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 149, in __init__
+    raise ValueError(error_msg)
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+
+2025-01-22 23:07:44,596 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 23:07:44,619 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp0offpwfz\Doc1.docx
+2025-01-22 23:07:44,620 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmp0offpwfz\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 23:07:44,623 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 23:07:44,625 - training_generator - INFO - Starting document loading...
+2025-01-22 23:07:46,745 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 23:07:46,746 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 23:07:46,747 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 23:07:46,747 - training_generator - WARNING - No documents were loaded, creating empty document
+2025-01-22 23:07:46,747 - training_generator - INFO - Successfully loaded 1 valid documents
+2025-01-22 23:07:55,018 - training_generator - ERROR - Error creating vector store: RetryError[<Future at 0x289bf5074c0 state=finished raised HTTPStatusError>]
+2025-01-22 23:07:55,095 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 478, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Chatbot\test_embeddings.py", line 70, in _get_embedding
+    response.raise_for_status()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\httpx\_models.py", line 763, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://api.siliconflow.cn/v1/embeddings'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 156, in __init__
+    self.vector_store = FAISS.from_documents(documents, self.embeddings)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\langchain_core\vectorstores\base.py", line 835, in from_documents
+    return cls.from_texts(texts, embedding, metadatas=metadatas, **kwargs)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\langchain_community\vectorstores\faiss.py", line 1041, in from_texts
+    embeddings = embedding.embed_documents(texts)
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Chatbot\test_embeddings.py", line 97, in embed_documents
+    embedding = self._get_embedding(text)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 336, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 475, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 376, in iter
+    result = action(retry_state)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 419, in exc_check
+    raise retry_exc from fut.exception()
+tenacity.RetryError: RetryError[<Future at 0x289bf5074c0 state=finished raised HTTPStatusError>]
+
+2025-01-22 23:08:03,265 - training_generator - ERROR - Error during initialization: RetryError[<Future at 0x289df908a30 state=finished raised HTTPStatusError>]
+2025-01-22 23:08:03,267 - training_generator - ERROR - Traceback: Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 478, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Chatbot\test_embeddings.py", line 70, in _get_embedding
+    response.raise_for_status()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\httpx\_models.py", line 763, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://api.siliconflow.cn/v1/embeddings'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 162, in __init__
+    self.vector_store = FAISS.from_texts([""], self.embeddings)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\langchain_community\vectorstores\faiss.py", line 1041, in from_texts
+    embeddings = embedding.embed_documents(texts)
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Chatbot\test_embeddings.py", line 97, in embed_documents
+    embedding = self._get_embedding(text)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 336, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 475, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 376, in iter
+    result = action(retry_state)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python38\lib\site-packages\tenacity\__init__.py", line 419, in exc_check
+    raise retry_exc from fut.exception()
+tenacity.RetryError: RetryError[<Future at 0x289df908a30 state=finished raised HTTPStatusError>]
+
+2025-01-22 23:13:03,451 - training_generator - INFO - Initializing TrainingDocGenerator
+2025-01-22 23:13:03,474 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpvpzpii02\Doc1.docx
+2025-01-22 23:13:03,475 - training_generator - INFO - File: C:\Users\dorot\AppData\Local\Temp\tmpvpzpii02\Doc1.docx, Size: 195791 bytes, Type: .docx
+2025-01-22 23:13:03,478 - training_generator - INFO - Using UnstructuredWordDocumentLoader
+2025-01-22 23:13:03,478 - training_generator - INFO - Starting document loading...
+2025-01-22 23:13:05,956 - training_generator - INFO - Successfully loaded 1 documents
+2025-01-22 23:13:05,956 - training_generator - INFO - Document 0 content length: 0
+2025-01-22 23:13:05,957 - training_generator - WARNING - Skipped document 0 due to insufficient content
+2025-01-22 23:13:05,957 - training_generator - WARNING - No documents were loaded, creating empty document
+2025-01-22 23:13:05,957 - training_generator - INFO - Successfully loaded 1 valid documents
+2025-01-22 23:13:06,291 - training_generator - INFO - Successfully created vector store
+2025-01-22 23:52:29,171 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpt05ff0t2\Doc1.docx
+2025-01-22 23:52:32,433 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpt05ff0t2\Doc1.docx
+2025-01-22 23:52:32,433 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpt05ff0t2\Doc1.docx
+2025-01-22 23:52:32,433 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:52:32,434 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:59:01,439 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpp6r7mv27\Doc1.docx
+2025-01-22 23:59:04,376 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpp6r7mv27\Doc1.docx
+2025-01-22 23:59:04,376 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpp6r7mv27\Doc1.docx
+2025-01-22 23:59:04,376 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-22 23:59:04,378 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:03:15,909 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpsfz2z64i\Doc1.docx
+2025-01-23 00:03:15,979 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpsfz2z64i\Doc1.docx
+2025-01-23 00:03:15,980 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpsfz2z64i\Doc1.docx
+2025-01-23 00:03:15,983 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:03:15,983 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:03:17,718 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpda2ht122\Doc1.docx
+2025-01-23 00:03:17,784 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpda2ht122\Doc1.docx
+2025-01-23 00:03:17,785 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpda2ht122\Doc1.docx
+2025-01-23 00:03:17,785 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:03:17,786 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:08:12,622 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpsydh4j7_\Doc1.docx
+2025-01-23 00:08:15,080 - training_generator - INFO - Loaded 1 documents from C:\Users\dorot\AppData\Local\Temp\tmpsydh4j7_\Doc1.docx
+2025-01-23 00:08:15,081 - training_generator - WARNING - Skipped empty document from C:\Users\dorot\AppData\Local\Temp\tmpsydh4j7_\Doc1.docx
+2025-01-23 00:08:15,082 - training_generator - ERROR - Error during initialization: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 00:08:15,083 - training_generator - ERROR - Traceback:
+Traceback (most recent call last):
+  File "C:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\TrainingDocGenerator.py", line 95, in __init__
+    raise ValueError("No valid documents were loaded. Please check if the files contain readable content.")
+ValueError: No valid documents were loaded. Please check if the files contain readable content.
+2025-01-23 17:24:28,577 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp24syfsp1\Doc1.docx
+2025-01-23 17:24:53,828 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp24syfsp1\Doc1.docx
+2025-01-23 17:24:53,829 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:24:53,829 - training_generator - INFO - Added document with 6 characters
+2025-01-23 17:24:53,830 - training_generator - INFO - Added document with 3 characters
+2025-01-23 17:24:53,830 - training_generator - INFO - Added document with 92 characters
+2025-01-23 17:24:53,830 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:24:53,830 - training_generator - INFO - Added document with 103 characters
+2025-01-23 17:24:53,830 - training_generator - INFO - Added document with 48 characters
+2025-01-23 17:24:53,831 - training_generator - INFO - Added document with 11 characters
+2025-01-23 17:24:53,831 - training_generator - INFO - Added document with 66 characters
+2025-01-23 17:24:53,831 - training_generator - INFO - Added document with 29 characters
+2025-01-23 17:24:53,831 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:24:53,831 - training_generator - INFO - Added document with 58 characters
+2025-01-23 17:24:53,832 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:24:53,832 - training_generator - INFO - Added document with 34 characters
+2025-01-23 17:24:53,833 - training_generator - INFO - Added document with 8 characters
+2025-01-23 17:24:53,833 - training_generator - INFO - Added document with 118 characters
+2025-01-23 17:24:53,833 - training_generator - INFO - Added document with 4 characters
+2025-01-23 17:24:53,834 - training_generator - INFO - Added document with 94 characters
+2025-01-23 17:24:53,834 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,835 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:24:53,835 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,836 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 17:24:53,836 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,836 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 17:24:53,836 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,837 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 17:24:53,837 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,837 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:24:53,838 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,838 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 17:24:53,838 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,838 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 17:24:53,839 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,839 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 17:24:53,839 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,839 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 17:24:53,840 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,840 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 17:24:53,840 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,840 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:24:53,840 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,841 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 17:24:53,841 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,841 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:24:53,842 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,842 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 17:24:53,842 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,842 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 17:24:53,843 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,843 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 17:24:53,844 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,844 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 17:24:53,844 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:24:53,844 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 17:24:53,845 - training_generator - INFO - Created 18 total chunks
+2025-01-23 17:25:13,391 - training_generator - INFO - Successfully created vector store
+2025-01-23 17:25:37,716 - training_generator - INFO - Parsed sections: ['### 培训大纲：味精的正确使用与健康影响\n---\n#### 1. 介绍', '1.1 培训背景', '1.1.1 行业背景：食品行业对调味品使用的规范要求 [1]', '1.1.2 公司文化：注重健康饮食与食品安全 [1]', '1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险 [1]', '1.2 培训对象', '1.2.1 目标受众：食品加工、餐饮服务及相关岗位员工 [1]', '1.2.2 角色定位：确保食品安全与健康饮食的实践者 [1]', '1.3 培训意义', '1.3.1 提升食品安全意识', '1.3.2 减少因味精使用不当导致的健康问题 [1]\n---\n#### 2. 主要内容', '2.1 味精的基本知识', '2.1.1 味精的定义与主要成分：谷氨酸钠 [1]', '2.1.2 味精的调味作用与营养价值 [1]', '2.2 味精使用中的五大禁忌', '2.2.1 禁忌一：低、高温使用', '2.2.1.1 高温下味精的化学变化：生成焦谷氨酸钠 [1]', '2.2.1.2 低温下味精的溶解问题及解决方法 [1]', '2.2.2 禁忌二：用于酸、碱性食物', '2.2.2.1 碱性食物中味精的不良反应：生成谷氨酸二钠 [1]', '2.2.2.2 酸性食物中味精的溶解性问题 [1]', '2.2.3 禁忌三：用于甜口菜肴', '2.2.3.1 甜味与鲜味的冲突：味精对甜味菜肴的影响 [1]', '2.2.4 禁忌四：投放过量', '2.2.4.1 过量味精的副作用：怪味与健康风险 [1]', '2.2.4.2 每日推荐摄入量：不超过6克 [1]', '2.2.5 禁忌五：用于炒黄菜（炒鸡蛋）', '2.2.5.1 鸡蛋中天然谷氨酸的作用 [1]', '2.2.5.2 添加味精的冗余性与负面影响 [1]', '2.3 味精使用的健康建议', '2.3.1 特殊人群的注意事项：老年人、高血压患者等 [1]', '2.3.2 味精与其他调味品的搭配技巧\n---\n#### 3. 总结', '3.1 培训要点回顾', '3.1.1 味精的正确使用方法', '3.1.2 避免味精使用不当的健康风险 [1]', '3.2 实践建议', '3.2.1 在日常工作中应用所学知识', '3.2.2 定期检查与优化调味品使用流程', '3.3 后续行动计划', '3.3.1 制定公司内部味精使用规范', '3.3.2 开展定期培训与知识更新\n---\n#### 4. 参考资料\n[1] 本地文档：生活小常识1 - 味精食用不当易中毒\n---\n**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，同时结合公司文化与行业背景，确保培训内容的实用性与完整性。']
+2025-01-23 17:25:37,719 - training_generator - INFO - Generating section content for ### 培训大纲：味精的正确使用与健康影响
+---
+#### 1. 介绍
+2025-01-23 17:25:49,633 - training_generator - INFO - Generating section content for 1.1 培训背景
+2025-01-23 17:26:01,006 - training_generator - INFO - Generating section content for 1.1.1 行业背景：食品行业对调味品使用的规范要求 [1]
+2025-01-23 17:26:12,308 - training_generator - INFO - Generating section content for 1.1.2 公司文化：注重健康饮食与食品安全 [1]
+2025-01-23 17:26:24,414 - training_generator - INFO - Generating section content for 1.1.3 培训目标：提升员工对味精使用的科学认知，避免不当使用带来的健康风险 [1]
+2025-01-23 17:26:37,731 - training_generator - INFO - Generating section content for 1.2 培训对象
+2025-01-23 17:26:46,450 - training_generator - INFO - Generating section content for 1.2.1 目标受众：食品加工、餐饮服务及相关岗位员工 [1]
+2025-01-23 17:27:00,504 - training_generator - INFO - Generating section content for 1.2.2 角色定位：确保食品安全与健康饮食的实践者 [1]
+2025-01-23 17:27:15,098 - training_generator - INFO - Generating section content for 1.3 培训意义
+2025-01-23 17:27:22,734 - training_generator - INFO - Generating section content for 1.3.1 提升食品安全意识
+2025-01-23 17:27:35,154 - training_generator - INFO - Generating section content for 1.3.2 减少因味精使用不当导致的健康问题 [1]
+---
+#### 2. 主要内容
+2025-01-23 17:27:49,193 - training_generator - INFO - Generating section content for 2.1 味精的基本知识
+2025-01-23 17:28:08,772 - training_generator - INFO - Generating section content for 2.1.1 味精的定义与主要成分：谷氨酸钠 [1]
+2025-01-23 17:28:22,983 - training_generator - INFO - Generating section content for 2.1.2 味精的调味作用与营养价值 [1]
+2025-01-23 17:28:41,749 - training_generator - INFO - Generating section content for 2.2 味精使用中的五大禁忌
+2025-01-23 17:28:56,592 - training_generator - INFO - Generating section content for 2.2.1 禁忌一：低、高温使用
+2025-01-23 17:29:06,709 - training_generator - INFO - Generating section content for 2.2.1.1 高温下味精的化学变化：生成焦谷氨酸钠 [1]
+2025-01-23 17:29:18,123 - training_generator - INFO - Generating section content for 2.2.1.2 低温下味精的溶解问题及解决方法 [1]
+2025-01-23 17:29:32,286 - training_generator - INFO - Generating section content for 2.2.2 禁忌二：用于酸、碱性食物
+2025-01-23 17:29:42,302 - training_generator - INFO - Generating section content for 2.2.2.1 碱性食物中味精的不良反应：生成谷氨酸二钠 [1]
+2025-01-23 17:29:55,944 - training_generator - INFO - Generating section content for 2.2.2.2 酸性食物中味精的溶解性问题 [1]
+2025-01-23 17:30:06,131 - training_generator - INFO - Generating section content for 2.2.3 禁忌三：用于甜口菜肴
+2025-01-23 17:30:16,223 - training_generator - INFO - Generating section content for 2.2.3.1 甜味与鲜味的冲突：味精对甜味菜肴的影响 [1]
+2025-01-23 17:30:26,044 - training_generator - INFO - Generating section content for 2.2.4 禁忌四：投放过量
+2025-01-23 17:30:34,042 - training_generator - INFO - Generating section content for 2.2.4.1 过量味精的副作用：怪味与健康风险 [1]
+2025-01-23 17:30:43,256 - training_generator - INFO - Generating section content for 2.2.4.2 每日推荐摄入量：不超过6克 [1]
+2025-01-23 17:30:51,013 - training_generator - INFO - Generating section content for 2.2.5 禁忌五：用于炒黄菜（炒鸡蛋）
+2025-01-23 17:30:59,914 - training_generator - INFO - Generating section content for 2.2.5.1 鸡蛋中天然谷氨酸的作用 [1]
+2025-01-23 17:31:09,985 - training_generator - INFO - Generating section content for 2.2.5.2 添加味精的冗余性与负面影响 [1]
+2025-01-23 17:31:24,457 - training_generator - INFO - Generating section content for 2.3 味精使用的健康建议
+2025-01-23 17:31:37,893 - training_generator - INFO - Generating section content for 2.3.1 特殊人群的注意事项：老年人、高血压患者等 [1]
+2025-01-23 17:31:48,700 - training_generator - INFO - Generating section content for 2.3.2 味精与其他调味品的搭配技巧
+---
+#### 3. 总结
+2025-01-23 17:32:02,338 - training_generator - INFO - Generating section content for 3.1 培训要点回顾
+2025-01-23 17:32:12,487 - training_generator - INFO - Generating section content for 3.1.1 味精的正确使用方法
+2025-01-23 17:32:26,866 - training_generator - INFO - Generating section content for 3.1.2 避免味精使用不当的健康风险 [1]
+2025-01-23 17:32:38,154 - training_generator - INFO - Generating section content for 3.2 实践建议
+2025-01-23 17:32:49,809 - training_generator - INFO - Generating section content for 3.2.1 在日常工作中应用所学知识
+2025-01-23 17:32:58,738 - training_generator - INFO - Generating section content for 3.2.2 定期检查与优化调味品使用流程
+2025-01-23 17:33:08,446 - training_generator - INFO - Generating section content for 3.3 后续行动计划
+2025-01-23 17:33:18,970 - training_generator - INFO - Generating section content for 3.3.1 制定公司内部味精使用规范
+2025-01-23 17:33:32,187 - training_generator - INFO - Generating section content for 3.3.2 开展定期培训与知识更新
+---
+#### 4. 参考资料
+[1] 本地文档：生活小常识1 - 味精食用不当易中毒
+---
+**备注**：本大纲旨在通过结构化内容帮助学员全面掌握味精的正确使用方法，同时结合公司文化与行业背景，确保培训内容的实用性与完整性。
+2025-01-23 17:34:59,155 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpf2dxqesr\Doc1.docx
+2025-01-23 17:35:02,023 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpf2dxqesr\Doc1.docx
+2025-01-23 17:35:02,024 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:35:02,025 - training_generator - INFO - Added document with 6 characters
+2025-01-23 17:35:02,025 - training_generator - INFO - Added document with 3 characters
+2025-01-23 17:35:02,025 - training_generator - INFO - Added document with 92 characters
+2025-01-23 17:35:02,025 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:35:02,026 - training_generator - INFO - Added document with 103 characters
+2025-01-23 17:35:02,026 - training_generator - INFO - Added document with 48 characters
+2025-01-23 17:35:02,026 - training_generator - INFO - Added document with 11 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 66 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 29 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 58 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:35:02,027 - training_generator - INFO - Added document with 34 characters
+2025-01-23 17:35:02,028 - training_generator - INFO - Added document with 8 characters
+2025-01-23 17:35:02,028 - training_generator - INFO - Added document with 118 characters
+2025-01-23 17:35:02,028 - training_generator - INFO - Added document with 4 characters
+2025-01-23 17:35:02,028 - training_generator - INFO - Added document with 94 characters
+2025-01-23 17:35:02,029 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,029 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:35:02,029 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,029 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 17:35:02,030 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,030 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 17:35:02,030 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,031 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 17:35:02,031 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,031 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:35:02,031 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,031 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 17:35:02,032 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,032 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 17:35:02,032 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,032 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 17:35:02,032 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,033 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 17:35:02,033 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,033 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 17:35:02,033 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,034 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:35:02,034 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,034 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 17:35:02,034 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,035 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:35:02,035 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,035 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 17:35:02,036 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,036 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 17:35:02,036 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,036 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 17:35:02,037 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,037 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 17:35:02,037 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:35:02,037 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 17:35:02,037 - training_generator - INFO - Created 18 total chunks
+2025-01-23 17:35:21,283 - training_generator - INFO - Successfully created vector store
+2025-01-23 17:36:36,718 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmp23nmjtp2\Doc1.docx
+2025-01-23 17:36:39,375 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmp23nmjtp2\Doc1.docx
+2025-01-23 17:36:39,376 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:36:39,377 - training_generator - INFO - Added document with 6 characters
+2025-01-23 17:36:39,377 - training_generator - INFO - Added document with 3 characters
+2025-01-23 17:36:39,377 - training_generator - INFO - Added document with 92 characters
+2025-01-23 17:36:39,377 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 103 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 48 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 11 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 66 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 29 characters
+2025-01-23 17:36:39,378 - training_generator - INFO - Added document with 9 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 58 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 7 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 34 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 8 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 118 characters
+2025-01-23 17:36:39,379 - training_generator - INFO - Added document with 4 characters
+2025-01-23 17:36:39,380 - training_generator - INFO - Added document with 94 characters
+2025-01-23 17:36:39,380 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,380 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:36:39,380 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,380 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 17:36:39,381 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,381 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 17:36:39,381 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,381 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 17:36:39,382 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,382 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:36:39,382 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,383 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 17:36:39,383 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,383 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 17:36:39,383 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,384 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 17:36:39,384 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,384 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 17:36:39,384 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,384 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 17:36:39,385 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,385 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 17:36:39,385 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,385 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 17:36:39,385 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,386 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 17:36:39,386 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,386 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 17:36:39,386 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,387 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 17:36:39,387 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,388 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 17:36:39,388 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,389 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 17:36:39,389 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 17:36:39,389 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 17:36:39,390 - training_generator - INFO - Created 18 total chunks
+2025-01-23 17:36:58,684 - training_generator - INFO - Successfully created vector store
+2025-01-23 19:20:53,829 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpj_jv_m81\Doc1.docx
+2025-01-23 19:20:54,106 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpj_jv_m81\Doc1.docx
+2025-01-23 19:20:54,107 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:20:54,108 - training_generator - INFO - Added document with 6 characters
+2025-01-23 19:20:54,108 - training_generator - INFO - Added document with 3 characters
+2025-01-23 19:20:54,109 - training_generator - INFO - Added document with 92 characters
+2025-01-23 19:20:54,109 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:20:54,109 - training_generator - INFO - Added document with 103 characters
+2025-01-23 19:20:54,110 - training_generator - INFO - Added document with 48 characters
+2025-01-23 19:20:54,110 - training_generator - INFO - Added document with 11 characters
+2025-01-23 19:20:54,110 - training_generator - INFO - Added document with 66 characters
+2025-01-23 19:20:54,110 - training_generator - INFO - Added document with 29 characters
+2025-01-23 19:20:54,110 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:20:54,111 - training_generator - INFO - Added document with 58 characters
+2025-01-23 19:20:54,111 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:20:54,111 - training_generator - INFO - Added document with 34 characters
+2025-01-23 19:20:54,111 - training_generator - INFO - Added document with 8 characters
+2025-01-23 19:20:54,112 - training_generator - INFO - Added document with 118 characters
+2025-01-23 19:20:54,112 - training_generator - INFO - Added document with 4 characters
+2025-01-23 19:20:54,112 - training_generator - INFO - Added document with 94 characters
+2025-01-23 19:20:54,114 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,115 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:20:54,115 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,116 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 19:20:54,116 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,116 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 19:20:54,116 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,117 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 19:20:54,121 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,122 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:20:54,123 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,123 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 19:20:54,123 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,124 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 19:20:54,124 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,124 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 19:20:54,125 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,125 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 19:20:54,125 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,126 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 19:20:54,126 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,126 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:20:54,126 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,127 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 19:20:54,127 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,127 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:20:54,127 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,128 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 19:20:54,129 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,129 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 19:20:54,130 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,130 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 19:20:54,130 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,130 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 19:20:54,130 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:20:54,131 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 19:20:54,131 - training_generator - INFO - Created 18 total chunks
+2025-01-23 19:21:13,354 - training_generator - INFO - Successfully created vector store
+2025-01-23 19:21:45,957 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpii9gbq6w\c09f0de4-df98-4356-85ec-f8456ba6f317.docx
+2025-01-23 19:21:46,080 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpii9gbq6w\c09f0de4-df98-4356-85ec-f8456ba6f317.docx
+2025-01-23 19:21:46,081 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:21:46,081 - training_generator - INFO - Added document with 6 characters
+2025-01-23 19:21:46,082 - training_generator - INFO - Added document with 3 characters
+2025-01-23 19:21:46,082 - training_generator - INFO - Added document with 92 characters
+2025-01-23 19:21:46,082 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:21:46,083 - training_generator - INFO - Added document with 103 characters
+2025-01-23 19:21:46,083 - training_generator - INFO - Added document with 48 characters
+2025-01-23 19:21:46,084 - training_generator - INFO - Added document with 11 characters
+2025-01-23 19:21:46,084 - training_generator - INFO - Added document with 66 characters
+2025-01-23 19:21:46,085 - training_generator - INFO - Added document with 29 characters
+2025-01-23 19:21:46,085 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:21:46,085 - training_generator - INFO - Added document with 58 characters
+2025-01-23 19:21:46,086 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:21:46,086 - training_generator - INFO - Added document with 34 characters
+2025-01-23 19:21:46,086 - training_generator - INFO - Added document with 8 characters
+2025-01-23 19:21:46,087 - training_generator - INFO - Added document with 118 characters
+2025-01-23 19:21:46,087 - training_generator - INFO - Added document with 4 characters
+2025-01-23 19:21:46,087 - training_generator - INFO - Added document with 94 characters
+2025-01-23 19:21:46,088 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,088 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:21:46,088 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,088 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 19:21:46,089 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,090 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 19:21:46,090 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,090 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 19:21:46,091 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,091 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:21:46,091 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,091 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 19:21:46,092 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,092 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 19:21:46,093 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,093 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 19:21:46,093 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,093 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 19:21:46,094 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,094 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 19:21:46,094 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,095 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:21:46,095 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,095 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 19:21:46,095 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,096 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:21:46,096 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,097 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 19:21:46,097 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,098 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 19:21:46,098 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,099 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 19:21:46,099 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,100 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 19:21:46,100 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:21:46,101 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 19:21:46,101 - training_generator - INFO - Created 18 total chunks
+2025-01-23 19:22:05,285 - training_generator - INFO - Successfully created vector store
+2025-01-23 19:22:10,073 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmpxaet6ny5\3e0e8f70-d477-43e9-819a-c9edc6149f6a.docx
+2025-01-23 19:22:10,174 - training_generator - INFO - Loaded 18 documents from C:\Users\dorot\AppData\Local\Temp\tmpxaet6ny5\3e0e8f70-d477-43e9-819a-c9edc6149f6a.docx
+2025-01-23 19:22:10,175 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:22:10,175 - training_generator - INFO - Added document with 6 characters
+2025-01-23 19:22:10,175 - training_generator - INFO - Added document with 3 characters
+2025-01-23 19:22:10,175 - training_generator - INFO - Added document with 92 characters
+2025-01-23 19:22:10,176 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:22:10,176 - training_generator - INFO - Added document with 103 characters
+2025-01-23 19:22:10,176 - training_generator - INFO - Added document with 48 characters
+2025-01-23 19:22:10,176 - training_generator - INFO - Added document with 11 characters
+2025-01-23 19:22:10,177 - training_generator - INFO - Added document with 66 characters
+2025-01-23 19:22:10,177 - training_generator - INFO - Added document with 29 characters
+2025-01-23 19:22:10,177 - training_generator - INFO - Added document with 9 characters
+2025-01-23 19:22:10,177 - training_generator - INFO - Added document with 58 characters
+2025-01-23 19:22:10,177 - training_generator - INFO - Added document with 7 characters
+2025-01-23 19:22:10,178 - training_generator - INFO - Added document with 34 characters
+2025-01-23 19:22:10,178 - training_generator - INFO - Added document with 8 characters
+2025-01-23 19:22:10,178 - training_generator - INFO - Added document with 118 characters
+2025-01-23 19:22:10,178 - training_generator - INFO - Added document with 4 characters
+2025-01-23 19:22:10,179 - training_generator - INFO - Added document with 94 characters
+2025-01-23 19:22:10,179 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,179 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:22:10,179 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,180 - training_generator - INFO - Added chunk with 6 characters
+2025-01-23 19:22:10,180 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,180 - training_generator - INFO - Added chunk with 3 characters
+2025-01-23 19:22:10,181 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,181 - training_generator - INFO - Added chunk with 92 characters
+2025-01-23 19:22:10,181 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,182 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:22:10,182 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,182 - training_generator - INFO - Added chunk with 103 characters
+2025-01-23 19:22:10,182 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,182 - training_generator - INFO - Added chunk with 48 characters
+2025-01-23 19:22:10,182 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,183 - training_generator - INFO - Added chunk with 11 characters
+2025-01-23 19:22:10,183 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,183 - training_generator - INFO - Added chunk with 66 characters
+2025-01-23 19:22:10,183 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,184 - training_generator - INFO - Added chunk with 29 characters
+2025-01-23 19:22:10,184 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,185 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 19:22:10,185 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,186 - training_generator - INFO - Added chunk with 58 characters
+2025-01-23 19:22:10,187 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,187 - training_generator - INFO - Added chunk with 7 characters
+2025-01-23 19:22:10,188 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,188 - training_generator - INFO - Added chunk with 34 characters
+2025-01-23 19:22:10,189 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,189 - training_generator - INFO - Added chunk with 8 characters
+2025-01-23 19:22:10,190 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,190 - training_generator - INFO - Added chunk with 118 characters
+2025-01-23 19:22:10,191 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,191 - training_generator - INFO - Added chunk with 4 characters
+2025-01-23 19:22:10,191 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 19:22:10,192 - training_generator - INFO - Added chunk with 94 characters
+2025-01-23 19:22:10,192 - training_generator - INFO - Created 18 total chunks
+2025-01-23 19:22:29,435 - training_generator - INFO - Successfully created vector store
+2025-01-23 23:32:54,613 - training_generator - INFO - Processing file: C:\Users\dorot\AppData\Local\Temp\tmprfh9ocpe\Doc1.docx
+2025-01-23 23:33:00,894 - training_generator - INFO - Loaded 2 documents from C:\Users\dorot\AppData\Local\Temp\tmprfh9ocpe\Doc1.docx
+2025-01-23 23:33:00,895 - training_generator - INFO - Added document with 9 characters
+2025-01-23 23:33:00,895 - training_generator - INFO - Added document with 238 characters
+2025-01-23 23:33:00,896 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 23:33:00,896 - training_generator - INFO - Added chunk with 9 characters
+2025-01-23 23:33:00,897 - training_generator - INFO - Split document into 1 chunks
+2025-01-23 23:33:00,898 - training_generator - INFO - Added chunk with 238 characters
+2025-01-23 23:33:00,899 - training_generator - INFO - Created 2 total chunks
+2025-01-23 23:33:03,229 - training_generator - INFO - Successfully created vector store

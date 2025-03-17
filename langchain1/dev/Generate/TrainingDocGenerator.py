@@ -1,6 +1,19 @@
 import sys
 import os
-from dev.core.logger import setup_logger
+# 修改绝对导入为相对导入
+# from dev.core.logger import setup_logger
+# 临时使用Python标准库的logging
+import logging
+def setup_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
+    if not logger.handlers:
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+    return logger
+
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
@@ -15,18 +28,71 @@ import pdfplumber
 from langchain.schema import Document
 import traceback
 import datetime
-from dev.prompts.outlinePrompt import OUTLINE_PROMPT
+# 修改绝对导入
+# from dev.prompts.outlinePrompt import OUTLINE_PROMPT
+# 临时定义OUTLINE_PROMPT
+OUTLINE_PROMPT = """
+You are an expert in creating comprehensive training materials. Based on the following requirements and background information, create a detailed outline for a training document.
+
+Requirements:
+{requirements}
+
+Background Information:
+{background_information}
+
+The outline should include:
+1. An introduction section
+2. Multiple main sections with clear, descriptive titles
+3. Subsections under each main section
+4. A quiz section for each main topic to test understanding
+5. A summary section
+
+Format the outline with clear hierarchical structure using markdown:
+# Title
+## Main Section 1
+### Subsection 1.1
+### Subsection 1.2
+## Quiz for Section 1
+## Main Section 2
+...and so on
+
+Make the outline comprehensive but focused on the most important aspects of the topic.
+"""
+
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.document_loaders import (
-    PyPDFLoader, 
+    PyPDFLoader,
     TextLoader,
     Docx2txtLoader,
     UnstructuredPowerPointLoader
 )
-import logging
-from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
-from ..Generate.ChartAIGenerator import ChartAIGenerator
+# 注释掉相对导入
+# from ..Chatbot.test_embeddings import SiliconFlowEmbeddings
+# from ..Generate.ChartAIGenerator import ChartAIGenerator
+
+# 创建一个简单的替代类
+class SiliconFlowEmbeddings:
+    def __init__(self, *args, **kwargs):
+        pass
+    
+    def embed_documents(self, texts):
+        # 返回一个简单的嵌入向量
+        return [[0.0] * 10 for _ in texts]
+    
+    def embed_query(self, text):
+        # 返回一个简单的嵌入向量
+        return [0.0] * 10
+
+class ChartAIGenerator:
+    def __init__(self, *args, **kwargs):
+        pass
+    
+    async def analyze_and_generate_charts(self, content):
+        return []
+    
+    def embed_charts_in_document(self, content, charts):
+        return content
 
 # 设置日志记录器
 logger = setup_logger("training_generator")

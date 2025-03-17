@@ -1,0 +1,2365 @@
+2025-02-14 00:10:07,105 - __main__ - INFO - 找到 6 张图像
+2025-02-14 00:10:07,415 - __main__ - ERROR - 图像分析失败: object dict can't be used in 'await' expression
+2025-02-14 00:10:37,822 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-14 00:10:37,835 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 217, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-14 00:11:16,925 - __main__ - INFO - 找到 6 张图像
+2025-02-14 00:11:17,195 - __main__ - INFO - 图像分析结果: {}
+2025-02-14 00:11:17,223 - __main__ - ERROR - 加载文档失败: `llama-index-readers-file` package not found
+2025-02-14 00:11:45,809 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-14 00:11:57,452 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-14 00:12:12,953 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-14 00:12:12,965 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 217, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-14 00:16:06,374 - __main__ - INFO - 找到 6 张图像
+2025-02-14 00:16:06,644 - __main__ - INFO - 图像分析结果: {}
+2025-02-14 00:16:06,656 - __main__ - ERROR - 加载文档失败: `llama-index-readers-file` package not found
+2025-02-14 00:16:12,052 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-14 00:16:12,067 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 163, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 49, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 88, in async_wrapped
+    return await fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 47, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\tenacity\_asyncio.py", line 50, in __call__
+    result = await fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 97, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 217, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 19:55:44,982 - __main__ - INFO - 找到 6 张图像
+2025-02-16 19:55:45,263 - __main__ - INFO - 向量化存储成功
+2025-02-16 19:55:45,267 - __main__ - ERROR - 加载文档失败: `llama-index-readers-file` package not found
+2025-02-16 19:55:58,848 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 19:56:10,744 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 19:56:24,599 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 19:56:35,521 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 19:56:53,031 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-16 19:56:53,041 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 221, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 19:58:39,743 - __main__ - INFO - 找到 6 张图像
+2025-02-16 19:58:40,753 - __main__ - INFO - 向量化存储成功
+2025-02-16 19:58:41,008 - __main__ - INFO - 加载 6 个文档
+2025-02-16 19:58:42,989 - __main__ - ERROR - 创建多模态索引失败: `llama-index-embeddings-clip` package not found, please run `pip install llama-index-embeddings-clip` and `pip install git+https://github.com/openai/CLIP.git`
+2025-02-16 19:58:52,827 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 19:59:05,134 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-16 19:59:05,146 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 221, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 20:08:45,647 - __main__ - INFO - 找到 6 张图像
+2025-02-16 20:08:46,476 - __main__ - INFO - 向量化存储成功
+2025-02-16 20:08:46,700 - __main__ - INFO - 加载 6 个文档
+2025-02-16 20:08:46,700 - __main__ - ERROR - 创建多模态索引失败: name 'CLIPEmbedding' is not defined
+2025-02-16 20:09:00,765 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-16 20:09:00,827 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 225, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 20:12:04,780 - __main__ - INFO - 找到 6 张图像
+2025-02-16 20:12:05,580 - __main__ - INFO - 向量化存储成功
+2025-02-16 20:12:05,783 - __main__ - INFO - 加载 6 个文档
+2025-02-16 20:18:00,090 - __main__ - ERROR - 初始化多模态语言模型失败: 'OpenAIMultiModal' object has no attribute '__pydantic_private__'
+2025-02-16 20:18:14,995 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:18:38,508 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:19:00,605 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:19:10,271 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:19:27,121 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:19:55,134 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:23:16,185 - __main__ - INFO - 找到 6 张图像
+2025-02-16 20:23:17,000 - __main__ - INFO - 向量化存储成功
+2025-02-16 20:23:17,221 - __main__ - INFO - 加载 6 个文档
+2025-02-16 20:23:28,022 - __main__ - ERROR - 主程序发生未处理的异常: 
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 201, in main
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\llama_index\core\indices\multi_modal\base.py", line 143, in as_query_engine
+    assert isinstance(llm, MultiModalLLM)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+2025-02-16 20:23:42,157 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:24:00,004 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:24:10,288 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:24:20,807 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:24:53,135 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-16 20:24:53,145 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 231, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 20:25:01,694 - __main__ - INFO - 找到 6 张图像
+2025-02-16 20:25:02,483 - __main__ - INFO - 向量化存储成功
+2025-02-16 20:25:02,662 - __main__ - INFO - 加载 6 个文档
+2025-02-16 20:25:12,406 - __main__ - ERROR - 初始化多模态语言模型失败: 'OpenAIMultiModal' object has no attribute '__pydantic_private__'
+2025-02-16 20:25:30,631 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:25:45,748 - asyncio - ERROR - _GatheringFuture exception was never retrieved
+future: <_GatheringFuture finished exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+2025-02-16 20:25:45,760 - __main__ - ERROR - 程序执行失败: Event loop stopped before Future completed.
+Traceback (most recent call last):
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1987, in _run_once
+    handle._run()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 209, in analyze_with_semaphore
+    result = await self.analyze_image(path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 61, in analyze_image
+    response = await self._call_api(base64_image, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\ImageUnderstanding.py", line 144, in _call_api
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_utils\_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\resources\chat\completions.py", line 850, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 1283, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 960, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\openai\_base_client.py", line 996, in _request
+    response = self._client.send(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http_proxy.py", line 343, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 136, in handle_request
+    raise exc
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1233, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 1106, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\testvisionrag.py", line 231, in <module>
+    asyncio.run(main())
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 193, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 62, in __exit__
+    self.close()
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 70, in close
+    _cancel_all_tasks(loop)
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 205, in _cancel_all_tasks
+    loop.run_until_complete(tasks.gather(*to_cancel, return_exceptions=True))
+  File "C:\Users\dorot\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    raise RuntimeError('Event loop stopped before Future completed.')
+RuntimeError: Event loop stopped before Future completed.
+2025-02-16 20:35:02,070 - __main__ - INFO - 找到 6 张图像
+2025-02-16 20:35:02,875 - __main__ - INFO - 向量化存储成功
+2025-02-16 20:35:03,064 - __main__ - INFO - 加载 6 个文档
+2025-02-16 20:35:20,655 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 20:35:20,663 - __main__ - INFO - 查询结果: The image provides data on the income levels of different city tiers, focusing on Gen Z (18-25 years old). For first-tier cities, the income levels are categorized as follows:
+
+- 74% have an income of 30.1K or higher.
+- 14% have an income between 15.3K and 30.1K.
+- 12% have an income of 15.3K or lower.
+
+This data highlights the distribution of income among Gen Z in first-tier cities.
+2025-02-16 21:26:52,672 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:27:12,853 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:27:37,813 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:27:45,922 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:28:45,771 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:29:12,872 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:33:53,908 - __main__ - INFO - 找到 6 张图像
+2025-02-16 21:33:53,909 - __main__ - INFO - 图像分析完成
+2025-02-16 21:33:53,921 - __main__ - INFO - 向量化存储成功
+2025-02-16 21:33:54,114 - __main__ - INFO - 加载 6 个文档
+2025-02-16 21:34:10,729 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:34:10,735 - __main__ - INFO - 查询结果: The image provides data on the income levels of different city tiers, focusing on Gen Z (18-25 years old). For first-tier cities, the income levels are categorized as follows:
+
+- 74% have an income of 30.1K or more.
+- 14% have an income between 15.3K and 30.1K.
+- 12% have an income of 15.3K or less.
+
+This data highlights the distribution of income among Gen Z in first-tier cities.
+2025-02-16 21:34:30,702 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:34:46,968 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:34:56,354 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:35:09,488 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:35:26,159 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:35:48,183 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:44:20,433 - __main__ - INFO - 找到 6 张图像
+2025-02-16 21:44:20,434 - __main__ - INFO - 图像分析完成
+2025-02-16 21:44:20,443 - __main__ - INFO - 向量化存储成功
+2025-02-16 21:44:20,623 - __main__ - INFO - 加载 6 个文档
+2025-02-16 21:44:35,153 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:44:35,156 - __main__ - INFO - 查询结果: The image provides data on the income levels of different city tiers, focusing on Gen Z (18-25 years old). For first-tier cities, the income levels are categorized as follows:
+
+- 74% have an income of 30.1K or higher.
+- 14% have an income between 15.3K and 30.1K.
+- 12% have an income of 15.3K or lower.
+
+This data highlights the distribution of income among young adults in first-tier cities.
+2025-02-16 21:44:35,158 - __main__ - INFO - 相关图像节点:
+2025-02-16 21:44:35,159 - __main__ - INFO - 图像 1:
+2025-02-16 21:44:35,159 - __main__ - INFO -   file_path: C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\image_26.jpg
+2025-02-16 21:44:35,159 - __main__ - INFO -   file_name: image_26.jpg
+2025-02-16 21:44:35,159 - __main__ - INFO -   file_type: image/jpeg
+2025-02-16 21:44:35,160 - __main__ - INFO -   file_size: 58685
+2025-02-16 21:44:35,160 - __main__ - INFO -   creation_date: 2025-02-12
+2025-02-16 21:44:35,160 - __main__ - INFO -   last_modified_date: 2025-02-12
+2025-02-16 21:44:48,615 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:45:03,022 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:45:25,120 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:45:32,126 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:45:54,983 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 21:46:16,637 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:52:16,811 - __main__ - INFO - 找到 6 张图像
+2025-02-16 22:52:16,811 - __main__ - INFO - 图像分析完成
+2025-02-16 22:52:16,821 - __main__ - INFO - 向量化存储成功
+2025-02-16 22:52:17,022 - __main__ - INFO - 加载 6 个文档
+2025-02-16 22:52:36,746 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:52:36,751 - __main__ - INFO - 查询结果: 根据图表，农村的收入情况如下：
+
+- 高于21K的比例为21%。
+- 介于14.5-21K之间的比例为29%。
+- 低于14.5K的比例为50%。
+2025-02-16 22:52:36,753 - __main__ - INFO - 相关图像节点:
+2025-02-16 22:52:36,753 - __main__ - INFO - 图像 1:
+2025-02-16 22:52:36,753 - __main__ - INFO -   file_path: C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\image_10.jpg
+2025-02-16 22:52:36,753 - __main__ - INFO -   file_name: image_10.jpg
+2025-02-16 22:52:36,753 - __main__ - INFO -   file_type: image/jpeg
+2025-02-16 22:52:36,753 - __main__ - INFO -   file_size: 73035
+2025-02-16 22:52:36,753 - __main__ - INFO -   creation_date: 2025-02-12
+2025-02-16 22:52:36,754 - __main__ - INFO -   last_modified_date: 2025-02-12
+2025-02-16 22:52:53,180 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:53:10,511 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:53:39,101 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:53:46,134 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:54:20,762 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:55:20,787 - openai._base_client - INFO - Retrying request to /chat/completions in 0.452750 seconds
+2025-02-16 22:56:06,539 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:56:45,425 - __main__ - INFO - 找到 6 张图像
+2025-02-16 22:56:45,425 - __main__ - INFO - 图像分析完成
+2025-02-16 22:56:45,437 - __main__ - INFO - 向量化存储成功
+2025-02-16 22:56:45,616 - __main__ - INFO - 加载 6 个文档
+2025-02-16 22:57:00,768 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:57:00,771 - __main__ - INFO - 查询结果: 在一线城市，00后的收入大多数在1.45万元至3.01万元之间。
+2025-02-16 22:57:00,772 - __main__ - INFO - 相关图像节点:
+2025-02-16 22:57:00,772 - __main__ - INFO - 图像 1:
+2025-02-16 22:57:00,772 - __main__ - INFO -   file_path: C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\image_6.jpg
+2025-02-16 22:57:00,773 - __main__ - INFO -   file_name: image_6.jpg
+2025-02-16 22:57:00,773 - __main__ - INFO -   file_type: image/jpeg
+2025-02-16 22:57:00,773 - __main__ - INFO -   file_size: 77164
+2025-02-16 22:57:00,774 - __main__ - INFO -   creation_date: 2025-02-12
+2025-02-16 22:57:00,774 - __main__ - INFO -   last_modified_date: 2025-02-12
+2025-02-16 22:57:09,605 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:57:19,178 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:57:39,942 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:57:52,778 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 22:58:52,806 - openai._base_client - INFO - Retrying request to /chat/completions in 0.443178 seconds
+2025-02-16 22:59:54,467 - openai._base_client - INFO - Retrying request to /chat/completions in 0.870448 seconds
+2025-02-16 23:01:58,101 - openai._base_client - INFO - Retrying request to /chat/completions in 0.408621 seconds
+2025-02-16 23:02:13,322 - httpx - INFO - HTTP Request: POST https://api-inference.modelscope.cn/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 23:27:13,194 - __main__ - INFO - 找到 6 张图像
+2025-02-16 23:27:13,204 - __main__ - INFO - 向量化存储成功
+2025-02-16 23:27:13,400 - __main__ - INFO - 加载 6 个文档
+2025-02-16 23:28:18,313 - __main__ - INFO - 找到 6 张图像
+2025-02-16 23:28:18,324 - __main__ - INFO - 向量化存储成功
+2025-02-16 23:28:18,501 - __main__ - INFO - 加载 7 个文档
+2025-02-16 23:29:11,286 - openai._base_client - INFO - Retrying request to /chat/completions in 0.475341 seconds
+2025-02-16 23:29:53,853 - openai._base_client - INFO - Retrying request to /chat/completions in 0.936600 seconds
+2025-02-16 23:30:36,898 - openai._base_client - INFO - Retrying request to /chat/completions in 1.762859 seconds
+2025-02-16 23:31:30,664 - __main__ - INFO - 找到 6 张图像
+2025-02-16 23:31:30,686 - __main__ - INFO - 向量化存储成功
+2025-02-16 23:31:30,860 - __main__ - INFO - 加载 7 个文档
+2025-02-16 23:31:45,648 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-16 23:31:45,652 - __main__ - INFO - 查询结果: 根据提供的上下文信息，杨蓉的生日是2月22日。
+2025-02-16 23:31:45,653 - __main__ - INFO - 相关图像节点:
+2025-02-16 23:31:45,653 - __main__ - INFO - 图像 1:
+2025-02-16 23:31:45,653 - __main__ - INFO -   file_path: C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\image_22.jpg
+2025-02-16 23:31:45,654 - __main__ - INFO -   file_name: image_22.jpg
+2025-02-16 23:31:45,654 - __main__ - INFO -   file_type: image/jpeg
+2025-02-16 23:31:45,654 - __main__ - INFO -   file_size: 73178
+2025-02-16 23:31:45,654 - __main__ - INFO -   creation_date: 2025-02-12
+2025-02-16 23:31:45,655 - __main__ - INFO -   last_modified_date: 2025-02-12
+2025-02-17 16:59:19,210 - __main__ - INFO - 找到 5 张图像
+2025-02-17 16:59:19,230 - __main__ - INFO - 向量化存储成功
+2025-02-17 16:59:19,444 - __main__ - INFO - 加载 5 个文档
+2025-02-17 16:59:55,802 - openai._base_client - INFO - Retrying request to /chat/completions in 0.467287 seconds
+2025-02-17 21:54:00,195 - __main__ - ERROR - Word文件处理失败 C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\b-dorothy2.14.docx: Document.__init__() takes 1 positional argument but 2 were given
+2025-02-17 21:54:00,197 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 21:54:00,199 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 21:54:00,201 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 21:54:00,203 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 21:54:00,205 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 21:54:00,207 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 21:54:00,242 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 21:54:00,242 - __main__ - INFO - 找到 5 张图像
+2025-02-17 21:54:00,284 - __main__ - INFO - 向量化存储成功
+2025-02-17 21:54:00,285 - __main__ - INFO - 文件 b-dorothy2.14.txt 的内容长度: 1105
+2025-02-17 21:54:00,285 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 21:54:00,287 - __main__ - INFO - 加载文本文件: b-dorothy2.14.txt
+2025-02-17 21:54:00,294 - __main__ - INFO - 文件 t2.txt 的内容长度: 144
+2025-02-17 21:54:00,294 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 21:54:00,294 - __main__ - INFO - 加载文本文件: t2.txt
+2025-02-17 21:54:00,296 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 21:54:00,296 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 21:54:00,296 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 21:54:00,297 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 21:54:00,297 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 21:54:00,297 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 21:54:00,297 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 21:54:00,297 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 21:54:00,298 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 21:54:00,298 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 21:54:00,298 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 21:54:00,299 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 21:54:00,299 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 21:54:00,300 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 21:54:00,300 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 21:54:00,301 - __main__ - INFO - 总共加载了 17 个文档
+2025-02-17 21:54:08,398 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+
+杨蓉的生日是2.22
+ 
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict
+2.To enhance the joy of traveling with friends and minimize the potential for accidents, the author of this article seeks advice from veterans and outlines the following tips.
+First, calm unnecessary doubts and foster indispensable compromise among the group. Respect each other’s habits and maintain a friendly coordination with rhythm of the group.
+Second, openly discuss trip costs, negotiate the trip’s cost openly and establish a general standard for necessary expenses and ensure it is collectively acceptable. 
+Third, set clear trip expectations, establish expectations for the trip in advance, accommodation the “must-dos” of each member. Consider incorporating a flexible schedule to allow for spontaneity.
+In conclusion, the author advocates for candid approach to personally preferences, emphasizing the importance of flexibility and adjusting plans accordingly.
+3.” Friendcations are not for the faint of heart, and you must be on the same wavelength: ” does this faint mean 脆弱 or 脆弱?
+杨蓉 | 2003.2.22
+血型 | A型 is too long for context length 77
+2025-02-17 21:59:29,385 - __main__ - ERROR - Word文件处理失败 C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\b-dorothy2.14.docx: Document.__init__() takes 1 positional argument but 2 were given
+2025-02-17 21:59:29,387 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 21:59:29,390 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 21:59:29,391 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 21:59:29,392 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 21:59:29,394 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 21:59:29,395 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 21:59:29,413 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 21:59:29,414 - __main__ - INFO - 找到 5 张图像
+2025-02-17 21:59:29,444 - __main__ - INFO - 向量化存储成功
+2025-02-17 21:59:29,445 - __main__ - INFO - 文件 b-dorothy2.14.txt 的内容长度: 1105
+2025-02-17 21:59:29,445 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 21:59:29,445 - __main__ - INFO - 添加完整文档: b-dorothy2.14.txt
+2025-02-17 21:59:29,454 - __main__ - INFO - 文件 t2.txt 的内容长度: 144
+2025-02-17 21:59:29,454 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 21:59:29,454 - __main__ - INFO - 添加完整文档: t2.txt
+2025-02-17 21:59:29,455 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 21:59:29,455 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 21:59:29,455 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 21:59:29,455 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 21:59:29,456 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 21:59:29,457 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 21:59:29,457 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 21:59:29,458 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 21:59:29,458 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 21:59:29,459 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 21:59:29,459 - __main__ - INFO - 总共加载了 17 个文档
+2025-02-17 21:59:33,341 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+
+杨蓉的生日是2.22
+ 
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict
+2.To enhance the joy of traveling with friends and minimize the potential for accidents, the author of this article seeks advice from veterans and outlines the following tips.
+First, calm unnecessary doubts and foster indispensable compromise among the group. Respect each other’s habits and maintain a friendly coordination with rhythm of the group.
+Second, openly discuss trip costs, negotiate the trip’s cost openly and establish a general standard for necessary expenses and ensure it is collectively acceptable. 
+Third, set clear trip expectations, establish expectations for the trip in advance, accommodation the “must-dos” of each member. Consider incorporating a flexible schedule to allow for spontaneity.
+In conclusion, the author advocates for candid approach to personally preferences, emphasizing the importance of flexibility and adjusting plans accordingly.
+3.” Friendcations are not for the faint of heart, and you must be on the same wavelength: ” does this faint mean 脆弱 or 脆弱?
+杨蓉 | 2003.2.22
+血型 | A型 is too long for context length 77
+2025-02-17 22:03:55,463 - __main__ - ERROR - Word文件处理失败 C:\Users\dorot\Desktop\crawl爬虫\downloaded_document_images\b-dorothy2.14.docx: Document.__init__() takes 1 positional argument but 2 were given
+2025-02-17 22:03:55,463 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:03:55,466 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:03:55,468 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:03:55,470 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:03:55,471 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:03:55,473 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:03:55,484 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:03:55,484 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:03:55,503 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:03:55,504 - __main__ - INFO - 文件 b-dorothy2.14.txt 的内容长度: 1105
+2025-02-17 22:03:55,504 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 22:03:55,504 - __main__ - INFO - 添加完整文档: b-dorothy2.14.txt
+2025-02-17 22:03:55,512 - __main__ - INFO - 文件 t2.txt 的内容长度: 144
+2025-02-17 22:03:55,512 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 22:03:55,512 - __main__ - INFO - 添加完整文档: t2.txt
+2025-02-17 22:03:55,513 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:03:55,514 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:03:55,515 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:03:55,515 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:03:55,515 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:03:55,516 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:03:55,516 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:03:55,516 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:03:55,517 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:03:55,517 - __main__ - INFO - 总共加载了 17 个文档
+2025-02-17 22:03:58,876 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+
+杨蓉的生日是2.22
+ 
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict
+2.To enhance the joy of traveling with friends and minimize the potential for accidents, the author of this article seeks advice from veterans and outlines the following tips.
+First, calm unnecessary doubts and foster indispensable compromise among the group. Respect each other’s habits and maintain a friendly coordination with rhythm of the group.
+Second, openly discuss trip costs, negotiate the trip’s cost openly and establish a general standard for necessary expenses and ensure it is collectively acceptable. 
+Third, set clear trip expectations, establish expectations for the trip in advance, accommodation the “must-dos” of each member. Consider incorporating a flexible schedule to allow for spontaneity.
+In conclusion, the author advocates for candid approach to personally preferences, emphasizing the importance of flexibility and adjusting plans accordingly.
+3.” Friendcations are not for the faint of heart, and you must be on the same wavelength: ” does this faint mean 脆弱 or 脆弱?
+杨蓉 | 2003.2.22
+血型 | A型 is too long for context length 77
+2025-02-17 22:03:58,878 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:03:58,878 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 611, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:08:24,099 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:08:24,101 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:08:24,102 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:08:24,104 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:08:24,105 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:08:24,107 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:08:24,118 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:08:24,119 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:08:24,134 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:08:24,141 - __main__ - INFO - 文件 b-dorothy2.14.txt 的内容长度: 1105
+2025-02-17 22:08:24,142 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 22:08:24,142 - __main__ - INFO - 添加完整文档: b-dorothy2.14.txt
+2025-02-17 22:08:24,143 - __main__ - INFO - 文件 t2.txt 的内容长度: 144
+2025-02-17 22:08:24,144 - __main__ - INFO - 当前设置的最大上下文长度: 4096
+2025-02-17 22:08:24,144 - __main__ - INFO - 添加完整文档: t2.txt
+2025-02-17 22:08:24,145 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:08:24,145 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:08:24,145 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:08:24,145 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:08:24,146 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:08:24,147 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:08:24,147 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:08:24,147 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:08:24,147 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:08:24,148 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:08:24,148 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:08:24,149 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:08:24,149 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:08:24,150 - __main__ - INFO - 总共加载了 20 个文档
+2025-02-17 22:08:27,443 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+
+杨蓉的生日是2.22
+ 
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict
+2.To enhance the joy of traveling with friends and minimize the potential for accidents, the author of this article seeks advice from veterans and outlines the following tips.
+First, calm unnecessary doubts and foster indispensable compromise among the group. Respect each other’s habits and maintain a friendly coordination with rhythm of the group.
+Second, openly discuss trip costs, negotiate the trip’s cost openly and establish a general standard for necessary expenses and ensure it is collectively acceptable. 
+Third, set clear trip expectations, establish expectations for the trip in advance, accommodation the “must-dos” of each member. Consider incorporating a flexible schedule to allow for spontaneity.
+In conclusion, the author advocates for candid approach to personally preferences, emphasizing the importance of flexibility and adjusting plans accordingly.
+3.” Friendcations are not for the faint of heart, and you must be on the same wavelength: ” does this faint mean 脆弱 or 脆弱?
+杨蓉 | 2003.2.22
+血型 | A型 is too long for context length 77
+2025-02-17 22:08:27,445 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:08:27,446 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 653, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:13:15,429 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:13:15,431 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:13:15,433 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:13:15,434 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:13:15,435 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:13:15,437 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:13:15,448 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:13:15,449 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:13:15,465 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:13:15,467 - __main__ - INFO - 创建最后一个文本块: b-dorothy2.14.txt, 大小: 1106
+2025-02-17 22:13:15,468 - __main__ - INFO - 创建最后一个文本块: t2.txt, 大小: 144
+2025-02-17 22:13:15,468 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img14.jpeg
+2025-02-17 22:13:15,469 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img15.png
+2025-02-17 22:13:15,470 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img16.png
+2025-02-17 22:13:15,470 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:13:15,470 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:13:15,470 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:13:15,470 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:13:15,471 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:13:15,471 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:13:15,471 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:13:15,471 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:13:15,472 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:13:15,472 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:13:15,473 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:13:15,473 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:13:15,473 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:13:15,474 - __main__ - INFO - 总共加载了 23 个文档
+2025-02-17 22:13:18,728 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+chunk_size: 1106
+
+杨蓉的生日是2.22   1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict 2.To enhance the joy of traveling with friends and minimize the potential for accidents, the author of this article seeks advice from veterans and outlines the following tips. First, calm unnecessary doubts and foster indispensable compromise among the group. Respect each other’s habits and maintain a friendly coordination with rhythm of the group. Second, openly discuss trip costs, negotiate the trip’s cost openly and establish a general standard for necessary expenses and ensure it is collectively acceptable.  Third, set clear trip expectations, establish expectations for the trip in advance, accommodation the “must-dos” of each member. Consider incorporating a flexible schedule to allow for spontaneity. In conclusion, the author advocates for candid approach to personally preferences, emphasizing the importance of flexibility and adjusting plans accordingly. 3.” Friendcations are not for the faint of heart, and you must be on the same wavelength: ” does this faint mean 脆弱 or 脆弱? 杨蓉 | 2003.2.22 血型 | A型。 is too long for context length 77
+2025-02-17 22:13:18,729 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:13:18,730 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 623, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:15:23,284 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:15:23,286 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:15:23,288 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:15:23,289 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:15:23,291 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:15:23,292 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:15:23,302 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:15:23,303 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:15:23,319 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:15:23,321 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 11
+2025-02-17 22:15:23,321 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 73
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 176
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 175
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 166
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 198
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 158
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 123
+2025-02-17 22:15:23,322 - __main__ - INFO - 创建最后一个文本块: b-dorothy2.14.txt, 大小: 24
+2025-02-17 22:15:23,323 - __main__ - INFO - 创建文本块: t2.txt, 大小: 52
+2025-02-17 22:15:23,324 - __main__ - INFO - 创建文本块: t2.txt, 大小: 40
+2025-02-17 22:15:23,324 - __main__ - INFO - 创建最后一个文本块: t2.txt, 大小: 14
+2025-02-17 22:15:23,324 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img14.jpeg
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img15.png
+2025-02-17 22:15:23,325 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img16.png
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img17.jpeg
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img18.png
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img19.png
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:15:23,326 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:15:23,327 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:15:23,327 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:15:23,327 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:15:23,327 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:15:23,328 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:15:23,328 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:15:23,329 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:15:23,329 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:15:23,329 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:15:23,330 - __main__ - INFO - 总共加载了 36 个文档
+2025-02-17 22:15:26,610 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+chunk_size: 73
+
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict。 is too long for context length 77
+2025-02-17 22:15:26,613 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:15:26,613 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 639, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:18:38,395 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:18:38,397 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:18:38,399 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:18:38,400 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:18:38,401 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:18:38,403 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:18:38,417 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:18:38,418 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:18:38,432 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:18:38,434 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 11
+2025-02-17 22:18:38,434 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 73
+2025-02-17 22:18:38,434 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 176
+2025-02-17 22:18:38,434 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 175
+2025-02-17 22:18:38,435 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 166
+2025-02-17 22:18:38,435 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 198
+2025-02-17 22:18:38,435 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 158
+2025-02-17 22:18:38,435 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 123
+2025-02-17 22:18:38,435 - __main__ - INFO - 添加完整文档: b-dorothy2.14.txt
+2025-02-17 22:18:38,436 - __main__ - INFO - 创建文本块: t2.txt, 大小: 52
+2025-02-17 22:18:38,436 - __main__ - INFO - 创建文本块: t2.txt, 大小: 40
+2025-02-17 22:18:38,437 - __main__ - INFO - 添加完整文档: t2.txt
+2025-02-17 22:18:38,437 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:18:38,437 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img14.jpeg
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img15.png
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img16.png
+2025-02-17 22:18:38,438 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img17.jpeg
+2025-02-17 22:18:38,439 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img18.png
+2025-02-17 22:18:38,439 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img19.png
+2025-02-17 22:18:38,439 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:18:38,439 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img20.jpeg
+2025-02-17 22:18:38,440 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img21.png
+2025-02-17 22:18:38,440 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img22.png
+2025-02-17 22:18:38,440 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:18:38,440 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:18:38,440 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:18:38,441 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:18:38,441 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:18:38,441 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:18:38,441 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:18:38,442 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:18:38,442 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:18:38,443 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:18:38,443 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:18:38,443 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:18:38,444 - __main__ - INFO - 总共加载了 39 个文档
+2025-02-17 22:18:42,083 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+chunk_size: 73
+
+1. derail, levity, portmanteau, sparingly, spiraled, concierge, derelict。 is too long for context length 77
+2025-02-17 22:18:42,086 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:18:42,086 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 637, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:20:58,157 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:20:58,160 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:20:58,161 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:20:58,162 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:20:58,164 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:20:58,165 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:20:58,175 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:20:58,175 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:20:58,192 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:20:58,194 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 65, 内容: 杨蓉的生日是2.22   1. derail, levity...
+2025-02-17 22:20:58,194 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 70, 内容: concierge, derelict 2.To enhan...
+2025-02-17 22:20:58,194 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 70, 内容: minimize the potential for acc...
+2025-02-17 22:20:58,194 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 65, 内容: advice from veterans and outli...
+2025-02-17 22:20:58,194 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 64, 内容: unnecessary doubts and foster ...
+2025-02-17 22:20:58,195 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 58, 内容: group. Respect each other’s ha...
+2025-02-17 22:20:58,195 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 66, 内容: coordination with rhythm of th...
+2025-02-17 22:20:58,195 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 63, 内容: costs, negotiate the trip’s co...
+2025-02-17 22:20:58,195 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 61, 内容: standard for necessary expense...
+2025-02-17 22:20:58,195 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 58, 内容: acceptable.  Third, set clear ...
+2025-02-17 22:20:58,196 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 69, 内容: expectations for the trip in a...
+2025-02-17 22:20:58,196 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 68, 内容: each member. Consider incorpor...
+2025-02-17 22:20:58,196 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 68, 内容: spontaneity. In conclusion, th...
+2025-02-17 22:20:58,197 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 68, 内容: to personally preferences, emp...
+2025-02-17 22:20:58,197 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 66, 内容: and adjusting plans accordingl...
+2025-02-17 22:20:58,197 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 67, 内容: faint of heart, and you must b...
+2025-02-17 22:20:58,197 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 大小: 43, 内容: faint mean 脆弱 or 脆弱? 杨蓉 | 2003...
+2025-02-17 22:20:58,198 - __main__ - INFO - 创建文本块: t2.txt, 大小: 67, 内容: Sheet: Sheet1   0   1 姓名  住址 杨...
+2025-02-17 22:20:58,199 - __main__ - INFO - 创建文本块: t2.txt, 大小: 65, 内容: Columns: [] Index: []  Sheet: ...
+2025-02-17 22:20:58,199 - __main__ - INFO - 创建文本块: t2.txt, 大小: 9, 内容: Index: []...
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:20:58,200 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img14.jpeg
+2025-02-17 22:20:58,201 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img15.png
+2025-02-17 22:20:58,201 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img16.png
+2025-02-17 22:20:58,201 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img17.jpeg
+2025-02-17 22:20:58,201 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img18.png
+2025-02-17 22:20:58,201 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img19.png
+2025-02-17 22:20:58,202 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:20:58,202 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img20.jpeg
+2025-02-17 22:20:58,202 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img21.png
+2025-02-17 22:20:58,202 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img22.png
+2025-02-17 22:20:58,203 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img23.jpeg
+2025-02-17 22:20:58,203 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img24.png
+2025-02-17 22:20:58,203 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img25.png
+2025-02-17 22:20:58,203 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:20:58,203 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:20:58,204 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:20:58,204 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:20:58,204 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:20:58,204 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:20:58,205 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:20:58,205 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:20:58,206 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:20:58,206 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:20:58,207 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:20:58,207 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:20:58,208 - __main__ - INFO - 总共加载了 50 个文档
+2025-02-17 22:21:01,664 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+chunk_size: 65
+chunk_start: 0
+chunk_end: 65
+
+杨蓉的生日是2.22   1. derail, levity, portmanteau, sparingly, spiraled, is too long for context length 77
+2025-02-17 22:21:01,666 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:21:01,666 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 610, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'
+2025-02-17 22:28:58,878 - __main__ - INFO - 已处理文件: b-dorothy2.14.docx
+2025-02-17 22:28:58,880 - __main__ - INFO - 已处理文件: image_10.jpg
+2025-02-17 22:28:58,882 - __main__ - INFO - 已处理文件: image_14.jpg
+2025-02-17 22:28:58,883 - __main__ - INFO - 已处理文件: image_18.jpg
+2025-02-17 22:28:58,884 - __main__ - INFO - 已处理文件: image_22.jpg
+2025-02-17 22:28:58,886 - __main__ - INFO - 已处理文件: image_26.jpg
+2025-02-17 22:28:58,896 - __main__ - INFO - 已处理文件: t2.xlsx
+2025-02-17 22:28:58,897 - __main__ - INFO - 找到 5 张图像
+2025-02-17 22:28:58,914 - __main__ - INFO - 向量化存储成功
+2025-02-17 22:28:58,920 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 1/13, 大小: 44
+2025-02-17 22:28:58,920 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 2/13, 大小: 72
+2025-02-17 22:28:58,920 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 3/13, 大小: 108
+2025-02-17 22:28:58,920 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 4/13, 大小: 86
+2025-02-17 22:28:58,920 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 5/13, 大小: 83
+2025-02-17 22:28:58,921 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 6/13, 大小: 125
+2025-02-17 22:28:58,921 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 7/13, 大小: 165
+2025-02-17 22:28:58,921 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 8/13, 大小: 128
+2025-02-17 22:28:58,921 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 9/13, 大小: 68
+2025-02-17 22:28:58,922 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 10/13, 大小: 160
+2025-02-17 22:28:58,922 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 11/13, 大小: 49
+2025-02-17 22:28:58,923 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 12/13, 大小: 72
+2025-02-17 22:28:58,923 - __main__ - INFO - 创建文本块: b-dorothy2.14.txt, 块 13/13, 大小: 22
+2025-02-17 22:28:58,925 - __main__ - INFO - 创建文本块: t2.txt, 块 1/2, 大小: 57
+2025-02-17 22:28:58,926 - __main__ - INFO - 创建文本块: t2.txt, 块 2/2, 大小: 99
+2025-02-17 22:28:58,927 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img1.png
+2025-02-17 22:28:58,927 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img10.png
+2025-02-17 22:28:58,927 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img11.jpeg
+2025-02-17 22:28:58,927 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img12.png
+2025-02-17 22:28:58,928 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img13.png
+2025-02-17 22:28:58,928 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img14.jpeg
+2025-02-17 22:28:58,928 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img15.png
+2025-02-17 22:28:58,928 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img16.png
+2025-02-17 22:28:58,928 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img17.jpeg
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img18.png
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img19.png
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img2.jpeg
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img20.jpeg
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img21.png
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img22.png
+2025-02-17 22:28:58,929 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img23.jpeg
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img24.png
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img25.png
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img26.jpeg
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img27.png
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img28.png
+2025-02-17 22:28:58,930 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img3.png
+2025-02-17 22:28:58,931 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img4.png
+2025-02-17 22:28:58,931 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img5.jpeg
+2025-02-17 22:28:58,931 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img6.png
+2025-02-17 22:28:58,931 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img7.png
+2025-02-17 22:28:58,931 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img8.jpeg
+2025-02-17 22:28:58,932 - __main__ - INFO - 加载图片: b-dorothy2.14/b-dorothy2.14_img9.png
+2025-02-17 22:28:58,932 - __main__ - INFO - 加载图片: image_10/image_10.jpg
+2025-02-17 22:28:58,933 - __main__ - INFO - 加载图片: image_14/image_14.jpg
+2025-02-17 22:28:58,933 - __main__ - INFO - 加载图片: image_18/image_18.jpg
+2025-02-17 22:28:58,934 - __main__ - INFO - 加载图片: image_22/image_22.jpg
+2025-02-17 22:28:58,934 - __main__ - INFO - 加载图片: image_26/image_26.jpg
+2025-02-17 22:28:58,934 - __main__ - INFO - 总共加载了 48 个文档
+2025-02-17 22:29:02,240 - __main__ - ERROR - 创建多模态索引失败: Input source: C:\Users\dorot\Desktop\crawl爬虫\extracted_text\b-dorothy2.14.txt
+type: text
+original_file: b-dorothy2.14.txt
+chunk_id: 0
+total_chunks: 13
+
+杨蓉的生日是2.22
+ 
+1. derail, levity, portmanteau, is too long for context length 77
+2025-02-17 22:29:02,242 - __main__ - INFO - 多模态索引创建成功
+2025-02-17 22:29:02,243 - __main__ - ERROR - 主程序发生未处理的异常: 'NoneType' object has no attribute 'as_query_engine'
+Traceback (most recent call last):
+  File "c:\Users\dorot\Desktop\DocGeneration\langchain1\dev\Generate\VisionRagProcessor.py", line 605, in process_images
+    query_engine = index.as_query_engine(
+                   ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'as_query_engine'

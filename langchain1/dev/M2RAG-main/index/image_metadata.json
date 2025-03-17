@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "path": "pretrained_model\\bge-visualized\\imgs\\cir_candi_1.png"
+  },
+  {
+    "id": 1,
+    "path": "pretrained_model\\bge-visualized\\imgs\\cir_candi_2.png"
+  },
+  {
+    "id": 2,
+    "path": "pretrained_model\\bge-visualized\\imgs\\cir_query.png"
+  },
+  {
+    "id": 3,
+    "path": "pretrained_model\\bge-visualized\\imgs\\SFT-CIRR.png"
+  },
+  {
+    "id": 4,
+    "path": "pretrained_model\\bge-visualized\\imgs\\SFT-ReMuQ.png"
+  },
+  {
+    "id": 5,
+    "path": "pretrained_model\\bge-visualized\\imgs\\SFT-WebQA.png"
+  },
+  {
+    "id": 6,
+    "path": "pretrained_model\\bge-visualized\\imgs\\wiki_candi_1.jpg"
+  },
+  {
+    "id": 7,
+    "path": "pretrained_model\\bge-visualized\\imgs\\wiki_candi_2.jpg"
+  },
+  {
+    "id": 8,
+    "path": "pretrained_model\\bge-visualized\\imgs\\zs-benchmark.png"
+  },
+  {
+    "id": 9,
+    "path": "pretrained_model\\bge-visualized\\imgs\\zs-performance.png"
+  }
+]

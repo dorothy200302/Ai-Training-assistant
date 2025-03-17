@@ -23,6 +23,7 @@ interface OutlineSection {
 
 const OutlineGenerator: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState<string>(location.state?.topic || "");
   const [loading, setLoading] = useState<boolean>(false);
@@ -355,11 +356,9 @@ const OutlineGenerator: React.FC = () => {
   const handleGeneration = async (files: File[]) => {
     try {
       setIsGenerating(true);
-      setGeneratingOutline(true);  // 添加生成中状态
+      setGeneratingOutline(true);
       
       const formData = new FormData();
-      
-      
       files.forEach(file => {
         formData.append('files', file);
       });
@@ -371,26 +370,37 @@ const OutlineGenerator: React.FC = () => {
       formData.append('ai_model', 'gpt-4o-mini');
 
       
-      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      const response = await fetch(`${API_BASE_URL}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
         body: formData,
-        credentials: 'include'  // 添加这个选项
+        credentials: 'include'
       });
-  
-
-      // 打印响应详情以便调试
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers));
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);  // 试日志
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-      console.log('response', response);
 
       const data = await response.json();
-      setOutline(parseOutlineText(data.outline));
+
+      if (response.status === 402) {
+        toast({
+          title: "能量不足",
+          description: `当前能量: ${data.current_energy}, 需要能量: ${data.required_energy}`,
+          variant: "destructive",
+        });
+        navigate('/recharge');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.detail || '生成失败');
+      }
+
+      if (data.status === 'success' && data.outline) {
+        setOutline(parseOutlineText(data.outline));
+        toast({
+          title: "生成成功",
+          description: data.message || "大纲已生成",
+        });
+      } else {
+        throw new Error('返回数据格式错误');
+      }
       
     } catch (error) {
       console.error('Error generating outline:', error);
@@ -401,7 +411,7 @@ const OutlineGenerator: React.FC = () => {
       });
     } finally {
       setIsGenerating(false);
-      setGeneratingOutline(false);  // 清除生成中状态
+      setGeneratingOutline(false);
     }
   };
 
@@ -518,7 +528,7 @@ const OutlineGenerator: React.FC = () => {
         console.log(pair[0] + ': ' + pair[1]);
       }
 
-      const response = await createApiRequest(`${base_url}/api/storage/generate_outline_and_upload/`, {
+      const response = await fetch(`${API_BASE_URL}/api/storage/generate_outline_and_upload/`, {
         method: 'POST',
        
         body: formData
@@ -566,9 +576,6 @@ const OutlineGenerator: React.FC = () => {
     console.log('improvementDirection', improvementDirection);
     await handleRegenerateOutline();
   };
-
-  // 添加 navigate
-  const navigate = useNavigate();
 
   // Add new state for mode selection
   const [selectedMode, setSelectedMode] = useState<number>(0);

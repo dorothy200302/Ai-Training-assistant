@@ -77,7 +77,7 @@ const templates: Template[] = [
     path: '/templates/performance-management',
     updatedAt: '2024-03-11T10:30:00Z',
     isFavorite: false,
-    isCustom: false
+    isCustom: false,
   },
   {
     id: '6',

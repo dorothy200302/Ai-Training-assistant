@@ -65,13 +65,8 @@ export default function Auth(): JSX.Element {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
         },
-        credentials: 'include',
-        body: JSON.stringify({ 
-          email: formData.email,
-          type: 'register'
-        }),
+        body: JSON.stringify({ email: formData.email }),
       });
 
       if (!response.ok) {
@@ -129,9 +124,7 @@ export default function Auth(): JSX.Element {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify({
             email: formData.email,
             password: formData.password
@@ -191,9 +184,7 @@ export default function Auth(): JSX.Element {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,

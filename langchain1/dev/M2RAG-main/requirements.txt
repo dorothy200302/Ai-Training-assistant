@@ -1,0 +1,203 @@
+absl-py==2.1.0
+accelerate==1.0.1
+aiofiles==23.2.1
+aiohappyeyeballs==2.4.4
+aiohttp==3.11.11
+aiosignal==1.3.2
+annotated-types==0.7.0
+anyio==4.8.0
+asttokens
+astunparse==1.6.3
+async-timeout==5.0.1
+attrs==24.3.0
+av==14.0.1
+backoff
+certifi==2024.12.14
+charset-normalizer==3.4.0
+click==8.1.8
+clip
+cloudpickle==3.1.0
+colorama==0.4.6
+comm
+contourpy==1.3.1
+cycler==0.12.1
+dask==2024.12.1
+datasets==3.1.0
+debugpy
+decorator
+deepspeed==0.16.3
+diffusers==0.21.0
+dill==0.3.8
+distro==1.9.0
+docstring_parser==0.16
+einops==0.8.0
+exceptiongroup
+executing
+# faiss==1.9.0
+faiss-cpu==1.9.0
+# faiss-gpu==1.7.2
+fastapi==0.115.7
+ffmpy==0.5.0
+filelock==3.16.1
+fire==0.7.0
+# flash-attn==2.6.1
+flatbuffers==24.3.25
+fonttools==4.55.3
+frozenlist==1.5.0
+fsspec==2024.9.0
+ftfy==6.3.1
+gast==0.6.0
+google-pasta==0.2.0
+gradio==5.12.0
+gradio_client==1.5.4
+grpcio==1.68.1
+h11==0.14.0
+h5py==3.12.1
+hjson==3.1.0
+httpcore==1.0.7
+httpx==0.28.1
+huggingface-hub==0.27.0
+idna==3.10
+importlib_metadata==8.5.0
+ipykernel
+ipython
+jedi
+jieba==0.42.1
+Jinja2==3.1.4
+jiter==0.8.2
+joblib==1.4.2
+jsonlines==4.0.0
+jupyter_client
+jupyter_core
+# keras==3.7.0
+kiwisolver==1.4.7
+libclang==18.1.1
+lightning-utilities==0.11.9
+# -e git+https://github.com/hiyouga/LLaMA-Factory.git@0f45982bac6b65533a94054ea5f792cb0f9e5a1f#egg=llamafactory
+locket==1.0.0
+lxml==5.3.0
+Markdown==3.7
+markdown-it-py==3.0.0
+MarkupSafe==2.1.5
+matplotlib==3.10.0
+matplotlib-inline
+mdurl==0.1.2
+ml-dtypes==0.4.1
+mpi4py
+mpmath==1.3.0
+msgpack==1.1.0
+multidict==6.1.0
+multiprocess==0.70.16
+namex==0.0.8
+nest-asyncio
+networkx==3.4.2
+ninja==1.11.1.3
+nltk==3.9.1
+numpy
+# nvidia-cublas-cu12==12.1.3.1
+# nvidia-cuda-cupti-cu12==12.1.105
+# nvidia-cuda-nvrtc-cu12==12.1.105
+# nvidia-cuda-runtime-cu12==12.1.105
+# nvidia-cudnn-cu12==9.1.0.70
+# nvidia-cufft-cu12==11.0.2.54
+# nvidia-curand-cu12==10.3.2.106
+# nvidia-cusolver-cu12==11.4.5.107
+# nvidia-cusparse-cu12==12.1.0.106
+# nvidia-ml-py==12.560.30
+# nvidia-nccl-cu12==2.20.5
+# nvidia-nvjitlink-cu12==12.4.127
+# nvidia-nvtx-cu12==12.1.105
+openai==1.60.1
+opt_einsum==3.4.0
+optree==0.13.1
+orjson==3.10.15
+packaging
+pandas==2.2.3
+parso
+partd==1.4.2
+peft==0.12.0
+pexpect
+pillow==11.0.0
+platformdirs
+portalocker==3.0.0
+prompt-toolkit
+propcache==0.2.1
+protobuf==5.29.2
+psutil
+ptyprocess
+pure-eval
+py-cpuinfo==9.0.0
+pyarrow==18.1.0
+pycocoevalcap
+pycocotools==2.0.8
+pydantic==2.10.5
+pydantic_core==2.27.2
+pydub==0.25.1
+Pygments
+pynvml==12.0.0
+pyparsing==3.2.0
+python-dateutil
+python-multipart==0.0.20
+pytrec_eval==0.5
+pytz==2024.2
+PyYAML==6.0.2
+pyzmq
+qwen-vl-utils==0.0.8
+regex==2024.11.6
+requests==2.32.3
+rich==13.9.4
+rouge-chinese==1.0.3
+rouge_score==0.1.2
+ruff==0.9.2
+sacrebleu==2.4.3
+safehttpx==0.1.6
+safetensors==0.4.5
+scikit-learn==1.6.0
+scipy==1.14.1
+seaborn==0.13.2
+semantic-version==2.10.0
+sentencepiece==0.2.0
+shellingham==1.5.4
+shtab==1.7.1
+six
+sniffio==1.3.1
+sse-starlette==2.2.1
+stack-data
+starlette==0.45.2
+sympy==1.13.1
+tabulate==0.9.0
+# tensorboard==2.18.0
+# tensorboard-data-server==0.7.2
+# tensorboardX==2.6.2.2
+# tensorflow==2.18.0
+# tensorflow-io-gcs-filesystem==0.37.1
+termcolor==2.5.0
+# tf_keras==2.18.0
+threadpoolctl==3.5.0
+tiktoken==0.8.0
+timm==1.0.12
+tokenizers==0.19.1
+tomlkit==0.13.2
+toolz==1.0.0
+torch
+torchmetrics==1.6.1
+tornado
+tqdm==4.67.1
+traitlets
+transformers==4.44.2
+# triton==3.0.0
+trl==0.9.6
+typer==0.15.1
+typing_extensions
+tyro==0.8.14
+tzdata==2024.2
+urllib3==2.2.3
+uvicorn==0.34.0
+wcwidth
+websockets==14.2
+Werkzeug==3.1.3
+wrapt==1.17.0
+# xformers==0.0.27.post2
+xxhash==3.5.0
+yarl==1.18.3
+zipp==3.21.0
