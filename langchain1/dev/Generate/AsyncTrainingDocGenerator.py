@@ -33,7 +33,7 @@ from langchain_community.document_loaders import (
 from langchain.chains.retrieval_qa.base import RetrievalQA
 
 # Local imports
-from TrainingDocGenerator import TrainingDocGenerator
+from Generate.TrainingDocGenerator import TrainingDocGenerator
 # from dev.CloudStorage.aws import download_file_from_s3, upload_file_to_s3_by_key
 # from dev.prompts.outlinePrompt import OUTLINE_PROMPT
 # from dev.prompts.reviewPrompt import *
@@ -1729,3 +1729,53 @@ def insert_references(content: str) -> str:
     content = re.sub(r'\[Source (\d+)\]', r'[\1]', content)
     logging.info("References inserted")
     return content
+
+def get_file_processor(file_type):
+    """根据文件类型返回适当的处理器"""
+    processors = {
+        'pdf': PDFProcessor(),
+        'docx': DocxProcessor(),
+        'doc': DocxProcessor(),
+        'txt': TxtProcessor(),
+        'html': HTMLProcessor(),
+    }
+    return processors.get(file_type, DefaultProcessor())
+
+class DefaultProcessor:
+    """默认文件处理器"""
+    async def extract_text(self, file):
+        return ""
+    
+    async def extract_tables(self, file):
+        return []
+    
+    async def extract_images(self, file):
+        return []
+
+class PDFProcessor(DefaultProcessor):
+    """PDF文件处理器"""
+    async def extract_text(self, file):
+        # 简单实现
+        return "PDF文本内容"
+    
+    async def extract_tables(self, file):
+        return []
+    
+    async def extract_images(self, file):
+        return []
+
+class DocxProcessor(DefaultProcessor):
+    """Word文件处理器"""
+    async def extract_text(self, file):
+        return "Word文本内容"
+
+class TxtProcessor(DefaultProcessor):
+    """文本文件处理器"""
+    async def extract_text(self, file):
+        content = file.read().decode('utf-8')
+        return content
+
+class HTMLProcessor(DefaultProcessor):
+    """HTML文件处理器"""
+    async def extract_text(self, file):
+        return "HTML内容"

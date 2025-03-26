@@ -152,3 +152,56 @@ class FileIndex(Base):
 
     USER = "user"
     MANAGER = "manager"
+
+class PermissionLevel(enum.Enum):
+    READ = "read"
+    WRITE = "write"
+    ADMIN = "admin"
+
+class DocumentAccess(Base):
+    __tablename__ = "document_access"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    document_id = Column(String(50), ForeignKey("documents.document_id", ondelete='CASCADE'))
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete='CASCADE'))
+    permission_level = Column(Enum(PermissionLevel))
+    granted_by = Column(Integer, ForeignKey("users.user_id"))
+    granted_at = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    expires_at = Column(DateTime, nullable=True)
+    
+    # Add relationships
+    document = relationship("Documents", foreign_keys=[document_id])
+    user = relationship("Users", foreign_keys=[user_id])
+    grantor = relationship("Users", foreign_keys=[granted_by])
+
+class LearningProgress(Base):
+    __tablename__ = "learning_progress"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete='CASCADE'))
+    document_id = Column(String(50), ForeignKey("documents.document_id", ondelete='CASCADE'))
+    current_section = Column(String(255))
+    progress_percentage = Column(Integer, default=0)
+    last_accessed = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    completed = Column(Integer, default=0)  # 0=未完成，1=已完成
+    completion_date = Column(DateTime, nullable=True)
+    quiz_scores = Column(Text)  # 存储JSON格式的测验分数
+    
+    # Add relationships
+    user = relationship("Users", foreign_keys=[user_id])
+    document = relationship("Documents", foreign_keys=[document_id])
+
+class AccessLog(Base):
+    __tablename__ = "access_logs"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete='SET NULL'), nullable=True)
+    document_id = Column(String(50), ForeignKey("documents.document_id", ondelete='CASCADE'))
+    action = Column(String(50))  # 例如：view, edit, download
+    access_time = Column(TIMESTAMP, server_default=text('CURRENT_TIMESTAMP'))
+    ip_address = Column(String(50), nullable=True)
+    user_agent = Column(String(255), nullable=True)
+    
+    # Add relationships
+    user = relationship("Users", foreign_keys=[user_id])
+    document = relationship("Documents", foreign_keys=[document_id])

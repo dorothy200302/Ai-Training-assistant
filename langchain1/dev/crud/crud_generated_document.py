@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from dev.models.generated_document import GeneratedDocument
+from models.generated_document import GeneratedDocument
 from typing import List, Optional
 from datetime import datetime
 from fastapi.encoders import jsonable_encoder

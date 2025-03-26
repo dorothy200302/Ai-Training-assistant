@@ -27,18 +27,18 @@ from sqlalchemy.orm import Session
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
-from dev.models.models import Users as User, Documents
-from dev.database import get_db
-from dev.core.security import get_current_user
-from dev.crud.crud_generated_document import generated_document_crud
-from dev.CloudStorage.aws import upload_file_to_s3_by_key
-from dev.Generate.AsyncTrainingDocGenerator import AsyncTrainingDocGenerator
+from models.models import Users as User, Documents
+from database import get_db
+from core.security import get_current_user
+from crud.crud_generated_document import generated_document_crud
+from .aws import upload_file_to_s3_by_key
+from Generate.AsyncTrainingDocGenerator import AsyncTrainingDocGenerator
 from fastapi.templating import Jinja2Templates
 from .aws import download_file_by_url
 import mimetypes
 from pathlib import Path
-from dev.Generate.VisionRagProcessor import VisionRAGProcessor
-from dev.services.access_log import AccessLogService
+from Generate.VisionRagProcessor import VisionRAGProcessor
+from services.access_log_service import AccessLogService
 
 # Configure logging
 logger = logging.getLogger(__name__)

@@ -2,8 +2,8 @@ import requests
 import json
 from urllib.parse import urlparse, parse_qs
 import os
-from dev.models import *
-from dev.config.database import SessionLocal
+from models import *
+from config.database import SessionLocal
 from crud.crud_document import document_crud
 from typing import Tuple
 import urllib3

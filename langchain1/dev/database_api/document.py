@@ -7,6 +7,11 @@ from datetime import datetime
 from crud.crud_document import document_crud
 from core.security import get_current_user
 from database import get_db
+from schemas.permission import PermissionLevel
+from services.permission_service import PermissionService
+from services.progress_service import ProgressService
+from services.access_log_service import AccessLogService
+
 
 router = APIRouter(
     prefix="/documents",
